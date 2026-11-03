@@ -75,4 +75,6 @@ export interface AppState {
   acknowledged: Record<string, number>;
   /** Routine task completion keyed by `${crewId}:${day}:${taskId}`. */
   routineDone: Record<string, boolean>;
+  /** Flight surgeon notes keyed by crewId. */
+  surgeonNotes: Record<string, string>;
 }

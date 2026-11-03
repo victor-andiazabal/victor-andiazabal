@@ -34,6 +34,9 @@ beats per minute at rest. Crews need a tool that notices those shifts for them a
   published cut-offs drawn on the chart. Compare the whole crew with one checkbox.
 - **Routine and streak**: timed prompts for the day (reaction test after waking, vitals, exercise block,
   social time, lights-down), a check-in streak, and a progress bar.
+- **Ground view**: the flight surgeon's side of the same data. Crew-by-indicator status grid, the queue of
+  items the crew flagged for the ground, and per-crew notes.
+- **Import**: CSV in the export layout, so cuff or wearable exports replace the simulated day.
 - **Learn**: what each indicator means, how to measure it on board, and every source used.
 - **Four environments**: space station, deep-space transit, pressurized rover, planetary base. Each sets the
   comm delay and the expected daily radiation dose from measured values.

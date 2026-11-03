@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Alerts } from './components/Alerts';
 import { CheckIn } from './components/CheckIn';
 import { Dashboard } from './components/Dashboard';
+import { Ground } from './components/Ground';
 import { Learn } from './components/Learn';
 import { ReactionTest } from './components/ReactionTest';
 import { Routine } from './components/Routine';
@@ -11,7 +12,7 @@ import { evaluate } from './lib/rules';
 import type { IndicatorId } from './lib/types';
 import { useStore } from './state/store';
 
-export type View = 'dashboard' | 'checkin' | 'pvt' | 'trends' | 'alerts' | 'routine' | 'learn' | 'settings';
+export type View = 'dashboard' | 'checkin' | 'pvt' | 'trends' | 'alerts' | 'routine' | 'ground' | 'learn' | 'settings';
 
 const NAV: { id: View; label: string; icon: string }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: '◉' },
@@ -20,6 +21,7 @@ const NAV: { id: View; label: string; icon: string }[] = [
   { id: 'trends', label: 'Trends', icon: '📈' },
   { id: 'alerts', label: 'Alerts', icon: '⚠' },
   { id: 'routine', label: 'Routine', icon: '☑' },
+  { id: 'ground', label: 'Ground view', icon: '🛰' },
   { id: 'learn', label: 'Learn', icon: '📖' },
   { id: 'settings', label: 'Settings', icon: '⚙' },
 ];
@@ -103,6 +105,7 @@ export default function App() {
         {view === 'trends' && <Trends key={trendIndicator ?? 'default'} initial={trendIndicator} />}
         {view === 'alerts' && <Alerts />}
         {view === 'routine' && <Routine go={go} />}
+        {view === 'ground' && <Ground go={go} />}
         {view === 'learn' && <Learn />}
         {view === 'settings' && <Settings theme={theme} setTheme={setTheme} />}
       </main>

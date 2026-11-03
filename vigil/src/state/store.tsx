@@ -9,6 +9,8 @@ type Action =
   | { type: 'manual'; crewId: string; record: DayRecord }
   | { type: 'ack'; id: string }
   | { type: 'routine'; key: string; done: boolean }
+  | { type: 'manualMany'; records: { crewId: string; record: DayRecord }[] }
+  | { type: 'surgeonNote'; crewId: string; text: string }
   | { type: 'reset' };
 
 function reducer(s: Persisted, a: Action): Persisted {
@@ -23,13 +25,20 @@ function reducer(s: Persisted, a: Action): Persisted {
       return { ...s, acknowledged: { ...s.acknowledged, [a.id]: Date.now() } };
     case 'routine':
       return { ...s, routineDone: { ...s.routineDone, [a.key]: a.done } };
+    case 'manualMany': {
+      const manual = { ...s.manual };
+      for (const { crewId, record } of a.records) manual[`${crewId}:${record.day}`] = record;
+      return { ...s, manual };
+    }
+    case 'surgeonNote':
+      return { ...s, surgeonNotes: { ...s.surgeonNotes, [a.crewId]: a.text } };
     case 'reset':
       return initial();
   }
 }
 
 function initial(): Persisted {
-  return { settings: DEFAULT_SETTINGS, selectedCrewId: 'cdr', manual: {}, acknowledged: {}, routineDone: {} };
+  return { settings: DEFAULT_SETTINGS, selectedCrewId: 'cdr', manual: {}, acknowledged: {}, routineDone: {}, surgeonNotes: {} };
 }
 
 interface Store extends Persisted {

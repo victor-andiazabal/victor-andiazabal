@@ -1,4 +1,6 @@
+import { useRef, useState } from 'react';
 import { ENVIRONMENTS, INDICATORS } from '../data/indicators';
+import type { DayRecord, IndicatorId } from '../lib/types';
 import { MAX_MISSION_DAY, SCENARIOS } from '../lib/simulate';
 import type { Environment, ScenarioId } from '../lib/types';
 import { useStore } from '../state/store';
@@ -13,8 +15,45 @@ function download(name: string, text: string, type = 'application/json') {
   URL.revokeObjectURL(url);
 }
 
+/** Parse the CSV this app exports: crew, day, source, one column per indicator, symptoms (| separated), notes. */
+export function parseCsv(text: string, knownCrew: string[]): { records: { crewId: string; record: DayRecord }[]; skipped: number } {
+  const lines = text.split(/\r?\n/).filter((l) => l.trim());
+  if (lines.length < 2) return { records: [], skipped: 0 };
+  const head = lines[0].split(',').map((h) => h.trim());
+  const ids = new Set(INDICATORS.map((i) => i.id as string));
+  const out: { crewId: string; record: DayRecord }[] = [];
+  let skipped = 0;
+  for (const line of lines.slice(1)) {
+    const cells = line.split(',');
+    const row: Record<string, string> = {};
+    head.forEach((h, i) => { row[h] = (cells[i] ?? '').trim(); });
+    const day = Number(row.day);
+    const crewId = row.crew;
+    if (!knownCrew.includes(crewId) || !Number.isInteger(day)) { skipped++; continue; }
+    const values: Partial<Record<IndicatorId, number>> = {};
+    for (const h of head) {
+      if (!ids.has(h) || row[h] === '') continue;
+      const n = Number(row[h]);
+      if (Number.isFinite(n)) values[h as IndicatorId] = n;
+    }
+    let notes = row.notes ?? '';
+    try { if (notes.startsWith('"')) notes = JSON.parse(notes); } catch { /* keep raw */ }
+    out.push({ crewId, record: { day, values, symptoms: row.symptoms ? row.symptoms.split('|').filter(Boolean) : [], notes: notes || undefined, source: 'manual' } });
+  }
+  return { records: out, skipped };
+}
+
 export function Settings({ theme, setTheme }: { theme: 'dark' | 'light'; setTheme: (t: 'dark' | 'light') => void }) {
   const { settings, dispatch, crew, manual } = useStore();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [importMsg, setImportMsg] = useState('');
+
+  const importCsv = async (file: File) => {
+    const text = await file.text();
+    const { records, skipped } = parseCsv(text, crew.map((c) => c.id));
+    if (records.length) dispatch({ type: 'manualMany', records });
+    setImportMsg(`${records.length} row${records.length === 1 ? '' : 's'} imported${skipped ? `, ${skipped} skipped` : ''}.`);
+  };
 
   const exportJson = () => download(`vigil-day${settings.currentDay}.json`, JSON.stringify({ settings, crew, manual }, null, 2));
   const exportCsv = () => {
@@ -96,6 +135,11 @@ export function Settings({ theme, setTheme }: { theme: 'dark' | 'light'; setThem
                 <button className="btn sm" onClick={exportCsv}>CSV</button>
               </div>
               <span className="hint">All records for all crew, including your manual entries. Nothing leaves the device unless you export it.</span>
+            </div>
+            <div className="field">
+              <label htmlFor="csv">Import</label>
+              <input ref={fileRef} id="csv" type="file" accept=".csv,text/csv" style={{ fontSize: 13 }} onChange={(e) => { const f = e.target.files?.[0]; if (f) void importCsv(f); }} />
+              <span className="hint">CSV in the same layout as the export (crew, day, one column per indicator). Rows replace the simulated day for that crew member, which is how wearable or cuff exports get in.{importMsg ? ` ${importMsg}` : ''}</span>
             </div>
             <div className="field">
               <label>Reset</label>

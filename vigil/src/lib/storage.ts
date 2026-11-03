@@ -10,7 +10,7 @@ export const DEFAULT_SETTINGS: MissionSettings = {
   seed: 20261114,
 };
 
-export type Persisted = Pick<AppState, 'settings' | 'selectedCrewId' | 'manual' | 'acknowledged' | 'routineDone'>;
+export type Persisted = Pick<AppState, 'settings' | 'selectedCrewId' | 'manual' | 'acknowledged' | 'routineDone' | 'surgeonNotes'>;
 
 export function loadState(): Persisted | null {
   try {
@@ -24,6 +24,7 @@ export function loadState(): Persisted | null {
       manual: p.manual ?? {},
       acknowledged: p.acknowledged ?? {},
       routineDone: p.routineDone ?? {},
+      surgeonNotes: p.surgeonNotes ?? {},
     };
   } catch {
     return null;

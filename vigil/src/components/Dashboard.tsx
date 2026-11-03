@@ -111,7 +111,15 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
           const s = ev.byIndicator[def.id];
           const t = trendOf(selected, def.id, settings.currentDay);
           return (
-            <div key={def.id} className={`panel tile ${s.level}`} onClick={() => go('trends', def.id)} title={`Open ${def.label} trend`}>
+            <div
+              key={def.id}
+              className={`panel tile ${s.level}`}
+              role="button"
+              tabIndex={0}
+              aria-label={`${def.label}: ${fmt(def.id, s.value)} ${def.unit}, ${s.level === 'green' ? 'nominal' : s.level === 'amber' ? 'watch' : 'act now'}. Open trend.`}
+              onClick={() => go('trends', def.id)}
+              onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go('trends', def.id); } }}
+            >
               <div className="label">{def.short}</div>
               <div className="value">
                 {fmt(def.id, s.value)}
