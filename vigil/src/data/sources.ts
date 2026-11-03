@@ -145,6 +145,13 @@ export const SOURCES: Source[] = [
     note: 'ISS effective doses usually accumulate at roughly 0.2 to 0.5 mSv or more per mission day.',
   },
   {
+    id: 'rppg',
+    org: 'Verkruysse, Svaasand and Nelson, Optics Express 16 (2008)',
+    title: 'Remote plethysmographic imaging using ambient light',
+    url: 'https://doi.org/10.1364/OE.16.021434',
+    note: 'Heart rate can be read from the green channel of ordinary video of skin under ambient light.',
+  },
+  {
     id: 'space-apps',
     org: 'NASA Space Apps Challenge 2026',
     title: 'Create Health Monitoring Software for Astronauts on Space Missions',

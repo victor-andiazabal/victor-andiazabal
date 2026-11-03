@@ -20,6 +20,8 @@ beats per minute at rest. Crews need a tool that notices those shifts for them a
 
 - **Daily check-in** for blood pressure, heart rate, SpO2, temperature, fasting glucose, body mass, sleep,
   exercise, mood, stress, symptoms and radiation dose. Keyboard, touch, or values pre-filled from a wearable.
+- **Camera pulse**: 20 seconds of video from the phone or laptop camera, fingertip or face, turned into a heart-rate
+  estimate on the device (photoplethysmography, Verkruysse 2008). Labelled experimental; fills the heart-rate field.
 - **Reaction self-test**: a 60-second psychomotor vigilance test, the same family of test ISS crews run as the
   Reaction Self Test, with the PVT-B lapse threshold of 355 ms.
 - **Personal baseline**: 14 pre-flight days give each crew member a median and a robust spread (median
@@ -81,7 +83,7 @@ React 19, TypeScript, Vite, Recharts. No backend, no accounts, no network calls 
 ```
 vigil/
   src/data/        indicators, crew roster, scenarios, countermeasure checklists, sources
-  src/lib/         simulator, baseline statistics, rule engine, storage
+  src/lib/         simulator, baseline statistics, rule engine, pulse estimation, storage
   src/components/  dashboard, check-in, reaction test, trends, alerts, routine, learn, settings
   src/lib/__tests__ unit tests for the statistics, simulator and rules
   docs/            sources, demo deck (pptx), slide outline, video script, submission draft

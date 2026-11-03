@@ -32,7 +32,7 @@ export const INDICATORS: IndicatorDef[] = [
     max: 200,
     step: 1,
     what: 'How many times the heart beats per minute while at rest. It rises with fever, dehydration, stress and poor sleep.',
-    how: 'Sit still for 5 minutes, then read the wearable or count the pulse at the wrist for 30 seconds and double it.',
+    how: 'Sit still for 5 minutes, then read the wearable, use the camera pulse tool, or count the pulse at the wrist for 30 seconds and double it.',
     reference: 'Typical adult resting range 60-100 bpm (AHA). Very fit people are often lower, so VIGIL also compares with your own baseline.',
     sources: ['aha-hr'],
     entry: 'device',

@@ -3,6 +3,7 @@ import { INDICATORS, SYMPTOMS } from '../data/indicators';
 import { evaluate } from '../lib/rules';
 import type { DayRecord, IndicatorId } from '../lib/types';
 import { useStore } from '../state/store';
+import { CameraPulse } from './CameraPulse';
 import { Pill, SourceLinks } from './ui';
 import type { View } from '../App';
 
@@ -131,6 +132,7 @@ export function CheckIn({ go }: { go: (v: View) => void }) {
                   Run the 60-second reaction test
                 </button>
               )}
+              {g.key === 'vitals' && <CameraPulse onResult={(bpm) => set('hr', String(bpm))} />}
             </div>
           </div>
         ))}

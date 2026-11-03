@@ -32,8 +32,8 @@ Source: https://github.com/victor-andiazabal/victor-andiazabal/tree/main/vigil
 
 ## Detailed project description
 
-**What it does.** A daily check-in form (keyboard, touch or pre-filled from a wearable), a psychomotor
-vigilance reaction test, trend charts with the baseline band and published cut-offs, an alert list with
+**What it does.** A daily check-in form (keyboard, touch or pre-filled from a wearable), a camera-based pulse
+measurement (fingertip or face, processed on the device), a psychomotor vigilance reaction test, trend charts with the baseline band and published cut-offs, an alert list with
 checklists, a routine with timed prompts and a streak, a learn section, and mission settings.
 
 **How it works.** Pre-flight days give a median and a median absolute deviation per indicator. In-flight
@@ -65,7 +65,8 @@ wearable input.
 
 ACC/AHA 2017 blood pressure guideline; American Heart Association heart rate reference; ADA Standards of
 Care; CDC fever definition; Mayo Clinic SpO2 reference; AASM/SRS sleep recommendation; Barger et al. 2014
-(ISS sleep); Basner, Mollicone and Dinges 2011 (PVT-B); Shavers et al. 2024 (ISS dose rate).
+(ISS sleep); Basner, Mollicone and Dinges 2011 (PVT-B); Shavers et al. 2024 (ISS dose rate); Verkruysse et al.
+2008 (camera photoplethysmography).
 All crew data in the demo is simulated.
 
 ## Use of Artificial Intelligence

@@ -42,6 +42,8 @@ papers only. The same list is in `src/data/sources.ts` and in the app under Lear
 - **Garrett-Bakelman et al., Science 364 (2019).** The NASA Twins Study.
   https://doi.org/10.1126/science.aau8650. Gene expression, immune, telomere and cognitive changes over a
   340-day mission.
+- **Verkruysse, Svaasand and Nelson, Optics Express 16 (2008).** Remote plethysmographic imaging using ambient
+  light. https://doi.org/10.1364/OE.16.021434. Heart rate from the green channel of ordinary video of skin.
 - **Watson et al., Sleep 38 (2015).** Recommended amount of sleep for a healthy adult (AASM and SRS consensus).
   https://doi.org/10.5665/sleep.4716. Seven hours or more per night.
 
