@@ -1,7 +1,8 @@
 # VIGIL demo, 7 slides
 
-Space Apps accepts a project demo of up to 7 slides or a 30-second video. These are the seven slides. Each
-slide has a headline, the visual to show, and two or three lines of speaker text.
+Space Apps accepts a project demo of up to 7 slides or a 30-second video. The finished deck is
+`VIGIL-demo.pptx` in this folder (export it to PDF for the submission). Below is the outline: each slide has a
+headline, the visual, and two or three lines of speaker text.
 
 ---
 

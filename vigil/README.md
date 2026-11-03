@@ -67,6 +67,8 @@ npm install
 npm run dev
 ```
 
+Tests: `npm test` (vitest, covers the statistics, the simulator and every alert rule at its cited cut-off).
+
 Production build: `npm run build`, output in `dist/`. The GitHub Actions workflow in
 `.github/workflows/pages.yml` builds and deploys to GitHub Pages on every push to `main`.
 
@@ -81,7 +83,8 @@ vigil/
   src/data/        indicators, crew roster, scenarios, countermeasure checklists, sources
   src/lib/         simulator, baseline statistics, rule engine, storage
   src/components/  dashboard, check-in, reaction test, trends, alerts, routine, learn, settings
-  docs/            sources, demo slides, video script, submission draft
+  src/lib/__tests__ unit tests for the statistics, simulator and rules
+  docs/            sources, demo deck (pptx), slide outline, video script, submission draft
 ```
 
 ## Limits
