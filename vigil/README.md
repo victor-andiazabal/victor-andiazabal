@@ -38,7 +38,8 @@ beats per minute at rest. Crews need a tool that notices those shifts for them a
 - **Four environments**: space station, deep-space transit, pressurized rover, planetary base. Each sets the
   comm delay and the expected daily radiation dose from measured values.
 - **Four demo scenarios**: nominal, solar particle event, sleep debt with slowed reactions, early infection.
-- Runs fully offline in the browser. Data stays on the device; export JSON or CSV at any time.
+- Runs fully offline in the browser and installs as a web app on a tablet or phone (service worker caches
+  everything after the first load). Data stays on the device; export JSON or CSV at any time.
 
 ## Where the numbers come from
 

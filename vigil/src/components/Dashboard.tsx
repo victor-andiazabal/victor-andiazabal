@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { ENVIRONMENTS, INDICATORS } from '../data/indicators';
 import { evaluate, trendOf } from '../lib/rules';
 import { scenarioById } from '../lib/simulate';
@@ -8,8 +8,14 @@ import { routineFor } from './Routine';
 import { Disclaimer, fmt, LEVEL_LABEL, Pill, Trend } from './ui';
 import type { View } from '../App';
 
+function readTour(): boolean {
+  try { return localStorage.getItem('vigil:tour') !== 'done'; } catch { return true; }
+}
+
 export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => void }) {
   const { crew, selected, settings, dispatch, acknowledged, routineDone } = useStore();
+  const [tour, setTour] = useState(readTour);
+  const closeTour = () => { try { localStorage.setItem('vigil:tour', 'done'); } catch { /* ignore */ } setTour(false); };
   const ev = useMemo(() => evaluate(selected, settings), [selected, settings]);
   const env = ENVIRONMENTS[settings.environment];
   const scenario = scenarioById(settings.scenario);
@@ -37,6 +43,20 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
         </div>
       </div>
 
+      {tour && (
+        <div className="panel tour">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+            <b>Three things to try</b>
+            <span className="muted">Simulated crew, mission day {settings.currentDay}, scenario "{scenario.label}".</span>
+            <button className="btn sm" style={{ marginLeft: 'auto' }} onClick={closeTour} aria-label="Dismiss tour">Dismiss</button>
+          </div>
+          <ol>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); go('alerts'); }}>Open the alerts</a> and read why each one fired and what to do.</li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); dispatch({ type: 'settings', patch: { scenario: 'spe', currentDay: 25 } }); }}>Replay the solar storm</a> on day 25, then drag the day slider in Settings.</li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); go('pvt'); }}>Run the 60-second reaction test</a> and save it into today's check-in.</li>
+          </ol>
+        </div>
+      )}
       <div className="grid cols-3" style={{ marginBottom: 14 }}>
         <div className="panel status-hero" style={{ gridColumn: 'span 2' }}>
           <div className={`ring ${ev.overall}`}>{LEVEL_LABEL[ev.overall].toUpperCase()}</div>
