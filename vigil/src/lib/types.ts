@@ -55,6 +55,8 @@ export interface Finding {
   sources: string[];
   /** 'reference' = compared with a published range. 'baseline' = compared with the person's own history. */
   basis: 'reference' | 'baseline' | 'symptom' | 'routine';
+  /** Key into data/countermeasures.ts for the checklist shown with the alert. */
+  checklist?: string;
 }
 
 export interface MissionSettings {

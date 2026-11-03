@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseCsv } from '../../components/Settings';
+import { csvCell, parseCsv, splitCsvLine } from '../../components/Settings';
 
 describe('CSV import', () => {
   it('round-trips the export layout', () => {
@@ -13,6 +13,17 @@ describe('CSV import', () => {
     expect(records[0].record.symptoms).toEqual(['headache', 'nausea']);
     expect(records[0].record.notes).toBe('cuff export');
     expect(records[0].record.source).toBe('manual');
+  });
+
+  it('round-trips notes that contain commas, quotes and newlines', () => {
+    const note = 'cuff reading, arm "supported"\nsecond line';
+    const line = ['cdr', 5, 'manual', 70, 'headache', csvCell(note)].join(',');
+    const cells = splitCsvLine(line);
+    expect(cells).toHaveLength(6);
+    expect(cells[5]).toBe('cuff reading, arm "supported" second line');
+    const { records } = parseCsv(`crew,day,source,hr,symptoms,notes\n${line}`, ['cdr']);
+    expect(records[0].record.values.hr).toBe(70);
+    expect(records[0].record.notes).toBe('cuff reading, arm "supported" second line');
   });
 
   it('ignores unknown columns and empty files', () => {

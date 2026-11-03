@@ -6,25 +6,7 @@ import type { Finding } from '../lib/types';
 import { useStore } from '../state/store';
 import { fmt, Pill, SourceLinks } from './ui';
 
-function checklistFor(f: Finding) {
-  const key = f.id.split(':')[2] ?? '';
-  if (key.startsWith('bp')) return COUNTERMEASURES.bp;
-  if (key.startsWith('hr')) return COUNTERMEASURES.hr;
-  if (key.startsWith('spo2')) return COUNTERMEASURES.spo2;
-  if (key.startsWith('temp')) return COUNTERMEASURES.fever;
-  if (key.startsWith('glu-low')) return COUNTERMEASURES.glucoseLow;
-  if (key.startsWith('glu')) return COUNTERMEASURES.glucoseHigh;
-  if (key.startsWith('sleep')) return COUNTERMEASURES.sleep;
-  if (key.startsWith('pvt')) return COUNTERMEASURES.alertness;
-  if (key.startsWith('mood') || key.startsWith('stress')) return COUNTERMEASURES.mood;
-  if (key.startsWith('rad')) return COUNTERMEASURES.radiation;
-  if (key.startsWith('weight')) return COUNTERMEASURES.weight;
-  if (key.startsWith('exercise')) return COUNTERMEASURES.exercise;
-  if (key === 'symptom-red') return COUNTERMEASURES.redFlag;
-  if (key.startsWith('symptom')) return COUNTERMEASURES.symptoms;
-  if (key === 'routine') return COUNTERMEASURES.routine;
-  return null;
-}
+const checklistFor = (f: Finding) => (f.checklist ? COUNTERMEASURES[f.checklist] ?? null : null);
 
 export function Alerts() {
   const { selected, settings, crew, dispatch, acknowledged } = useStore();

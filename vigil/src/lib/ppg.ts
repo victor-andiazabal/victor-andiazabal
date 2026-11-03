@@ -12,6 +12,8 @@ export interface PpgResult {
   bpm: number | null;
   /** Ratio of the spectral peak to the mean power in the 42-180 bpm band. Higher is cleaner. */
   snr: number;
+  /** Share of band power within 3 bpm of the peak. Noise spreads power; a pulse concentrates it. */
+  concentration: number;
   quality: 'good' | 'fair' | 'poor';
   seconds: number;
   samples: number;
@@ -77,18 +79,16 @@ export function estimatePulse(samples: PpgSample[]): PpgResult {
   // Drop the first second (camera auto-exposure settling).
   const sig = x.slice(FS);
   if (seconds < 8 || sig.length < FS * 6) {
-    return { bpm: null, snr: 0, quality: 'poor', seconds, samples: samples.length, trace: sig };
+    return { bpm: null, snr: 0, concentration: 0, quality: 'poor', seconds, samples: samples.length, trace: sig };
   }
-  let best = { bpm: 0, p: 0 };
-  let total = 0;
-  let count = 0;
-  for (let bpm = MIN_BPM; bpm <= MAX_BPM; bpm += 0.5) {
-    const p = power(sig, bpm / 60);
-    total += p;
-    count++;
-    if (p > best.p) best = { bpm, p };
-  }
-  const snr = best.p / (total / count);
-  const quality: PpgResult['quality'] = snr >= 12 ? 'good' : snr >= 6 ? 'fair' : 'poor';
-  return { bpm: quality === 'poor' ? null : Math.round(best.bpm), snr, quality, seconds, samples: samples.length, trace: sig };
+  const spectrum: { bpm: number; p: number }[] = [];
+  for (let bpm = MIN_BPM; bpm <= MAX_BPM; bpm += 0.5) spectrum.push({ bpm, p: power(sig, bpm / 60) });
+  const total = spectrum.reduce((s, b) => s + b.p, 0);
+  const best = spectrum.reduce((m, b) => (b.p > m.p ? b : m), spectrum[0]);
+  const snr = best.p / (total / spectrum.length);
+  const near = spectrum.filter((b) => Math.abs(b.bpm - best.bpm) <= 3).reduce((s, b) => s + b.p, 0);
+  const concentration = total > 0 ? near / total : 0;
+  // Noise spreads its power across the band (concentration well under 0.2); a pulse puts most of it in one place.
+  const quality: PpgResult['quality'] = concentration >= 0.5 && snr >= 12 ? 'good' : concentration >= 0.3 && snr >= 8 ? 'fair' : 'poor';
+  return { bpm: quality === 'poor' ? null : Math.round(best.bpm), snr, concentration, quality, seconds, samples: samples.length, trace: sig };
 }

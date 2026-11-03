@@ -33,10 +33,19 @@ export function CheckIn({ go }: { go: (v: View) => void }) {
       const raw = draft[def.id];
       if (raw === undefined || raw === '') continue;
       const n = Number(raw);
-      if (Number.isFinite(n)) values[def.id] = n;
+      if (Number.isFinite(n) && n >= def.min && n <= def.max) values[def.id] = n;
     }
     return { day, values, symptoms, notes, source: 'manual' };
   }, [draft, symptoms, notes, day]);
+
+  const outOfRange = (id: IndicatorId): boolean => {
+    const raw = draft[id];
+    if (raw === undefined || raw === '') return false;
+    const n = Number(raw);
+    const def = INDICATORS.find((i) => i.id === id)!;
+    return !Number.isFinite(n) || n < def.min || n > def.max;
+  };
+  const invalidCount = INDICATORS.filter((i) => outOfRange(i.id)).length;
 
   // Live preview: evaluate the crew member as if this draft were today's record.
   const preview = useMemo(() => {
@@ -77,6 +86,9 @@ export function CheckIn({ go }: { go: (v: View) => void }) {
           </button>
         </div>
       </div>
+      {invalidCount > 0 && (
+        <p style={{ color: 'var(--red)', marginBottom: 10 }}>{invalidCount} value{invalidCount > 1 ? 's are' : ' is'} outside the measurable range and will be left out of the entry.</p>
+      )}
 
       <div className="grid cols-2">
         {groups.map((g) => (
@@ -115,7 +127,12 @@ export function CheckIn({ go }: { go: (v: View) => void }) {
                       </div>
                     )}
                     <span className="hint">{def.reference}</span>
-                    {draft[def.id] && (
+                    {outOfRange(def.id) && (
+                      <span className="inline-status" style={{ color: 'var(--red)' }}>
+                        Outside {def.min}-{def.max} {def.unit}: check the entry. It will not be saved.
+                      </span>
+                    )}
+                    {draft[def.id] && !outOfRange(def.id) && (
                       <span className="inline-status">
                         <span className={`dot ${st.level}`} />
                         {st.level === 'green' ? 'within range' : st.level === 'amber' ? 'flagged: watch' : 'flagged: act now'}

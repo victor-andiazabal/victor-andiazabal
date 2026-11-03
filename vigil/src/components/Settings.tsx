@@ -15,6 +15,31 @@ function download(name: string, text: string, type = 'application/json') {
   URL.revokeObjectURL(url);
 }
 
+/** Split one CSV line, honouring double quotes and doubled quotes inside them. */
+export function splitCsvLine(line: string): string[] {
+  const out: string[] = [];
+  let cur = '';
+  let inQuotes = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQuotes) {
+      if (ch === '"' && line[i + 1] === '"') { cur += '"'; i++; }
+      else if (ch === '"') inQuotes = false;
+      else cur += ch;
+    } else if (ch === '"') inQuotes = true;
+    else if (ch === ',') { out.push(cur); cur = ''; }
+    else cur += ch;
+  }
+  out.push(cur);
+  return out;
+}
+
+export function csvCell(v: string | number | undefined): string {
+  if (v === undefined || v === null) return '';
+  const s = String(v).replace(/\r?\n/g, ' ');
+  return /[",]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+}
+
 /** Parse the CSV this app exports: crew, day, source, one column per indicator, symptoms (| separated), notes. */
 export function parseCsv(text: string, knownCrew: string[]): { records: { crewId: string; record: DayRecord }[]; skipped: number } {
   const lines = text.split(/\r?\n/).filter((l) => l.trim());
@@ -24,7 +49,7 @@ export function parseCsv(text: string, knownCrew: string[]): { records: { crewId
   const out: { crewId: string; record: DayRecord }[] = [];
   let skipped = 0;
   for (const line of lines.slice(1)) {
-    const cells = line.split(',');
+    const cells = splitCsvLine(line);
     const row: Record<string, string> = {};
     head.forEach((h, i) => { row[h] = (cells[i] ?? '').trim(); });
     const day = Number(row.day);
@@ -36,8 +61,7 @@ export function parseCsv(text: string, knownCrew: string[]): { records: { crewId
       const n = Number(row[h]);
       if (Number.isFinite(n)) values[h as IndicatorId] = n;
     }
-    let notes = row.notes ?? '';
-    try { if (notes.startsWith('"')) notes = JSON.parse(notes); } catch { /* keep raw */ }
+    const notes = row.notes ?? '';
     out.push({ crewId, record: { day, values, symptoms: row.symptoms ? row.symptoms.split('|').filter(Boolean) : [], notes: notes || undefined, source: 'manual' } });
   }
   return { records: out, skipped };
@@ -52,14 +76,15 @@ export function Settings({ theme, setTheme }: { theme: 'dark' | 'light'; setThem
     const text = await file.text();
     const { records, skipped } = parseCsv(text, crew.map((c) => c.id));
     if (records.length) dispatch({ type: 'manualMany', records });
-    setImportMsg(`${records.length} row${records.length === 1 ? '' : 's'} imported${skipped ? `, ${skipped} skipped` : ''}.`);
+    const future = records.filter((r) => r.record.day > settings.currentDay).length;
+    setImportMsg(`${records.length} row${records.length === 1 ? '' : 's'} imported${skipped ? `, ${skipped} skipped` : ''}.${future ? ` ${future} of them are for days after today and appear when the mission reaches them.` : ''}`);
   };
 
   const exportJson = () => download(`vigil-day${settings.currentDay}.json`, JSON.stringify({ settings, crew, manual }, null, 2));
   const exportCsv = () => {
     const head = ['crew', 'day', 'source', ...INDICATORS.map((i) => i.id), 'symptoms', 'notes'];
     const rows = crew.flatMap((c) =>
-      c.records.map((r) => [c.id, r.day, r.source, ...INDICATORS.map((i) => r.values[i.id] ?? ''), r.symptoms.join('|'), JSON.stringify(r.notes ?? '')].join(',')),
+      c.records.map((r) => [c.id, r.day, r.source, ...INDICATORS.map((i) => r.values[i.id] ?? ''), r.symptoms.join('|'), csvCell(r.notes)].join(',')),
     );
     download(`vigil-day${settings.currentDay}.csv`, [head.join(','), ...rows].join('\n'), 'text/csv');
   };
@@ -138,7 +163,7 @@ export function Settings({ theme, setTheme }: { theme: 'dark' | 'light'; setThem
             </div>
             <div className="field">
               <label htmlFor="csv">Import</label>
-              <input ref={fileRef} id="csv" type="file" accept=".csv,text/csv" style={{ fontSize: 13 }} onChange={(e) => { const f = e.target.files?.[0]; if (f) void importCsv(f); }} />
+              <input ref={fileRef} id="csv" type="file" accept=".csv,text/csv" style={{ fontSize: 13 }} onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void importCsv(f); }} />
               <span className="hint">CSV in the same layout as the export (crew, day, one column per indicator). Rows replace the simulated day for that crew member, which is how wearable or cuff exports get in.{importMsg ? ` ${importMsg}` : ''}</span>
             </div>
             <div className="field">

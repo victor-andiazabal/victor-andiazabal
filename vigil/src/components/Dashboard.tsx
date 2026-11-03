@@ -16,7 +16,8 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
   const { crew, selected, settings, dispatch, acknowledged, routineDone } = useStore();
   const [tour, setTour] = useState(readTour);
   const closeTour = () => { try { localStorage.setItem('vigil:tour', 'done'); } catch { /* ignore */ } setTour(false); };
-  const ev = useMemo(() => evaluate(selected, settings), [selected, settings]);
+  const evals = useMemo(() => crew.map((c) => ({ crew: c, ev: evaluate(c, settings) })), [crew, settings]);
+  const ev = evals.find((e) => e.crew.id === selected.id)!.ev;
   const env = ENVIRONMENTS[settings.environment];
   const scenario = scenarioById(settings.scenario);
   const top = ev.findings.filter((f) => !acknowledged[f.id]).slice(0, 3);
@@ -84,8 +85,7 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
         </div>
         <div className="panel">
           <h3>Crew status</h3>
-          {crew.map((c) => {
-            const e = evaluate(c, settings);
+          {evals.map(({ crew: c, ev: e }) => {
             return (
               <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0' }}>
                 <span className={`dot ${e.overall}`} />

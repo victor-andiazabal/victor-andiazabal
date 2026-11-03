@@ -110,6 +110,12 @@ describe('baseline rules', () => {
     expect(titles(m)).toContain('Under 6 hours of sleep for 3 nights');
   });
 
+  it('every finding carries a checklist key that exists', async () => {
+    const { COUNTERMEASURES } = await import('../../data/countermeasures');
+    const m = withToday(cdr(), { bpSys: 150, temp: 38.5, spo2: 93, glucose: 60, hr: 105, radDose: 19 }, ['chestPain', 'headache', 'nausea', 'dizziness']);
+    for (const f of evaluate(m, base).findings) expect(COUNTERMEASURES[f.checklist ?? '']).toBeDefined();
+  });
+
   it('every finding carries a reason, an action and a source', () => {
     const m = withToday(cdr(), { bpSys: 150, temp: 38.5, spo2: 93, glucose: 60, hr: 105 }, ['headache', 'nausea', 'dizziness']);
     const ev = evaluate(m, base);

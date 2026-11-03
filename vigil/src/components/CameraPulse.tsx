@@ -54,10 +54,10 @@ export function CameraPulse({ onResult }: { onResult: (bpm: number) => void }) {
       setPhase('recording');
       const canvas = canvasRef.current!;
       const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+      const w = (canvas.width = 64);
+      const h = (canvas.height = 48);
       const tick = () => {
         const now = performance.now();
-        const w = (canvas.width = 64);
-        const h = (canvas.height = 48);
         ctx.drawImage(video, 0, 0, w, h);
         // Face: central box (forehead/cheeks). Finger: whole frame.
         const roi = mode === 'face' ? { x: Math.round(w * 0.3), y: Math.round(h * 0.2), w: Math.round(w * 0.4), h: Math.round(h * 0.45) } : { x: 0, y: 0, w, h };

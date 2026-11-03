@@ -34,22 +34,23 @@ export function routineFor(env: Environment): RoutineTask[] {
 }
 
 export function Routine({ go }: { go: (v: View) => void }) {
-  const { selected, settings, routineDone, dispatch } = useStore();
+  const { selected, settings, routineDone, dispatch, manual } = useStore();
   const tasks = routineFor(settings.environment);
   const key = (id: string) => `${selected.id}:${settings.currentDay}:${id}`;
   const done = tasks.filter((t) => routineDone[key(t.id)]).length;
   const ev = useMemo(() => evaluate(selected, settings), [selected, settings]);
 
-  // Streak: consecutive mission days with a check-in, counting back from today.
+  // Streak: consecutive mission days, counting back from today, on which this person saved a check-in
+  // or ticked a routine task. Simulated history does not count.
   const streak = useMemo(() => {
-    const days = new Set(selected.records.filter((r) => r.day >= 1).map((r) => r.day));
     let n = 0;
     for (let d = settings.currentDay; d >= 1; d--) {
-      if (days.has(d)) n++;
+      const entered = Boolean(manual[`${selected.id}:${d}`]) || tasks.some((t) => routineDone[`${selected.id}:${d}:${t.id}`]);
+      if (entered) n++;
       else break;
     }
     return n;
-  }, [selected, settings.currentDay]);
+  }, [manual, routineDone, selected.id, settings.currentDay, tasks]);
 
   const totalDone = Object.entries(routineDone).filter(([k, v]) => v && k.startsWith(`${selected.id}:`)).length;
 
@@ -88,8 +89,8 @@ export function Routine({ go }: { go: (v: View) => void }) {
             <div className="streak">
               <div className="num">{streak}</div>
               <div>
-                <div>day{streak === 1 ? '' : 's'} of check-ins in a row</div>
-                <small className="muted">{ev.missedCheckins === 0 ? 'No missed days this mission.' : `${ev.missedCheckins} missed day${ev.missedCheckins > 1 ? 's' : ''} this mission.`}</small>
+                <div>day{streak === 1 ? '' : 's'} in a row with your own entry</div>
+                <small className="muted">{streak === 0 ? 'Save a check-in or tick a task to start the streak.' : ev.missedCheckins === 0 ? 'No missed days this mission.' : `${ev.missedCheckins} missed day${ev.missedCheckins > 1 ? 's' : ''} this mission.`}</small>
               </div>
             </div>
             <p className="muted" style={{ marginTop: 8, fontSize: 13 }}>{totalDone} routine tasks completed in this session.</p>

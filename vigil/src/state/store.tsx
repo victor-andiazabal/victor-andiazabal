@@ -57,10 +57,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const crew = useMemo(() => {
     const sim = simulateCrew(state.settings);
     // Manual entries replace the simulated record for that day.
-    return sim.map((m) => ({
-      ...m,
-      records: m.records.map((r) => state.manual[`${m.id}:${r.day}`] ?? r),
-    }));
+    return sim.map((m) => {
+      const covered = new Set(m.records.map((r) => r.day));
+      const extra = Object.entries(state.manual)
+        .filter(([k, r]) => k.startsWith(`${m.id}:`) && !covered.has(r.day))
+        .map(([, r]) => r);
+      const records = [...m.records.map((r) => state.manual[`${m.id}:${r.day}`] ?? r), ...extra].sort((a, b) => a.day - b.day);
+      return { ...m, records };
+    });
   }, [state.settings, state.manual]);
 
   const selected = crew.find((c) => c.id === state.selectedCrewId) ?? crew[0];

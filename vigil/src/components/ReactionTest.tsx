@@ -27,6 +27,7 @@ export function ReactionTest({ go }: { go: (v: View) => void }) {
   const counter = useRef<number | null>(null);
   const endTimer = useRef<number | null>(null);
   const phaseRef = useRef<Phase>('idle');
+  const runningRef = useRef(false);
   const setPhaseBoth = (p: Phase) => { phaseRef.current = p; setPhase(p); };
 
   const clearTimers = () => {
@@ -55,9 +56,11 @@ export function ReactionTest({ go }: { go: (v: View) => void }) {
     setElapsed(0);
     setSaved(false);
     startedAt.current = performance.now();
+    runningRef.current = true;
     tick.current = window.setInterval(() => setElapsed((performance.now() - startedAt.current) / 1000), 200);
     endTimer.current = window.setTimeout(() => {
       clearTimers();
+      runningRef.current = false;
       setPhaseBoth('done');
     }, TEST_SECONDS * 1000);
     scheduleStimulus();
@@ -83,7 +86,7 @@ export function ReactionTest({ go }: { go: (v: View) => void }) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.code === 'Space') { e.preventDefault(); respond(); }
+      if (e.code === 'Space' && runningRef.current) { e.preventDefault(); respond(); }
     };
     window.addEventListener('keydown', onKey);
     return () => { window.removeEventListener('keydown', onKey); clearTimers(); };

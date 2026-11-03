@@ -30,8 +30,24 @@ type Ctx = {
   findings: Finding[];
 };
 
-function add(ctx: Ctx, key: string, f: Omit<Finding, 'id' | 'crewId' | 'day'>) {
-  ctx.findings.push({ id: `${ctx.crew.id}:${ctx.rec.day}:${key}`, crewId: ctx.crew.id, day: ctx.rec.day, ...f });
+/** Which countermeasure checklist goes with each rule key. Kept next to the rules so a renamed key is caught here. */
+const CHECKLIST: Record<string, string> = {
+  'bp-crisis': 'bp', 'bp-stage2': 'bp', 'bp-stage1': 'bp', 'bp-low': 'bp',
+  'hr-high': 'hr', 'hr-above': 'hr', 'hr-baseline': 'hr',
+  'spo2-low': 'spo2', 'spo2-border': 'spo2',
+  'temp-high': 'fever', 'temp-fever': 'fever', 'temp-low': 'fever',
+  'glu-low2': 'glucoseLow', 'glu-low1': 'glucoseLow', 'glu-high2': 'glucoseHigh', 'glu-high1': 'glucoseHigh', 'glu-pre': 'glucoseHigh',
+  'sleep-red': 'sleep', 'sleep-amber': 'sleep',
+  'pvt-red': 'alertness', 'pvt-amber': 'alertness',
+  'mood-low': 'mood', 'stress-high': 'mood',
+  'rad-red': 'radiation', 'rad-amber': 'radiation', 'rad-career': 'radiation',
+  'weight-loss': 'weight', 'exercise-low': 'exercise',
+  'symptom-red': 'redFlag', 'symptom-persist': 'symptoms', 'symptom-cluster': 'symptoms',
+  routine: 'routine',
+};
+
+function add(ctx: Ctx, key: string, f: Omit<Finding, 'id' | 'crewId' | 'day' | 'checklist'>) {
+  ctx.findings.push({ id: `${ctx.crew.id}:${ctx.rec.day}:${key}`, crewId: ctx.crew.id, day: ctx.rec.day, checklist: CHECKLIST[key], ...f });
 }
 
 const v = (ctx: Ctx, id: IndicatorId): number | null => {
