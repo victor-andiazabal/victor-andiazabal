@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
 import { Alerts } from './components/Alerts';
 import { CheckIn } from './components/CheckIn';
 import { Dashboard } from './components/Dashboard';
@@ -7,10 +7,11 @@ import { Learn } from './components/Learn';
 import { ReactionTest } from './components/ReactionTest';
 import { Routine } from './components/Routine';
 import { Settings } from './components/Settings';
-import { Trends } from './components/Trends';
 import { evaluate } from './lib/rules';
 import type { IndicatorId } from './lib/types';
 import { useStore } from './state/store';
+
+const Trends = lazy(() => import('./components/Trends').then((m) => ({ default: m.Trends })));
 
 export type View = 'dashboard' | 'checkin' | 'pvt' | 'trends' | 'alerts' | 'routine' | 'ground' | 'learn' | 'settings';
 
@@ -102,7 +103,11 @@ export default function App() {
         {view === 'dashboard' && <Dashboard go={go} />}
         {view === 'checkin' && <CheckIn key={`${selected.id}:${settings.currentDay}`} go={go} />}
         {view === 'pvt' && <ReactionTest go={go} />}
-        {view === 'trends' && <Trends key={trendIndicator ?? 'default'} initial={trendIndicator} />}
+        {view === 'trends' && (
+          <Suspense fallback={<p className="muted">Loading charts…</p>}>
+            <Trends key={trendIndicator ?? 'default'} initial={trendIndicator} />
+          </Suspense>
+        )}
         {view === 'alerts' && <Alerts />}
         {view === 'routine' && <Routine go={go} />}
         {view === 'ground' && <Ground go={go} />}
