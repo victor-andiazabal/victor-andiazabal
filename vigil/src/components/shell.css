@@ -20,7 +20,7 @@
 .day-pill { min-height: 32px; padding: 4px 12px; font-size: 13px; }
 
 /* Crew switcher (T4): icon tabs. Mechanism ported from "Tabs with Icons" by cnippet-dev (21st.dev id 24990),
-   rebuilt as a plain roving-tabindex tablist; each tab is a chamfered 48px key with the role icon, callsign and status dot. */
+   rebuilt as a roving-tabindex radio group; each tab is a chamfered 48px key with the role icon, callsign and status dot. */
 .crew-tabs { flex: 0 0 auto; display: flex; align-items: center; gap: 2px; margin-left: var(--s-6); }
 .crew-tab {
   --cf-edge: transparent;
@@ -30,9 +30,9 @@
   transition: color var(--t-fast) var(--ease);
 }
 .crew-tab:hover { --cf-fill: var(--surface-2); color: var(--text); }
-.crew-tab[aria-selected='true'] { --cf-fill: var(--surface-3); --cf-edge: var(--line-strong); color: var(--text); }
+.crew-tab[aria-checked='true'] { --cf-fill: var(--surface-3); --cf-edge: var(--line-strong); color: var(--text); }
 /* Selected underline: 2px action blue along the bottom edge, stopping where the corner is cut. */
-.crew-tab[aria-selected='true']::before {
+.crew-tab[aria-checked='true']::before {
   background-image: linear-gradient(var(--action), var(--action));
   background-repeat: no-repeat; background-position: left bottom; background-size: calc(100% - var(--c)) 2px;
 }
@@ -132,7 +132,7 @@
   .crew-tabs { margin-left: var(--s-2); gap: 0; }
   .crew-tab { --c: var(--chamfer-sm); flex-direction: column; justify-content: center; gap: 1px; min-width: var(--hit-min); padding: 0 6px; font-size: 12px; line-height: 1.1; }
   .crew-tab .dot { position: absolute; top: 8px; right: 7px; width: 7px; height: 7px; box-shadow: 0 0 0 2px var(--bg); }
-  .crew-tab[aria-selected='true'] .dot { box-shadow: 0 0 0 2px var(--surface-3); }
+  .crew-tab[aria-checked='true'] .dot { box-shadow: 0 0 0 2px var(--surface-3); }
 }
 
 @media (max-width: 639px) {

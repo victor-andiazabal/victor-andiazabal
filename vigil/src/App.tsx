@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Alerts } from './components/Alerts';
 import { CheckIn } from './components/CheckIn';
 import { Ground } from './components/Ground';
@@ -10,10 +10,11 @@ import { Settings } from './components/Settings';
 import { Today } from './components/Today';
 import { TopBar, type Theme } from './components/TopBar';
 import { Tour } from './components/Tour';
+import { focusPage } from './components/pageFocus';
 import { evaluate } from './lib/rules';
 import { markTourSeen, tourSeen } from './lib/tour';
 import type { IndicatorId } from './lib/types';
-import { viewFromQuery, type View } from './lib/views';
+import { parseTheme, viewFromQuery, viewTitle, type View } from './lib/views';
 import { useStore } from './state/store';
 import './components/shell.css';
 
@@ -25,7 +26,7 @@ export type { View } from './lib/views';
 function useTheme() {
   const [theme, setTheme] = useState<Theme>(() => {
     try {
-      return (localStorage.getItem('vigil:theme') as Theme) || 'dark';
+      return parseTheme(localStorage.getItem('vigil:theme'));
     } catch {
       return 'dark';
     }
@@ -66,6 +67,21 @@ export default function App() {
     go('today');
   };
 
+  // A screen change names the page and moves focus to its heading, so it is announced. Not on first load (focus
+  // stays at the top of the document) and not while the tutorial drives the screens.
+  // tourOpen is read through a ref, not watched: opening or closing the tutorial is not a screen change.
+  const shownView = useRef(view);
+  const tourOpenRef = useRef(tourOpen);
+  useEffect(() => {
+    tourOpenRef.current = tourOpen;
+  });
+  useEffect(() => {
+    document.title = viewTitle(view);
+    if (shownView.current === view) return;
+    shownView.current = view;
+    if (!tourOpenRef.current) focusPage();
+  }, [view]);
+
   const ev = useMemo(() => evaluate(selected, settings), [selected, settings]);
   const openAlerts = ev.findings.filter((f) => !acknowledged[f.id]).length;
   const nav = { view, go, openAlerts, alertLevel: ev.overall };
@@ -75,7 +91,7 @@ export default function App() {
       <TopBar theme={theme} setTheme={setTheme} onHelp={startTour} />
       <Rail {...nav} />
 
-      <main id="main" className="main">
+      <main id="main" className="main" tabIndex={-1}>
         <div className="main-inner">
           {view === 'today' && <Today go={go} />}
           {view === 'body' && (

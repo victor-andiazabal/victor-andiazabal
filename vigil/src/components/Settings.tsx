@@ -14,6 +14,8 @@ const THEMES = [
   { value: 'light', label: 'Light' },
 ];
 
+const REVOKE_DELAY_MS = 1000;
+
 function download(name: string, text: string, type = 'application/json') {
   const blob = new Blob([text], { type });
   const url = URL.createObjectURL(blob);
@@ -21,7 +23,8 @@ function download(name: string, text: string, type = 'application/json') {
   a.href = url;
   a.download = name;
   a.click();
-  URL.revokeObjectURL(url);
+  // Revoking straight away can cancel the download in some browsers; give it a moment to start.
+  window.setTimeout(() => URL.revokeObjectURL(url), REVOKE_DELAY_MS);
 }
 
 interface SettingsProps {

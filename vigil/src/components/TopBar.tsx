@@ -1,11 +1,12 @@
-import { useMemo, useRef, type KeyboardEvent, type ReactNode } from 'react';
+import { useMemo, useRef, useState, type FocusEvent, type KeyboardEvent, type ReactNode } from 'react';
 import { LEVEL_LABEL } from '../lib/format';
 import { evaluate } from '../lib/rules';
+import type { Theme } from '../lib/views';
 import { useStore } from '../state/store';
 import { Segmented } from './controls/Segmented';
 import { IconCommander, IconEva, IconHelp, IconMedic, IconScience, Logo } from './icons';
 
-export type Theme = 'dark' | 'light';
+export type { Theme } from '../lib/views';
 
 const THEMES = [
   { value: 'dark', label: 'Dark' },
@@ -30,7 +31,9 @@ const STEP: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -
 
 /**
  * Crew switcher as icon tabs (T4). Mechanism ported from "Tabs with Icons" by cnippet-dev (21st.dev id 24990),
- * rebuilt as a plain React tablist: roving tabindex, arrow / Home / End keys, selection follows focus.
+ * rebuilt as a radio group, because it switches the whole app to another person rather than showing a panel.
+ * Roving tabindex; arrow / Home / End keys move focus only, and Enter, Space or a click selects (manual
+ * activation), so passing over a crew member never reloads every screen.
  */
 function CrewTabs() {
   const { crew, selected, settings, dispatch } = useStore();
@@ -38,9 +41,12 @@ function CrewTabs() {
   const levels = useMemo(() => Object.fromEntries(crew.map((c) => [c.id, evaluate(c, settings).overall])), [crew, settings]);
   const count = crew.length;
   const current = Math.max(0, crew.findIndex((c) => c.id === selected.id));
+  // The key the arrows last moved to; it holds the tab stop until focus leaves the group.
+  const [focused, setFocused] = useState<number | null>(null);
+  const rove = focused ?? current;
 
   const choose = (i: number) => {
-    tabs.current[i]?.focus();
+    setFocused(null);
     if (crew[i].id !== selected.id) dispatch({ type: 'select', crewId: crew[i].id });
   };
 
@@ -51,11 +57,16 @@ function CrewTabs() {
     else if (e.key === 'End') to = count - 1;
     if (to === null) return;
     e.preventDefault();
-    choose(to);
+    setFocused(to);
+    tabs.current[to]?.focus();
+  };
+
+  const onBlur = (e: FocusEvent<HTMLDivElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setFocused(null);
   };
 
   return (
-    <div role="tablist" aria-label="Crew member" className="crew-tabs">
+    <div role="radiogroup" aria-label="Crew member" className="crew-tabs" onBlur={onBlur}>
       {crew.map((c, i) => {
         const level = levels[c.id];
         const on = i === current;
@@ -66,12 +77,10 @@ function CrewTabs() {
               tabs.current[i] = node;
             }}
             type="button"
-            role="tab"
-            id={`crew-tab-${c.id}`}
-            aria-selected={on}
-            aria-controls="main"
+            role="radio"
+            aria-checked={on}
             aria-label={`${c.callsign}, ${LEVEL_LABEL[level]}`}
-            tabIndex={on ? 0 : -1}
+            tabIndex={i === rove ? 0 : -1}
             title={`${c.callsign} · ${c.role}`}
             className="crew-tab"
             onClick={() => choose(i)}

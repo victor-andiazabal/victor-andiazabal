@@ -22,6 +22,11 @@ export interface NextAction {
   indicator?: IndicatorId;
 }
 
+/** True for a saved daily check-in; simulated records and reaction-test-only records are not. */
+export function isCheckin(record: DayRecord | null | undefined): boolean {
+  return record?.source === 'manual';
+}
+
 export interface NextActionInput {
   crewId: string;
   day: number;
@@ -32,10 +37,11 @@ export interface NextActionInput {
 
 /**
  * The single next step on Today, checked in this order: no check-in today, then no reaction test today,
- * then any Act now finding today, otherwise send the report. A "check-in today" is a manual record for the day.
+ * then any Act now finding today, otherwise send the report. A "check-in today" is a manual record for the day; a
+ * reaction-test result saved on its own ('pvt') is not one.
  */
 export function nextAction({ crewId, day, manual, routineDone, findings }: NextActionInput): NextAction {
-  if (!manual[`${crewId}:${day}`]) return { kind: 'checkin', label: 'Start check-in', view: 'checkin' };
+  if (!isCheckin(manual[`${crewId}:${day}`])) return { kind: 'checkin', label: 'Start check-in', view: 'checkin' };
   if (!routineDone[`${crewId}:${day}:${PVT_TASK_ID}`]) return { kind: 'pvt', label: 'Run reaction test', view: 'pvt' };
   const red = findings.find((f) => f.day === day && f.level === 'red');
   if (red) {

@@ -26,7 +26,10 @@ export function csvCell(v: string | number | undefined): string {
   return /[",]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 }
 
-/** Parse the CSV this app exports: crew, day, source, one column per indicator, symptoms (| separated), notes. */
+/**
+ * Parse the CSV this app exports: crew, day, source, one column per indicator, symptoms (| separated), notes.
+ * Every row imports as a manual record, except 'pvt' rows, which keep that source.
+ */
 export function parseCsv(text: string, knownCrew: string[]): { records: { crewId: string; record: DayRecord }[]; skipped: number } {
   const lines = text.split(/\r?\n/).filter((l) => l.trim());
   if (lines.length < 2) return { records: [], skipped: 0 };
@@ -48,7 +51,9 @@ export function parseCsv(text: string, knownCrew: string[]): { records: { crewId
       if (Number.isFinite(n)) values[h as IndicatorId] = n;
     }
     const notes = row.notes ?? '';
-    out.push({ crewId, record: { day, values, symptoms: row.symptoms ? row.symptoms.split('|').filter(Boolean) : [], notes: notes || undefined, source: 'manual' } });
+    // A reaction-test-only row stays one, so the import does not mark that day's check-in as done.
+    const source = row.source === 'pvt' ? 'pvt' : 'manual';
+    out.push({ crewId, record: { day, values, symptoms: row.symptoms ? row.symptoms.split('|').filter(Boolean) : [], notes: notes || undefined, source } });
   }
   return { records: out, skipped };
 }

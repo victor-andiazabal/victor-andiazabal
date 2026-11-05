@@ -18,12 +18,14 @@ const PATCH_ICON: Record<BadgeIcon, typeof IconFlame> = {
 function Patch({ p, next }: { p: BadgeProgress; next: boolean }) {
   const { badge, earned, current, target } = p;
   const PatchIcon = PATCH_ICON[badge.icon];
-  const status = earned ? 'earned' : `next, ${current} of ${target}`;
+  const status = earned ? 'Earned' : `${current} of ${target}`;
+  // Not a control, so no tab stop: the how-to and the reason are read with the row (the visible how-to only on the next patch).
   return (
-    <li className={`patch ${earned ? 'earned' : 'next'}`} tabIndex={0} aria-label={`${badge.label}, ${status}`} title={`${badge.how} ${badge.why}`}>
+    <li className={`patch ${earned ? 'earned' : 'next'}`} title={`${badge.how} ${badge.why}`}>
       <span className="patch-icon" aria-hidden="true"><PatchIcon size={20} /></span>
       <strong className="patch-name">{badge.label}</strong>
-      <span className="patch-state mono">{earned ? 'Earned' : `${current}/${target}`}</span>
+      <span className="patch-state mono" aria-hidden="true">{earned ? 'Earned' : `${current}/${target}`}</span>
+      <span className="sr-only">, {status}{next ? ', next patch' : ''}. {next ? '' : `${badge.how} `}{badge.why}</span>
       {next && (
         <>
           <div className="patch-bar" aria-hidden="true">

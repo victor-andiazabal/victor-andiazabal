@@ -27,11 +27,11 @@ interface CheckInProps {
 }
 
 export function CheckIn({ go, focus }: CheckInProps) {
-  const draft = useCheckinDraft();
-  const [index, setIndex] = useState(() => stepOf(focus));
-  const [furthest, setFurthest] = useState(index);
+  // The step lives in the draft, so leaving and coming back (or switching crew member and back) resumes it.
+  const draft = useCheckinDraft(focus ? stepOf(focus) : undefined);
+  const { step: index, furthest } = draft;
   const [dir, setDir] = useState<'fwd' | 'back'>('fwd');
-  const [active, setActive] = useState<IndicatorId | undefined>(() => focus ?? STEPS[stepOf(focus)].fields[0]);
+  const [active, setActive] = useState<IndicatorId | undefined>(() => focus ?? STEPS[index].fields[0]);
   const rootRef = useRef<HTMLDivElement>(null);
   const headRef = useRef<HTMLHeadingElement>(null);
   const moved = useRef(false);
@@ -60,8 +60,7 @@ export function CheckIn({ go, focus }: CheckInProps) {
     if (target === index) return;
     moved.current = true;
     setDir(target > index ? 'fwd' : 'back');
-    setIndex(target);
-    setFurthest((f) => Math.max(f, target));
+    draft.goStep(target);
     setActive(STEPS[target].fields[0]);
   };
   const next = () => goTo(index + 1);
@@ -80,7 +79,10 @@ export function CheckIn({ go, focus }: CheckInProps) {
       back();
       return;
     }
-    if (t.tagName === 'BUTTON' && t.getAttribute('role') !== 'radio') return;
+    // Buttons keep their own Enter, and a scale option selects on Enter instead of moving on.
+    if (t.tagName === 'BUTTON') return;
+    // An entry that is not a number or out of range stays on screen to be corrected.
+    if (t.getAttribute('aria-invalid') === 'true') return;
     if (index >= REVIEW_STEP) return;
     e.preventDefault();
     next();
@@ -119,6 +121,8 @@ export function CheckIn({ go, focus }: CheckInProps) {
 
       <StepRail steps={STEPS} index={index} furthest={furthest} onGo={goTo} />
 
+      {/* Enter / Shift+Enter is delegated from the fields inside; each control stays a native, focusable element. */}
+      {/* oxlint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <section className="panel ci-panel" aria-labelledby="ci-step-title" onKeyDown={onKeyDown}>
         <div key={index} className={`ci-step ci-step-${dir}`}>
           <div className="ci-step-head">

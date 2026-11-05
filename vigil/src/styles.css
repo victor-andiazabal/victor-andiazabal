@@ -106,6 +106,8 @@ small, .muted { color: var(--text-muted); }
   overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
 }
 :focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+/* Headings and main take focus only to announce a new screen or tutorial step; they are not controls, so no ring. */
+:where(#main, #main h1[tabindex='-1'], .tour-title):focus { outline: none; }
 ::selection { background: var(--surface-3); }
 
 @media (max-width: 1023px) {

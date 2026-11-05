@@ -1,4 +1,4 @@
-import type { CSSProperties } from 'react';
+import { useId, type CSSProperties } from 'react';
 import type { IndicatorDef } from '../data/indicators';
 import { fmt, LEVEL_LABEL } from '../lib/format';
 import type { Evaluation } from '../lib/rules';
@@ -38,6 +38,7 @@ interface IndicatorTileProps {
 export function IndicatorTile({ def, status, days, trend, order, refresh, tourAnchor, attention, spans, onOpen }: IndicatorTileProps) {
   const scale = bandScale(status.value, status.baseline, def);
   const TrendIcon = trend ? TREND_ICON[trend] : null;
+  const stripId = useId();
   const style = { '--i': order, '--span-sm': spans.sm, '--span-lg': spans.lg, '--span-xl': spans.xl } as CSSProperties;
   return (
     <article className={`ind-tile ${attention ? 'attention' : 'range'}${refresh ? ' refresh' : ''}`} style={style}>
@@ -45,6 +46,7 @@ export function IndicatorTile({ def, status, days, trend, order, refresh, tourAn
         type="button"
         className="ind-open"
         onClick={onOpen}
+        aria-describedby={days.length ? stripId : undefined}
         aria-label={`${def.label}: ${fmt(def.id, status.value)} ${def.unit}, ${LEVEL_LABEL[status.level]}${trend ? `, ${TREND_WORD[trend]}` : ''}. Open trend`}
       />
       <div className="ind-head">
@@ -64,7 +66,7 @@ export function IndicatorTile({ def, status, days, trend, order, refresh, tourAn
         <BaselineBand value={status.value} baseline={status.baseline} min={scale.min} max={scale.max} />
       </div>
       <div className="ind-strip">
-        <StatusStrip days={days} />
+        <StatusStrip days={days} summaryId={stripId} />
       </div>
     </article>
   );

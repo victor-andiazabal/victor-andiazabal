@@ -6,6 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProp
 import { createPortal } from 'react-dom';
 import { TOUR_STEPS } from '../lib/tour';
 import type { View } from '../lib/views';
+import { focusPage } from './pageFocus';
 import { BtnTrail } from './ui';
 import './tour.css';
 
@@ -58,6 +59,7 @@ export function Tour({ onClose, go }: TourProps) {
   const [vp, setVp] = useState({ w: window.innerWidth, h: window.innerHeight });
   const [gliding, setGliding] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const goRef = useRef(go);
   const step = TOUR_STEPS[index];
   const last = index === TOUR_STEPS.length - 1;
@@ -89,7 +91,9 @@ export function Tour({ onClose, go }: TourProps) {
     if (root) root.inert = true;
     return () => {
       if (root) root.inert = false;
-      before?.focus?.();
+      // The tour may have changed screens and removed that element; then the page heading takes focus.
+      if (before?.isConnected && before !== document.body) before.focus();
+      else focusPage();
     };
   }, []);
 
@@ -111,7 +115,10 @@ export function Tour({ onClose, go }: TourProps) {
     let scrolled = false;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const measure = () => {
-      setVp({ w: window.innerWidth, h: window.innerHeight });
+      // Scrolling calls this every frame; unchanged values keep the previous state so nothing re-renders.
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      setVp((v) => (v.w === w && v.h === h ? v : { w, h }));
       const el = findTarget(step.target);
       if (!el) {
         setSpot(null);
@@ -123,7 +130,8 @@ export function Tour({ onClose, go }: TourProps) {
         el.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
       }
       const r = el.getBoundingClientRect();
-      setSpot({ top: r.top - PAD, left: r.left - PAD, width: r.width + PAD * 2, height: r.height + PAD * 2 });
+      const next = { top: r.top - PAD, left: r.left - PAD, width: r.width + PAD * 2, height: r.height + PAD * 2 };
+      setSpot((s) => (s && s.top === next.top && s.left === next.left && s.width === next.width && s.height === next.height ? s : next));
     };
     const onMove = () => {
       cancelAnimationFrame(frame);
@@ -147,9 +155,12 @@ export function Tour({ onClose, go }: TourProps) {
     if (r) setCard({ w: r.width, h: r.height });
   }, [index, vp.w]);
 
+  // Each step puts focus on its heading, so a screen reader reads the step number, title and body before the buttons.
+  // The card stays hidden until it has been measured, and a hidden element cannot take focus, so wait for that.
+  const measured = card !== null;
   useEffect(() => {
-    cardRef.current?.querySelector<HTMLElement>('[data-primary]')?.focus();
-  }, [index]);
+    if (measured) titleRef.current?.focus();
+  }, [index, measured]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -167,8 +178,9 @@ export function Tour({ onClose, go }: TourProps) {
         if (!items?.length) return;
         const first = items[0];
         const end = items[items.length - 1];
-        const inside = cardRef.current?.contains(document.activeElement);
-        if (!inside || (e.shiftKey && document.activeElement === first)) {
+        const active = document.activeElement;
+        const inside = cardRef.current?.contains(active);
+        if (!inside || (e.shiftKey && (active === first || active === titleRef.current))) {
           e.preventDefault();
           (e.shiftKey ? end : first).focus();
         } else if (!e.shiftKey && document.activeElement === end) {
@@ -190,8 +202,10 @@ export function Tour({ onClose, go }: TourProps) {
     <div className="tour-layer" role="dialog" aria-modal="true" aria-labelledby="tour-title" aria-describedby="tour-body">
       {spot ? <div className={`tour-spot${gliding ? ' is-gliding' : ''}`} style={spotStyle} /> : <div className="tour-dim" />}
       <div ref={cardRef} className="tour-card" style={cardStyle} key={index}>
-        <p className="sr-only">Step {index + 1} of {TOUR_STEPS.length}</p>
-        <h2 id="tour-title" className="tour-title">{step.title}</h2>
+        <h2 id="tour-title" className="tour-title" ref={titleRef} tabIndex={-1} aria-describedby="tour-body">
+          <span className="sr-only">Step {index + 1} of {TOUR_STEPS.length}: </span>
+          {step.title}
+        </h2>
         <p id="tour-body" className="tour-body">{step.body}</p>
         <div className="tour-foot">
           <div className="tour-dots" aria-hidden="true">

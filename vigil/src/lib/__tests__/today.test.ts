@@ -3,7 +3,7 @@ import { CREW } from '../../data/crew';
 import { PVT_TASK_ID } from '../../data/routine';
 import { baselineOf } from '../analytics';
 import { simulateMember } from '../simulate';
-import { bandScale, buildStatusHistory, GRID_TRACKS, groupTiles, nextAction, reasonLine, STRIP_DAYS, tileSpans } from '../today';
+import { bandScale, buildStatusHistory, GRID_TRACKS, groupTiles, isCheckin, nextAction, reasonLine, STRIP_DAYS, tileSpans } from '../today';
 import type { DayRecord, Finding, IndicatorId, Level, MissionSettings } from '../types';
 import { INDICATORS } from '../../data/indicators';
 
@@ -21,6 +21,12 @@ describe('nextAction', () => {
     // A red finding from simulated data does not skip the check-in.
     const a = nextAction({ ...input, findings: [finding({ level: 'red' })], manual: { 'cdr:29': rec(29) } });
     expect(a).toMatchObject({ kind: 'checkin', label: 'Start check-in', view: 'checkin' });
+  });
+
+  it('still asks for the check-in when only a reaction test was saved today', () => {
+    const pvtOnly: DayRecord = { ...rec(30), values: { pvtRt: 260, pvtLapses: 1 }, source: 'pvt' };
+    const a = nextAction({ ...input, manual: { 'cdr:30': pvtOnly }, routineDone: { [`cdr:30:${PVT_TASK_ID}`]: true } });
+    expect(a.kind).toBe('checkin');
   });
 
   it('asks for the reaction test once the check-in is saved', () => {
@@ -153,5 +159,14 @@ describe('tileSpans', () => {
     expect(tileSpans(2, 4)).toEqual([3, 3]);
     expect(tileSpans(3, 4)).toEqual([4, 4, 4]);
     expect(tileSpans(1, 2)).toEqual([6]);
+  });
+});
+
+describe('isCheckin', () => {
+  it('is true only for a saved check-in', () => {
+    expect(isCheckin(rec(30))).toBe(true);
+    expect(isCheckin({ ...rec(30), source: 'pvt' })).toBe(false);
+    expect(isCheckin({ ...rec(30), source: 'simulated' })).toBe(false);
+    expect(isCheckin(undefined)).toBe(false);
   });
 });

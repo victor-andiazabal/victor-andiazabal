@@ -75,9 +75,15 @@ export function Segmented({ label, options, value, onChange, size = 'md' }: Segm
         ))}
       </div>
       {hasHints && (
-        <p className="seg-hint" aria-live="polite">
-          {hint}
-        </p>
+        <>
+          {/* The visible line follows hover and focus; only a change of the selected option is announced. */}
+          <p className="seg-hint" aria-hidden="true">
+            {hint}
+          </p>
+          <span className="sr-only" aria-live="polite">
+            {options[index]?.hint ?? ''}
+          </span>
+        </>
       )}
     </div>
   );

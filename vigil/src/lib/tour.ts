@@ -20,7 +20,7 @@ export interface TourStep {
 export const TOUR_STEPS: TourStep[] = [
   { target: 'status', view: 'today', title: 'Status readout', body: "This is today's answer: Nominal, Watch or Act now, and the reason." },
   { target: 'next-action', view: 'today', title: 'Next action', body: 'One button always tells you what to do next.' },
-  { target: 'bodymap', view: 'today', title: 'Body map', body: 'Tap a body system to see what space does to it and what to do.' },
+  { target: 'bodymap', view: 'today', title: 'Body map', body: 'Open the body map to see each body system, what space does to it and what to do.' },
   {
     target: 'nav-checkin',
     view: 'today',

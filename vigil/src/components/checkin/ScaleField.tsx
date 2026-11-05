@@ -31,8 +31,10 @@ export function ScaleField({ def, value, onChange, prefill, children }: ScaleFie
   const selectedIndex = value === null ? -1 : options.indexOf(value);
   const focusIndex = selectedIndex < 0 ? 0 : selectedIndex;
 
-  const shown = peek ?? value;
-  const hint = shown === null ? `Choose ${def.min} to ${def.max}` : `${shown}${hints[shown] ? `, ${hints[shown]}` : ` of ${def.max}`}`;
+  const hintFor = (v: number | null) => (v === null ? `Choose ${def.min} to ${def.max}` : `${v}${hints[v] ? `, ${hints[v]}` : ` of ${def.max}`}`);
+  // The visible line follows hover and focus; only a change of the selected value is announced.
+  const hint = hintFor(peek ?? value);
+  const selectedHint = value === null ? '' : hintFor(value);
 
   const choose = (i: number) => {
     buttons.current[i]?.focus();
@@ -81,9 +83,12 @@ export function ScaleField({ def, value, onChange, prefill, children }: ScaleFie
           </button>
         ))}
       </div>
-      <p className="ci-scale-hint" aria-live="polite">
+      <p className="ci-scale-hint" aria-hidden="true">
         {hint}
       </p>
+      <span className="sr-only" aria-live="polite">
+        {selectedHint}
+      </span>
       {children}
     </div>
   );

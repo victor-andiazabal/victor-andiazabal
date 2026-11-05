@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ComponentType, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import type { Level } from '../lib/types';
 import type { View } from '../lib/views';
 import {
@@ -42,8 +43,9 @@ interface NavProps {
 function Badge({ count, level }: { count: number; level: Level }) {
   if (count <= 0) return null;
   return (
-    <span className={`nav-badge ${level} mono`} aria-label={`${count} open`}>
+    <span className={`nav-badge ${level} mono`}>
       {count}
+      <span className="sr-only"> open alerts</span>
     </span>
   );
 }
@@ -77,34 +79,73 @@ export function BottomBar({ view, go, openAlerts, alertLevel }: NavProps) {
   const [sheet, setSheet] = useState(false);
   const moreRef = useRef<HTMLButtonElement>(null);
   const sheetRef = useRef<HTMLDivElement>(null);
+  const barRef = useRef<HTMLElement>(null);
   const inSheet = IN_SHEET.some((n) => n.id === view);
 
+  const returnFocus = useRef(false);
   const close = () => {
+    returnFocus.current = true;
     setSheet(false);
-    moreRef.current?.focus();
   };
 
+  // A modal sheet: the page behind it is inert, Tab cycles inside it, and Escape closes it and gives focus back to
+  // More. The bottom bar stays live because it sits above the scrim and More (or any destination) closes the sheet.
   useEffect(() => {
     if (!sheet) return;
+    const bar = barRef.current;
+    const more = moreRef.current;
+    const behind = bar?.parentElement ? Array.from(bar.parentElement.children).filter((el): el is HTMLElement => el !== bar && el instanceof HTMLElement) : [];
+    for (const el of behind) el.inert = true;
     sheetRef.current?.querySelector<HTMLElement>('button')?.focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
+        e.preventDefault();
+        returnFocus.current = true;
         setSheet(false);
-        moreRef.current?.focus();
+        return;
+      }
+      if (e.key !== 'Tab') return;
+      const items = sheetRef.current?.querySelectorAll<HTMLElement>('button');
+      if (!items?.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+      if (!sheetRef.current?.contains(active) || (e.shiftKey && active === first)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
       }
     };
     window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
+    return () => {
+      window.removeEventListener('keydown', onKey);
+      for (const el of behind) el.inert = false;
+      if (returnFocus.current) {
+        returnFocus.current = false;
+        more?.focus();
+      }
+    };
   }, [sheet]);
+
+  const pick = (id: View) => {
+    if (id === view) {
+      close(); // same screen: nothing re-renders the page, so focus goes back to More
+      return;
+    }
+    setSheet(false);
+    go(id); // a new screen moves focus to its heading
+  };
 
   return (
     <>
-      <nav className="bottombar" aria-label="Main">
+      <nav ref={barRef} className="bottombar" aria-label="Main">
         {BOTTOM.map((id) => {
           const n = PRIMARY.find((p) => p.id === id)!;
           const { Icon } = n;
           return (
-            <button key={id} type="button" className="bb-item" aria-current={view === id ? 'page' : undefined} data-tour={n.tour} onClick={() => go(id)}>
+            <button key={id} type="button" className="bb-item" aria-current={view === id ? 'page' : undefined} data-tour={n.tour} onClick={() => { setSheet(false); go(id); }}>
               <span className="bb-icon"><Icon />{id === 'alerts' && <Badge count={openAlerts} level={alertLevel} />}</span>
               <span>{n.short ?? n.label}</span>
             </button>
@@ -124,21 +165,23 @@ export function BottomBar({ view, go, openAlerts, alertLevel }: NavProps) {
           <span>More</span>
         </button>
       </nav>
-      {sheet && (
+      {sheet && createPortal(
         <div className="sheet-layer">
-          <div className="sheet-scrim" onClick={close} />
+          {/* Pointer shortcut only; keyboard users close with Escape. */}
+          <div className="sheet-scrim" aria-hidden="true" role="presentation" onClick={close} />
           <div id="more-sheet" ref={sheetRef} className="sheet" role="dialog" aria-modal="true" aria-label="More">
             {IN_SHEET.map((n) => {
               const { Icon } = n;
               return (
-                <button key={n.id} type="button" className="rail-row" aria-current={view === n.id ? 'page' : undefined} onClick={() => { setSheet(false); go(n.id); }}>
+                <button key={n.id} type="button" className="rail-row" aria-current={view === n.id ? 'page' : undefined} onClick={() => pick(n.id)}>
                   <Icon />
                   <span>{n.label}</span>
                 </button>
               );
             })}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </>
   );

@@ -115,6 +115,8 @@
 .nf-input::placeholder { color: var(--text-muted); }
 .nf-unit { flex: 0 0 auto; font-size: 13px; color: var(--text-muted); }
 .nf-msg { margin: 0; font-size: 13px; color: var(--red); }
+/* Level preview live region: kept in the tree so changes are announced, with no gap while it is empty. */
+.nf-live:empty { margin-top: calc(-1 * var(--s-2)); }
 .nf-hint { margin: 0; font-size: 14px; line-height: 1.45; color: var(--text-2); }
 @media (max-width: 1023px) {
   .nf-input { font-size: 36px; }

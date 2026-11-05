@@ -19,6 +19,8 @@ const BASIS_LABEL: Record<string, string> = { baseline: 'vs your baseline', refe
 export function Alerts() {
   const { selected, settings, crew, dispatch, acknowledged } = useStore();
   const ev = useMemo(() => evaluate(selected, settings), [selected, settings]);
+  // The comm clock re-renders this screen every second; the crew table must not re-run the rules each time.
+  const crewEvals = useMemo(() => crew.map((c) => ({ crew: c, ev: evaluate(c, settings) })), [crew, settings]);
   const env = ENVIRONMENTS[settings.environment];
   const [open, setOpen] = useState<string | null>(null);
   const [watchOpen, setWatchOpen] = useState<Record<string, boolean>>({});
@@ -70,12 +72,15 @@ export function Alerts() {
         </div>
       </div>
       {sentAt !== null && (
-        <p className="alerts-sent" role="status">
-          Report sent to the flight surgeon. It arrives {comm.now >= sentAt ? 'now' : `in ${Math.max(0, Math.ceil((sentAt - comm.now) / 1000))} s`}; follow it under In transit below.
+        <p className="alerts-sent">
+          {/* Only the fixed sentence is announced; the countdown ticks every second and would be read out each time. */}
+          <span role="status">Report sent to the flight surgeon.</span>{' '}
+          <span role="timer">It arrives {comm.now >= sentAt ? 'now' : `in ${Math.max(0, Math.ceil((sentAt - comm.now) / 1000))} s`}</span>; follow it under In transit below.
         </p>
       )}
       <div className="split alerts-split">
         <div className="stack-sm">
+          <h2 className="sr-only">Today's alerts</h2>
           {ev.findings.length === 0 && (
             <article className="alert green finding">
               <header className="finding-head"><Pill level="green" /><h3>Nothing to flag today</h3></header>
@@ -156,8 +161,7 @@ export function Alerts() {
               <table className="table alerts-crew">
                 <thead><tr><th>Crew</th><th>Status</th><th className="num">Flags</th></tr></thead>
                 <tbody>
-                  {crew.map((c) => {
-                    const e = evaluate(c, settings);
+                  {crewEvals.map(({ crew: c, ev: e }) => {
                     return (
                       <tr key={c.id}>
                         <td>

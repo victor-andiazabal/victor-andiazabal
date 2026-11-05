@@ -48,6 +48,17 @@ interface TileGroup {
   spans: { sm: number[]; lg: number[]; xl: number[] };
 }
 
+/**
+ * Where each tile sat when the latest save sweep started. A tile that later moves group remounts under its new
+ * heading; it refreshes only in the place it held at save time, so a move never replays the animation.
+ */
+function useRefreshPlacement(sweep: number, groups: TileGroup[]): Record<string, TileGroup['id']> {
+  const placementOf = () => Object.fromEntries(groups.flatMap((g) => g.defs.map((d) => [d.id, g.id])));
+  const [placed, setPlaced] = useState(() => ({ sweep, at: placementOf() }));
+  if (placed.sweep !== sweep) setPlaced({ sweep, at: placementOf() });
+  return placed.sweep === sweep ? placed.at : placementOf();
+}
+
 /** Needs attention first, then In range, then anything without a reading; empty groups are left out. */
 function tileGroups(byIndicator: Parameters<typeof groupTiles>[1]): TileGroup[] {
   const g = groupTiles(INDICATORS, byIndicator);
@@ -74,7 +85,8 @@ export function Today({ go }: { go: Go }) {
     () => Object.fromEntries(INDICATORS.map((d) => [d.id, trendOf(selected, d.id, settings.currentDay)])) as Record<IndicatorId, ReturnType<typeof trendOf>>,
     [selected, settings.currentDay],
   );
-  const sweep = useSaveSweep(selected.id, settings.currentDay, ev.record);
+  // The saved entry, not the evaluated record: only a save changes it, while the evaluation can differ between renders.
+  const sweep = useSaveSweep(selected.id, settings.currentDay, manual[`${selected.id}:${settings.currentDay}`] ?? null);
   const env = ENVIRONMENTS[settings.environment];
   const action = nextAction({ crewId: selected.id, day: settings.currentDay, manual, routineDone, findings: ev.findings });
 
@@ -84,6 +96,7 @@ export function Today({ go }: { go: Go }) {
   const surgeonNote = ev.notifySurgeon ? `The flight surgeon should hear about this. One-way delay to the ground: ${env.commDelay}.` : null;
   const others = evals.filter((e) => e.crew.id !== selected.id);
   const groups = useMemo(() => tileGroups(ev.byIndicator), [ev.byIndicator]);
+  const refreshed = useRefreshPlacement(sweep, groups);
 
   return (
     <>
@@ -117,7 +130,7 @@ export function Today({ go }: { go: Go }) {
                     days={history[def.id]}
                     trend={trends[def.id]}
                     order={order}
-                    refresh={sweep > 0}
+                    refresh={sweep > 0 && refreshed[def.id] === g.id}
                     tourAnchor={order === 0}
                     attention={g.id === 'attention'}
                     spans={{ sm: g.spans.sm[i], lg: g.spans.lg[i], xl: g.spans.xl[i] }}

@@ -7,6 +7,7 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type PointerEvent, type ReactNode } from 'react';
 import type { IndicatorDef } from '../../data/indicators';
 import type { Baseline } from '../../lib/analytics';
+import { parseNumberText } from '../../lib/parseNumber';
 import { bandScale } from '../../lib/today';
 import { BaselineBand } from './BaselineBand';
 import { PREFILL_LABEL, type Prefill } from './prefill';
@@ -38,14 +39,6 @@ const HOLD_REPEAT_MS = 80;
 
 const format = (v: number | null, decimals: number) => (v === null ? '' : v.toFixed(decimals));
 
-/** null for an empty box, 'invalid' for text that is not a number. Accepts a decimal comma. */
-function parseText(t: string): number | null | 'invalid' {
-  const s = t.trim().replace(',', '.');
-  if (s === '') return null;
-  const n = Number(s);
-  return Number.isFinite(n) ? n : 'invalid';
-}
-
 function MinusGlyph() {
   return (
     <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
@@ -67,7 +60,7 @@ export function NumberField({ id, label, value, onChange, min, max, step, decima
   // Follow outside changes (stepper, camera pulse, confirm) without clobbering what the person is typing.
   if (seen !== value) {
     setSeen(value);
-    const typed = parseText(text);
+    const typed = parseNumberText(text);
     const keep = typed === value || (typed === 'invalid' && value === null);
     if (!keep) setText(format(value, decimals));
   }
@@ -110,7 +103,7 @@ export function NumberField({ id, label, value, onChange, min, max, step, decima
 
   const onType = (t: string) => {
     setText(t);
-    const parsed = parseText(t);
+    const parsed = parseNumberText(t);
     onChange(parsed === 'invalid' ? null : parsed);
   };
 
@@ -121,7 +114,7 @@ export function NumberField({ id, label, value, onChange, min, max, step, decima
     bump(dir);
   };
 
-  const typed = parseText(text);
+  const typed = parseNumberText(text);
   const invalid = typed === 'invalid';
   const outOfRange = typeof typed === 'number' && (typed < min || typed > max);
   const scale = bandScale(value, baseline, { min, max });
@@ -157,6 +150,11 @@ export function NumberField({ id, label, value, onChange, min, max, step, decima
             id={id}
             className="nf-input"
             type="text"
+            role="spinbutton"
+            aria-valuemin={min}
+            aria-valuemax={max}
+            aria-valuenow={typeof typed === 'number' ? typed : undefined}
+            aria-valuetext={typeof typed === 'number' && unit ? `${text} ${unit}` : undefined}
             inputMode="decimal"
             autoComplete="off"
             spellCheck={false}
@@ -193,7 +191,10 @@ export function NumberField({ id, label, value, onChange, min, max, step, decima
           {invalid ? 'Not a number: check the entry. It will not be saved.' : `Outside ${min}-${max} ${unit}: check the entry. It will not be saved.`}
         </p>
       )}
-      {!invalid && !outOfRange && children}
+      {/* The level preview is announced as it changes; collapsed by CSS while empty. */}
+      <div className="nf-live" aria-live="polite">
+        {!invalid && !outOfRange && children}
+      </div>
       <p id={hintId} className="nf-hint">
         {def.reference}
       </p>
