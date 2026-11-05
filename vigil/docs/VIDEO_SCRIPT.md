@@ -1,6 +1,10 @@
-# 30-second video script
+# 30-second video
 
-Screen recording of the live app, voice-over, no music needed. Timings in seconds.
+The finished video is `VIGIL-30s.mp4` in this folder: 1280 by 720, 29 seconds, on-screen captions, no audio.
+It can be submitted as is. To add a voice-over, read the lines below over it in any video editor; the captions
+already match them.
+
+Shot list and voice-over lines. Timings in seconds.
 
 | Time | On screen | Voice-over |
 | --- | --- | --- |
