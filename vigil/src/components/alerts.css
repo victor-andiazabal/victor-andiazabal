@@ -2,15 +2,23 @@
 
 .finding { margin: 0; padding: var(--s-4) var(--s-6); display: grid; gap: var(--s-3); }
 .finding.acked { opacity: 1; }
-.finding.acked .finding-head h3 { color: var(--text-2); }
-.finding-head { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
-.finding-head h3 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+.finding.acked .finding-head h3, .finding.acked .finding-title { color: var(--text-2); }
+/* Pill in its own column, title in the other: a long title wraps inside its column, so every card head lines up. */
+.finding-head { display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: start; gap: var(--s-3); }
+.finding-head h3 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; line-height: 24px; overflow-wrap: anywhere; }
+.finding-head .pill, .fold .pill { min-width: 92px; justify-content: center; }
+.finding-title { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; line-height: 22px; }
+/* Watch findings: a collapsed 48px row in a tray; Act now findings stay open. */
+.finding.is-watch { padding: var(--s-2); gap: 0; }
+.finding.is-watch .finding-body { padding: var(--s-4) var(--s-4) var(--s-2); }
+.finding-body { display: grid; gap: var(--s-3); }
 .finding-tags { display: flex; flex-wrap: wrap; gap: var(--s-2); }
 .finding-block { display: grid; gap: var(--s-1); }
-.finding-label { margin: 0; font-size: 13px; font-weight: 500; color: var(--text-muted); letter-spacing: 0; }
+.finding-label { margin: 0; font-size: 14px; font-weight: 500; color: var(--text-2); letter-spacing: 0; }
 .finding-text { margin: 0; color: var(--text); max-width: 72ch; }
-.finding-foot { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-2) var(--s-3); padding-top: var(--s-2); border-top: 1px solid var(--line); }
-.finding-foot .muted { margin-left: auto; }
+.finding-foot { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-2) var(--s-3); padding-top: var(--s-3); border-top: 1px solid var(--line); }
+/* Sources always sit on their own line under the actions. */
+.finding-src { flex: 1 0 100%; }
 
 .finding-checklist { display: grid; gap: var(--s-2); padding: var(--s-4); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-card); }
 .checklist { list-style: none; margin: 0; padding: 0; }
@@ -18,7 +26,7 @@
 .checklist li:first-child { border-top: 0; }
 .checklist .check-row { padding: 6px 0; min-height: var(--hit); align-items: center; }
 .checklist .check-row.done > span { color: var(--text-muted); text-decoration: line-through; }
-.step-no { display: inline-block; min-width: 24px; color: var(--text-muted); font-size: 13px; }
+.step-no { display: inline-block; min-width: 24px; color: var(--text-2); font-size: 14px; }
 
 .alert-copy { margin-top: var(--s-3); }
 .alerts-actions { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; }
@@ -27,7 +35,9 @@
 .alerts-link:focus { outline: none; }
 
 @media (max-width: 639px) {
-  .finding-foot .muted { margin-left: 0; flex-basis: 100%; }
+  .finding { padding: var(--s-4); }
+  .finding.is-watch { padding: var(--s-2); }
+  .finding-head .pill, .fold .pill { min-width: 0; }
 }
 
 .alerts-crew th, .alerts-crew td { padding: 0 8px; white-space: nowrap; }

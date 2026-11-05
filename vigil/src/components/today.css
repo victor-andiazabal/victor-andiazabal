@@ -62,13 +62,15 @@
   position: relative; display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; min-height: 162px;
   padding: var(--s-4); border-radius: var(--r-card);
   background: var(--surface-1); border: 1px solid var(--line); box-shadow: var(--shadow-panel);
-  transition: background-color var(--t-fast) var(--ease);
+  transition: background-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
 }
 .ind-tile:hover { background: var(--surface-2); }
 .ind-tile.range { min-height: 124px; }
 .ind-tile.attention { background: var(--surface-2); border-color: var(--line-strong); }
 .ind-tile.attention:hover { background: var(--surface-3); }
-.ind-tile:has(.ind-open:active) { transform: translateY(1px); }
+/* Pressed is one step past hover, like the keys: range tiles go to surface-3, flagged tiles (hover surface-3) settle back to surface-2 with the strong hairline; both drop 2px. */
+.ind-tile:has(.ind-open:active) { background: var(--surface-3); transform: translateY(2px); }
+.ind-tile.attention:has(.ind-open:active) { background: var(--surface-2); border-color: var(--line-strong); }
 .ind-tile.refresh { animation: tile-in var(--t-step) var(--ease) both; animation-delay: calc(var(--i) * 40ms); }
 @keyframes tile-in { from { opacity: 0; transform: translateY(4px); } }
 .ind-open {
@@ -95,11 +97,12 @@
 
 /* Crew and mission */
 .today-bottom { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--s-6); }
-.crew-strip { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+/* Crew: one horizontal scroller below 1024 (three chips of one width), a column of equal full-width rows from 1024 up. */
+.crew-strip { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(256px, 1fr); gap: var(--s-2); overflow-x: auto; padding: 4px; margin: -4px; }
 .crew-chip {
   --cf-fill: var(--surface-2); --cf-edge: var(--line-strong);
-  display: inline-flex; align-items: center; gap: var(--s-3); min-height: var(--hit); padding: 0 var(--s-3) 0 var(--s-4);
-  color: var(--text);
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); min-height: var(--hit); padding: 0 var(--s-3);
+  color: var(--text); text-align: left; white-space: nowrap;
 }
 .crew-chip:hover { --cf-fill: var(--surface-3); }
 .mission-env { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); min-height: var(--hit); margin: 0; color: var(--text-2); font-size: 14px; }
@@ -110,12 +113,16 @@
   border-top: 1px solid var(--line); color: var(--text); text-align: left;
 }
 .mission-env + .mission-row { border-top: 1px solid var(--line); }
+/* Mission rows share any extra height, so Crew and Mission end together. */
+.today-mission { display: flex; flex-direction: column; }
+.today-mission .mission-row { flex: 1 0 var(--hit); }
 .mission-row .mono { font-size: 13px; color: var(--text-2); }
 .mission-row svg { color: var(--text-muted); }
 .mission-row:hover svg { color: var(--text); }
 
 @media (min-width: 1024px) {
   .ind-tile { grid-column: span var(--span-lg, 4); }
+  .crew-strip { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: minmax(0, 1fr); overflow: visible; padding: 0; margin: 0; }
 }
 @media (min-width: 1280px) {
   .ind-tile { grid-column: span var(--span-xl, 3); }
@@ -132,8 +139,7 @@
   .ring { width: 112px; height: 112px; }
   .ring-count { font-size: 20px; }
   .status-actions { grid-column: 1 / -1; max-width: none; }
-  .crew-strip { flex-wrap: nowrap; overflow-x: auto; margin: 0 calc(var(--s-4) * -1); padding: 0 var(--s-4); }
-  .crew-chip { flex: 0 0 auto; }
+  .crew-strip { margin: -4px calc(var(--s-4) * -1); padding: 4px var(--s-4); }
 }
 
 /* Two narrow tiles per row on phones: same geometry as desktop, the label clamps to one line beside the pill. */

@@ -1,6 +1,7 @@
 /*
  * Day strip: one 4px bar per day coloured by that day's level; tap, hover or arrow keys show the day in a tooltip.
- * Nominal days are muted; Watch and Act now days are full colour, taller and carry a dot, so status is shape + colour.
+ * Nominal days are neutral; Watch and Act now days are colour at 70% and taller (Act now tallest), so status is shape + colour.
+ * Today's bar (the last) is full strength with a 2px underline.
  * Mechanism ported from "Uptime Card" by kokonutd (21st.dev id 39964), without the magnify swell.
  */
 import { useRef, useState, type KeyboardEvent, type PointerEvent } from 'react';
@@ -69,7 +70,7 @@ export function StatusStrip({ days }: StatusStripProps) {
             key={d.day}
             role="img"
             aria-label={`Day ${d.day}: ${d.level ? LEVEL_LABEL[d.level] : 'no reading'}`}
-            className={`strip-bar ${d.level ?? 'none'}${i === active ? ' is-active' : ''}`}
+            className={`strip-bar ${d.level ?? 'none'}${i === active ? ' is-active' : ''}${i === n - 1 ? ' is-today' : ''}`}
           />
         ))}
       </div>

@@ -32,6 +32,9 @@ function Svg({ size = 20, label, className, children }: IconProps & { children: 
 export const IconToday = (p: IconProps) => (
   <Svg {...p}><circle cx="10" cy="10" r="7.5" /><path d="M4.5 10.5h2.5l1.5-3 2.5 6 1.5-3h3" /></Svg>
 );
+export const IconCamera = (p: IconProps) => (
+  <Svg {...p}><path d="M3.5 7a1.5 1.5 0 0 1 1.5-1.5h1.5l1-2h5l1 2H15A1.5 1.5 0 0 1 16.5 7v7.5A1.5 1.5 0 0 1 15 16H5a1.5 1.5 0 0 1-1.5-1.5z" /><circle cx="10" cy="10.5" r="2.75" /></Svg>
+);
 export const IconCheckin = (p: IconProps) => (
   <Svg {...p}><rect x="4.5" y="3.5" width="11" height="14" rx="1.5" /><path d="M7.5 3.5v-1h5v1M7.5 9.5l1.75 1.75L12.75 8M7.5 14.5h5" /></Svg>
 );

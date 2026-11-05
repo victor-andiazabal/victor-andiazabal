@@ -27,6 +27,8 @@ interface NumberFieldProps {
   def: IndicatorDef;
   /** Marks this field as the one the first-run tutorial points at (the field and its baseline band). */
   tourAnchor?: boolean;
+  /** A small key set on the label row, at the right (the heart-rate field's camera pulse). */
+  headAction?: ReactNode;
   /** Status line under the band (level preview), supplied by the form. */
   children?: ReactNode;
 }
@@ -59,7 +61,7 @@ function PlusGlyph() {
   );
 }
 
-export function NumberField({ id, label, value, onChange, min, max, step, decimals, unit, prefill = null, baseline = null, def, tourAnchor = false, children }: NumberFieldProps) {
+export function NumberField({ id, label, value, onChange, min, max, step, decimals, unit, prefill = null, baseline = null, def, tourAnchor = false, headAction, children }: NumberFieldProps) {
   const [text, setText] = useState(() => format(value, decimals));
   const [seen, setSeen] = useState(value);
   // Follow outside changes (stepper, camera pulse, confirm) without clobbering what the person is typing.
@@ -133,6 +135,7 @@ export function NumberField({ id, label, value, onChange, min, max, step, decima
           {label}
         </label>
         {prefill && prefill !== 'simulated' && <span className="nf-chip">{PREFILL_LABEL[prefill]}</span>}
+        {headAction && <span className="nf-head-action">{headAction}</span>}
       </div>
       <div className={`nf-row${invalid || outOfRange ? ' is-invalid' : ''}`}>
         <button

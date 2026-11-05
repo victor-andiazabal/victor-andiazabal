@@ -91,7 +91,8 @@ export function CheckIn({ go, focus }: CheckInProps) {
   const activeDef = active ? indicatorById(active) : null;
   const cue: Cue | null = step.id === 'symptoms' ? SYMPTOM_CUE : activeDef ? { title: activeDef.label, what: activeDef.what, how: activeDef.how, whySpace: activeDef.whySpace, sources: activeDef.sources } : null;
   const flags = draft.preview.findings.length;
-  const hasSimulated = index !== REVIEW_STEP && fields.some((id) => draft.prefillOf(id) === 'simulated');
+  // Said once, in the header, not on every step.
+  const hasSimulated = STEPS.some((s) => s.fields.some((id) => draft.prefillOf(id) === 'simulated'));
 
   return (
     <div className="ci" ref={rootRef}>
@@ -102,6 +103,7 @@ export function CheckIn({ go, focus }: CheckInProps) {
             Day <span className="mono">{draft.day}</span> · {draft.selected.callsign}.{' '}
             {draft.isManual ? 'You already saved an entry today; editing it.' : 'Wearable values are prefilled; correct anything that looks wrong.'}
           </p>
+          {hasSimulated && <p className="ci-sim">Values are simulated in this prototype.</p>}
         </div>
         <Pill level={draft.preview.overall}>{flags ? `${flags} flag${flags > 1 ? 's' : ''}` : 'No flags'}</Pill>
       </div>
@@ -124,7 +126,6 @@ export function CheckIn({ go, focus }: CheckInProps) {
               {step.label}
             </h2>
             <p className="text-2">{step.blurb}</p>
-            {hasSimulated && <p className="ci-sim">Values are simulated in this prototype.</p>}
           </div>
 
           <div className={`ci-body${cue && index !== REVIEW_STEP ? '' : ' is-wide'}`}>

@@ -75,7 +75,9 @@
 /* Compact card on Today: figure 200px tall, worst system named under it; the whole card is one button. */
 .bm-compact {
   display: flex; flex-direction: column; align-items: center; gap: var(--s-4); width: 100%; flex: 1;
-  padding: var(--s-2) 0 0; border: 0; border-radius: var(--r-card); background: transparent; color: var(--text); text-align: center;
+  padding: var(--s-2) 0 0; color: var(--text); text-align: center;
+  --cf-fill: transparent; --cf-edge: transparent; --c: var(--chamfer);
+  transition: transform var(--t-fast) var(--ease);
 }
 .bm-compact .bm-svg { width: auto; height: 200px; max-width: none; margin: 0; }
 .bm-compact .bm-region { cursor: inherit; }
@@ -85,18 +87,25 @@
 .bm-compact:hover .bm-compact-cta { color: var(--text); }
 .bm-compact-prefix { display: none; }
 
-/* Phones: Today shows the body map as one 64px row (status in words); the full figure lives on the Body map screen. */
-@media (max-width: 639px) {
-  .today-body { padding: 0; }
+/*
+ * Up to 1023px (phones and tablets) Today shows the body map as one 62px row (status in words); the full figure lives on the
+ * Body map screen. The row is a tappable key, so it joins the chamfer family: surface fill, 1px hairline following the cut,
+ * the panel around it steps aside.
+ */
+@media (max-width: 1023px) {
+  .panel.today-body { padding: 0; background: none; border: 0; border-radius: 0; box-shadow: none; }
   .today-body h2 { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  .bm-compact { position: relative; flex-direction: row; justify-content: space-between; gap: var(--s-3); min-height: 62px; padding: 0 var(--s-4); text-align: left; }
+  .bm-compact {
+    --c: var(--chamfer-lg); --cf-fill: var(--surface-1); --cf-edge: var(--line-strong);
+    position: relative; flex-direction: row; justify-content: space-between; gap: var(--s-3); min-height: 62px; padding: 0 var(--s-4); text-align: left;
+  }
+  .bm-compact:hover { --cf-fill: var(--surface-2); }
+  .bm-compact:active { transform: translateY(2px); }
   .bm-compact .bm-svg { display: none; }
-  .bm-compact-text { flex: 1 1 auto; align-items: flex-start; gap: 0; }
+  .bm-compact-text { flex: 1 1 auto; flex-direction: column; align-items: flex-start; gap: 0; }
   .bm-compact-prefix { display: block; font-size: 13px; line-height: 1.3; color: var(--text-muted); }
   .bm-compact-text > .muted, .bm-compact-cta-label { display: none; }
-  .bm-compact-cta { flex: 0 0 auto; min-height: 0; text-decoration: none; }
-  .bm-compact-text { flex-direction: column; }
-  .bm-compact-cta { position: absolute; right: var(--s-4); top: 50%; transform: translateY(-50%); }
+  .bm-compact-cta { flex: 0 0 auto; min-height: 0; text-decoration: none; position: absolute; right: var(--s-4); top: 50%; transform: translateY(-50%); }
 }
 
 @media (max-width: 760px) {

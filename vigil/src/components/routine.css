@@ -8,26 +8,23 @@
 .tl { list-style: none; margin: 0; padding: 0; }
 .tl-item, .tl-now { position: relative; padding-left: 40px; }
 
-/* Rail segment: runs from this row's marker down into the next row, drawn once on entrance. */
+/*
+ * One marker per row: the 24px chamfered checkbox is the node on the 1px rail (centre x 16). The rail runs from the bottom of
+ * one box to the top of the next (box spans y 14 to 38 inside its row).
+ */
 .tl-item:not(:last-child)::after, .tl-now::after {
-  content: ''; position: absolute; left: 16px; top: 30px; bottom: -18px; width: 1px;
+  content: ''; position: absolute; left: 16px; top: 38px; bottom: -14px; width: 1px;
   background: var(--line-strong); transform-origin: top;
 }
 .tl-now:last-child::after { display: none; }
 .tl-item:first-child::before {
-  content: ''; position: absolute; left: 16px; top: 0; height: 18px; width: 1px; background: var(--line-strong);
+  content: ''; position: absolute; left: 16px; top: 0; height: 14px; width: 1px; background: var(--line-strong);
 }
-.tl-dot {
-  position: absolute; left: 10px; top: 18px; width: 13px; height: 13px; z-index: 1;
-  border-radius: 50%; background: var(--surface-1); border: 1px solid var(--text-muted);
-  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
-}
-.tl-item.done .tl-dot { background: var(--text-2); border-color: var(--text-2); }
+.tl-check .check { position: absolute; left: -36px; top: 8px; }
 
 .tl-row { display: flex; align-items: center; gap: var(--s-3); min-height: var(--hit); padding: 6px 0; border-bottom: 1px solid var(--line); }
 .tl-item:last-child .tl-row { border-bottom: 0; }
-.tl-check { flex: 1; min-width: 0; display: flex; align-items: flex-start; gap: var(--s-3); min-height: var(--hit); padding: 8px 0; cursor: pointer; }
-.tl-check .check { margin-top: 0; }
+.tl-check { position: relative; flex: 1; min-width: 0; display: flex; align-items: flex-start; gap: var(--s-3); min-height: var(--hit); padding: 8px 0; cursor: pointer; }
 .tl-time { flex: none; width: 52px; font-size: 13px; line-height: 24px; color: var(--text-2); }
 .tl-text { display: grid; gap: 2px; min-width: 0; }
 .tl-label { line-height: 24px; }
@@ -38,7 +35,7 @@
 /* Now marker: the only cyan on this screen. */
 .tl-now { display: flex; align-items: center; gap: var(--s-3); min-height: 36px; }
 .tl-now-dot {
-  position: absolute; left: 6px; top: 50%; width: 13px; height: 13px; margin-top: -10.5px; z-index: 1;
+  position: absolute; left: 10px; top: 50%; width: 13px; height: 13px; margin-top: -6.5px; z-index: 1;
   border-radius: 50%; background: var(--brand); border: 4px solid var(--surface-1); background-clip: padding-box;
 }
 .tl-now::after { top: 50%; }
@@ -47,7 +44,7 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .tl-item:not(:last-child)::after, .tl-now::after { animation: tl-draw var(--t-step) var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
-  .tl-dot, .tl-now-dot { animation: tl-pop var(--t-step) var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
+  .tl-now-dot { animation: tl-pop var(--t-step) var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
 }
 @keyframes tl-draw { from { transform: scaleY(0); } }
 @keyframes tl-pop { from { opacity: 0; transform: scale(0.6); } }
@@ -61,16 +58,17 @@
 @media (max-width: 639px) {
   .tl-row { flex-wrap: wrap; gap: 0; }
   .tl-check {
-    flex: 1 1 100%; display: grid; grid-template-columns: 24px minmax(0, 1fr);
-    grid-template-areas: 'box time' 'box text'; column-gap: var(--s-3); row-gap: 0;
+    flex: 1 1 100%; display: grid; grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'time' 'text'; row-gap: 0;
   }
-  .tl-check .check { grid-area: box; margin-top: 0; }
   .tl-time { grid-area: time; width: auto; }
   .tl-text { grid-area: text; }
-  .tl-open { margin: 0 0 var(--s-2) 36px; }
+  .tl-open { margin: 0 0 var(--s-2) 0; }
 }
 
 /* 3fr / 2fr so the timeline column and the patches column end together. */
 @media (min-width: 1024px) {
-  .routine-split { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+  .routine-split { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: stretch; }
+  .routine-split > .stack:first-child { align-content: stretch; }
+  .routine-split > .stack:last-child { grid-template-rows: auto auto 1fr; align-content: stretch; }
 }

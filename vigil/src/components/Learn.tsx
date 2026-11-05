@@ -1,6 +1,7 @@
 import { INDICATORS } from '../data/indicators';
 import { SOURCES } from '../data/sources';
 import type { View } from '../lib/views';
+import { FoldSummary } from './Fold';
 import { Disclaimer, SourceLinks } from './ui';
 import './screens.css';
 import './learn.css';
@@ -23,7 +24,7 @@ export function Learn({ go }: { go: (v: View) => void }) {
         </div>
       </div>
 
-      <section className="learn-section" aria-labelledby="learn-hazards">
+      <section className="panel learn-section" aria-labelledby="learn-hazards">
         <h2 id="learn-hazards">The five hazards of human spaceflight</h2>
         <ul className="learn-list">
           {HAZARDS.map((h) => (
@@ -40,7 +41,7 @@ export function Learn({ go }: { go: (v: View) => void }) {
         <button type="button" className="btn" onClick={() => go('body')}>Open body map</button>
       </section>
 
-      <section className="learn-section" aria-labelledby="learn-decides">
+      <section className="panel learn-section" aria-labelledby="learn-decides">
         <h2 id="learn-decides">How VIGIL decides</h2>
         <ul className="learn-list">
           <li>
@@ -61,15 +62,15 @@ export function Learn({ go }: { go: (v: View) => void }) {
         </ul>
       </section>
 
-      <section className="learn-section" aria-labelledby="learn-indicators">
+      <section className="panel learn-section" aria-labelledby="learn-indicators">
         <h2 id="learn-indicators">Indicators</h2>
-        <div>
+        <div className="learn-folds">
           {INDICATORS.map((def) => (
-            <details key={def.id} className="disclosure">
-              <summary>
-                <span>{def.label} {def.unit && <span className="muted mono learn-unit">{def.unit}</span>}</span>
-              </summary>
-              <div className="disclosure-body learn-body">
+            <details key={def.id} className="learn-fold">
+              <FoldSummary>
+                <span className="fold-main">{def.label} {def.unit && <span className="mono learn-unit">{def.unit}</span>}</span>
+              </FoldSummary>
+              <div className="learn-body">
                 <p>{def.what}</p>
                 <p><b>How to measure:</b> {def.how}</p>
                 <p className="learn-ref">{def.reference}</p>
@@ -80,17 +81,22 @@ export function Learn({ go }: { go: (v: View) => void }) {
         </div>
       </section>
 
-      <section className="learn-section" aria-labelledby="learn-sources">
-        <h2 id="learn-sources">All sources</h2>
-        <ul className="learn-sources">
-          {SOURCES.map((s) => (
-            <li key={s.id}>
-              <a href={s.url} target="_blank" rel="noreferrer">{s.title}</a>
-              <span className="learn-org">{s.org}</span>
-              <span className="muted">{s.note}</span>
-            </li>
-          ))}
-        </ul>
+      <section className="panel learn-section" aria-labelledby="learn-sources">
+        <h2 id="learn-sources">Sources</h2>
+        <details className="learn-fold">
+          <FoldSummary>
+            <span className="fold-main">All sources ({SOURCES.length})</span>
+          </FoldSummary>
+          <ul className="learn-sources">
+            {SOURCES.map((s) => (
+              <li key={s.id}>
+                <a href={s.url} target="_blank" rel="noreferrer">{s.title}</a>
+                <span className="learn-org">{s.org}</span>
+                <span className="learn-note-line">{s.note}</span>
+              </li>
+            ))}
+          </ul>
+        </details>
       </section>
       <Disclaimer />
     </div>

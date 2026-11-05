@@ -118,14 +118,6 @@ export function Routine({ go }: { go: (v: View) => void }) {
             })}
           </ol>
         </div>
-          <div className="panel">
-            <h2>Why a routine</h2>
-            <p>
-              Self-monitoring only works if readings are taken the same way at the same time every day. The prompts mirror what crews already
-              do on the ISS: a reaction test around sleep shifts, daily exercise, and scheduled private conferences with the ground.
-            </p>
-            <SourceLinks ids={['reaction-self-test', 'iss-exercise', 'hfbp']} />
-          </div>
         </div>
         <div className="stack">
           <div className="panel">
@@ -138,6 +130,14 @@ export function Routine({ go }: { go: (v: View) => void }) {
             <p className="small-note">{streak === 0 ? 'Save a check-in or tick a task to start the streak.' : ev.missedCheckins === 0 ? 'No missed days this mission.' : `${ev.missedCheckins} missed day${ev.missedCheckins > 1 ? 's' : ''} this mission.`} {totalDone} routine tasks completed in this session.</p>
           </div>
           <Badges />
+          <div className="panel">
+            <h2>Why a routine</h2>
+            <p>
+              Self-monitoring only works if readings are taken the same way at the same time every day. The prompts mirror what crews already
+              do on the ISS: a reaction test around sleep shifts, daily exercise, and scheduled private conferences with the ground.
+            </p>
+            <SourceLinks ids={['reaction-self-test', 'iss-exercise', 'hfbp']} />
+          </div>
         </div>
       </div>
     </>

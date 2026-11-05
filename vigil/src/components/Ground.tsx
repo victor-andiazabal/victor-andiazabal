@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import type { CrewMember, Finding } from '../lib/types';
 import { ENVIRONMENTS, INDICATORS } from '../data/indicators';
 import { fmt, LEVEL_LABEL } from '../lib/format';
 import { evaluate } from '../lib/rules';
@@ -7,10 +8,28 @@ import { useStore } from '../state/store';
 import { useComm } from '../lib/comm';
 import { CommLink } from './CommLink';
 import { useCommSender } from './commSender';
-import { Pill } from './ui';
+import { FoldButton } from './Fold';
+import { Pill, SourceLinks } from './ui';
 import './screens.css';
 import './alerts.css';
 import './ground.css';
+
+/** Why, the crew's action and the sources, the same three blocks on every card (sources always on their own line). */
+function FindingText({ f, actionLabel }: { f: Finding; actionLabel: string }) {
+  return (
+    <>
+      <div className="finding-block">
+        <h4 className="finding-label">Why</h4>
+        <p className="finding-text">{f.reason}</p>
+      </div>
+      <div className="finding-block">
+        <h4 className="finding-label">{actionLabel}</h4>
+        <p className="finding-text">{f.action}</p>
+      </div>
+      <div className="finding-src"><SourceLinks ids={f.sources} compact /></div>
+    </>
+  );
+}
 
 /**
  * The ground-side view: what the flight surgeon sees at the next downlink.
@@ -21,9 +40,40 @@ export function Ground({ go }: { go: (v: View) => void }) {
   const comm = useComm();
   const sendDraft = useCommSender(comm);
   const env = ENVIRONMENTS[settings.environment];
+  const [watchOpen, setWatchOpen] = useState<Record<string, boolean>>({});
+  const toggleWatch = (id: string) => setWatchOpen((w) => ({ ...w, [id]: !w[id] }));
   const evals = useMemo(() => crew.map((c) => ({ crew: c, ev: evaluate(c, settings) })), [crew, settings]);
   const queue = evals.flatMap(({ crew: c, ev }) => ev.findings.filter((f) => f.notifySurgeon).map((f) => ({ crew: c, f })));
   const watch = evals.flatMap(({ crew: c, ev }) => ev.findings.filter((f) => !f.notifySurgeon).map((f) => ({ crew: c, f })));
+
+  /** Act now findings stay open; Watch findings are one 48px row that opens in place. */
+  const renderFinding = (c: CrewMember, f: Finding) => {
+    const isWatch = f.level !== 'red';
+    const expanded = !isWatch || Boolean(watchOpen[f.id]);
+    const bodyId = `finding-body-${f.id}`;
+    const acked = Boolean(acknowledged[f.id]);
+    return (
+      <article key={f.id} className={`alert ${f.level} finding${acked ? ' acked' : ''}${isWatch ? ' is-watch' : ''}`}>
+        {isWatch ? (
+          <FoldButton open={expanded} controls={bodyId} onToggle={() => toggleWatch(f.id)}>
+            <Pill level={f.level} />
+            <span className="fold-main finding-title">{c.callsign}: {f.title}</span>
+          </FoldButton>
+        ) : (
+          <header className="finding-head">
+            <Pill level={f.level} />
+            <h3>{c.callsign}: {f.title}</h3>
+          </header>
+        )}
+        {expanded && (
+          <div className="finding-body" id={bodyId}>
+            {acked && <div className="finding-tags"><span className="pill neutral">Acknowledged by crew</span></div>}
+            <FindingText f={f} actionLabel="Crew action" />
+          </div>
+        )}
+      </article>
+    );
+  };
 
   return (
     <>
@@ -86,34 +136,11 @@ export function Ground({ go }: { go: (v: View) => void }) {
         <div className="stack-sm">
           <h2>Flagged for the surgeon</h2>
           {queue.length === 0 && <p className="muted">Nothing needs the ground today.</p>}
-          {queue.map(({ crew: c, f }) => (
-            <article key={f.id} className={`alert ${f.level} finding${acknowledged[f.id] ? ' acked' : ''}`}>
-              <header className="finding-head">
-                <Pill level={f.level} />
-                <h3>{c.callsign}: {f.title}</h3>
-              </header>
-              {acknowledged[f.id] && <div className="finding-tags"><span className="pill neutral">Acknowledged by crew</span></div>}
-              <div className="finding-block">
-                <h4 className="finding-label">Why</h4>
-                <p className="finding-text">{f.reason}</p>
-              </div>
-              <div className="finding-block">
-                <h4 className="finding-label">Crew action</h4>
-                <p className="finding-text">{f.action}</p>
-              </div>
-            </article>
-          ))}
+          {queue.map(({ crew: c, f }) => renderFinding(c, f))}
           {watch.length > 0 && (
             <>
               <h3 className="ground-watch-title">Watch items (crew handles these)</h3>
-              <ul className="ground-watch">
-                {watch.map(({ crew: c, f }) => (
-                  <li key={f.id}>
-                    <span className={`dot ${f.level}`} aria-hidden="true" />
-                    <span><span className="sr-only">{LEVEL_LABEL[f.level]}: </span>{c.callsign}: {f.title}</span>
-                  </li>
-                ))}
-              </ul>
+              <div className="stack-sm">{watch.map(({ crew: c, f }) => renderFinding(c, f))}</div>
             </>
           )}
         </div>

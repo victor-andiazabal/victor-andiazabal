@@ -51,18 +51,16 @@
   position: relative; display: flex; align-items: center; min-height: var(--hit-min);
   border-radius: var(--r-control); touch-action: pan-y; cursor: pointer; outline-offset: 0;
 }
-/* Bars stand on one baseline. Nominal: 16px at 45% green. Watch / Act now: full colour, 4px taller, a dot 2px above. */
-.strip-bars { display: flex; align-items: flex-end; gap: 2px; height: 26px; }
+/* Bars stand on one baseline. Nominal: 16px neutral. Watch 20px and Act now 24px, status colour at 70%. Today (last bar) is full strength with a 2px underline. */
+.strip-bars { display: flex; align-items: flex-end; gap: 2px; height: 26px; margin-bottom: 4px; }
 .strip-bar { position: relative; width: 4px; height: 16px; border-radius: 1px; background: var(--line-strong); transition: opacity var(--t-fast) var(--ease); }
-.strip-bar.green { background: color-mix(in srgb, var(--green) 45%, transparent); }
-.strip-bar.green.is-active { background: var(--green); }
-.strip-bar.amber, .strip-bar.red { height: 20px; }
-.strip-bar.amber { background: var(--amber); }
-.strip-bar.red { background: var(--red); }
-.strip-bar.amber::before, .strip-bar.red::before {
-  content: ''; position: absolute; left: 0; bottom: calc(100% + 2px); width: 4px; height: 4px; border-radius: 50%; background: inherit;
-}
-.strip-bar.none { height: 4px; margin-bottom: 6px; }
+.strip-bar.amber { height: 20px; background: color-mix(in srgb, var(--amber) 70%, transparent); }
+.strip-bar.red { height: 24px; background: color-mix(in srgb, var(--red) 70%, transparent); }
+.strip-bar.none { height: 4px; }
+.strip-bar.amber.is-today, .strip-bar.amber.is-active { background: var(--amber); }
+.strip-bar.red.is-today, .strip-bar.red.is-active { background: var(--red); }
+.strip-bar.green.is-today, .strip-bar.green.is-active { background: var(--text-muted); }
+.strip-bar.is-today::after { content: ''; position: absolute; left: 0; right: 0; top: calc(100% + 2px); height: 2px; border-radius: 1px; background: var(--text); }
 .strip:hover .strip-bar:not(.is-active), .strip:focus-visible .strip-bar:not(.is-active) { opacity: 0.55; }
 .strip-tip {
   position: absolute; left: 0; right: 0; bottom: calc(100% + 4px); z-index: 3;
@@ -73,8 +71,18 @@
 }
 
 /* Number field (C3): label row, 56px field between two 48px square steppers, band, messages. */
-.nf { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
-.nf-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); flex-wrap: wrap; }
+.nf { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; container-type: inline-size; }
+.nf-head { display: flex; align-items: center; justify-content: flex-start; gap: var(--s-2); flex-wrap: wrap; }
+.nf-head > .nf-chip { margin-left: auto; }
+.nf-head > .nf-chip:has(+ .nf-head-action) { margin-left: 0; }
+/* A small key on the label row (camera pulse): 44px tall, pulled into the row so the field keeps its height. */
+.nf-head-action { margin: -4px 0 -4px auto; }
+.nf-camera { gap: var(--s-2); }
+/* Two fields per row leave about 295px: the camera key shrinks to its icon (the name stays as its accessible label). */
+@container (max-width: 310px) {
+  .nf-camera { width: var(--hit-min); padding: 8px 0; }
+  .nf-camera-label { display: none; }
+}
 .nf-label { font-size: 14px; font-weight: 500; color: var(--text-2); }
 .nf-chip {
   display: inline-flex; align-items: center; min-height: 22px; padding: 1px 8px;

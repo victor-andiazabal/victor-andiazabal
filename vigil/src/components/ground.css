@@ -10,6 +10,3 @@
 .cell-val { display: inline-flex; align-items: center; gap: var(--s-1); }
 
 .ground-watch-title { margin: var(--s-4) 0 0; }
-.ground-watch { list-style: none; margin: 0; padding: 0; }
-.ground-watch li { display: flex; align-items: center; gap: var(--s-3); min-height: var(--hit); padding: 8px 0; border-top: 1px solid var(--line); }
-.ground-watch li:last-child { border-bottom: 1px solid var(--line); }

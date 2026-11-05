@@ -45,7 +45,7 @@ export function SourceLinks({ ids, compact = false }: { ids: string[]; compact?:
     // Two documents from one body would read as a repeated name, so those are labelled by title.
     const orgCount = (org: string) => srcs.filter((o) => o!.org === org).length;
     return (
-      <span className="muted" style={{ fontSize: 13 }}>
+      <span className="text-2" style={{ fontSize: 14 }}>
         Sources:{' '}
         {srcs.map((s, i) => (
           <span key={s!.id}>

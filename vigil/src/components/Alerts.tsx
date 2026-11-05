@@ -7,6 +7,7 @@ import type { Finding } from '../lib/types';
 import { useStore } from '../state/store';
 import { CommLink } from './CommLink';
 import { useCommSender } from './commSender';
+import { FoldButton } from './Fold';
 import { BtnTrail, Check, Pill, SourceLinks } from './ui';
 import './screens.css';
 import './alerts.css';
@@ -20,6 +21,7 @@ export function Alerts() {
   const ev = useMemo(() => evaluate(selected, settings), [selected, settings]);
   const env = ENVIRONMENTS[settings.environment];
   const [open, setOpen] = useState<string | null>(null);
+  const [watchOpen, setWatchOpen] = useState<Record<string, boolean>>({});
   const [ticked, setTicked] = useState<Record<string, boolean>>({});
   const [copied, setCopied] = useState(false);
   const comm = useComm();
@@ -51,6 +53,7 @@ export function Alerts() {
     }
   };
 
+  const toggleWatch = (id: string) => setWatchOpen((w) => ({ ...w, [id]: !w[id] }));
   const toggleStep = (key: string) => setTicked((t) => ({ ...t, [key]: !t[key] }));
 
   return (
@@ -83,48 +86,65 @@ export function Alerts() {
             const acked = Boolean(acknowledged[f.id]);
             const cl = checklistFor(f);
             const isOpen = open === f.id && cl;
+            const isWatch = f.level !== 'red';
+            const expanded = !isWatch || Boolean(watchOpen[f.id]);
+            const bodyId = `finding-body-${f.id}`;
+            const title = (
+              <>
+                <Pill level={f.level} />
+                <span className="fold-main finding-title">{f.title}</span>
+              </>
+            );
             return (
-              <article key={f.id} className={`alert ${f.level} finding${acked ? ' acked' : ''}`}>
-                <header className="finding-head">
-                  <Pill level={f.level} />
-                  <h3>{f.title}</h3>
-                </header>
-                <div className="finding-tags">
-                  <span className="pill neutral">{BASIS_LABEL[f.basis] ?? f.basis}</span>
-                  {f.notifySurgeon && <span className="pill red"><span className="dot red" />Notify flight surgeon</span>}
-                  {acked && <span className="pill neutral">Acknowledged</span>}
-                </div>
-                <div className="finding-block">
-                  <h4 className="finding-label">Why</h4>
-                  <p className="finding-text">{f.reason}</p>
-                </div>
-                <div className="finding-block">
-                  <h4 className="finding-label">Do now</h4>
-                  <p className="finding-text">{f.action}</p>
-                </div>
-                {isOpen && cl && (
-                  <div className="finding-checklist">
-                    <h4 className="finding-label">{cl.title}</h4>
-                    <ol className="checklist">
-                      {cl.steps.map((s, i) => {
-                        const key = `${f.id}:${i}`;
-                        return (
-                          <li key={key}>
-                            <label className={`check-row${ticked[key] ? ' done' : ''}`}>
-                              <Check type="checkbox" checked={Boolean(ticked[key])} onChange={() => toggleStep(key)} />
-                              <span><span className="step-no mono">{i + 1}</span>{s}</span>
-                            </label>
-                          </li>
-                        );
-                      })}
-                    </ol>
+              <article key={f.id} className={`alert ${f.level} finding${acked ? ' acked' : ''}${isWatch ? ' is-watch' : ''}`}>
+                {isWatch ? (
+                  <FoldButton open={expanded} controls={bodyId} onToggle={() => toggleWatch(f.id)}>{title}</FoldButton>
+                ) : (
+                  <header className="finding-head">
+                    <Pill level={f.level} />
+                    <h3>{f.title}</h3>
+                  </header>
+                )}
+                {expanded && (
+                  <div className="finding-body" id={bodyId}>
+                    <div className="finding-tags">
+                      <span className="pill neutral">{BASIS_LABEL[f.basis] ?? f.basis}</span>
+                      {f.notifySurgeon && <span className="pill red"><span className="dot red" />Notify flight surgeon</span>}
+                      {acked && <span className="pill neutral">Acknowledged</span>}
+                    </div>
+                    <div className="finding-block">
+                      <h4 className="finding-label">Why</h4>
+                      <p className="finding-text">{f.reason}</p>
+                    </div>
+                    <div className="finding-block">
+                      <h4 className="finding-label">Do now</h4>
+                      <p className="finding-text">{f.action}</p>
+                    </div>
+                    {isOpen && cl && (
+                      <div className="finding-checklist">
+                        <h4 className="finding-label">{cl.title}</h4>
+                        <ol className="checklist">
+                          {cl.steps.map((st, i) => {
+                            const key = `${f.id}:${i}`;
+                            return (
+                              <li key={key}>
+                                <label className={`check-row${ticked[key] ? ' done' : ''}`}>
+                                  <Check type="checkbox" checked={Boolean(ticked[key])} onChange={() => toggleStep(key)} />
+                                  <span><span className="step-no mono">{i + 1}</span>{st}</span>
+                                </label>
+                              </li>
+                            );
+                          })}
+                        </ol>
+                      </div>
+                    )}
+                    <footer className="finding-foot">
+                      {cl && <button type="button" className="btn" aria-expanded={Boolean(isOpen)} onClick={() => setOpen(open === f.id ? null : f.id)}>{isOpen ? 'Hide checklist' : 'Open checklist'}</button>}
+                      {!acked && <button type="button" className="btn" onClick={() => dispatch({ type: 'ack', id: f.id })}>Acknowledge</button>}
+                      <div className="finding-src"><SourceLinks ids={f.sources} compact /></div>
+                    </footer>
                   </div>
                 )}
-                <footer className="finding-foot">
-                  {cl && <button type="button" className="btn" aria-expanded={Boolean(isOpen)} onClick={() => setOpen(open === f.id ? null : f.id)}>{isOpen ? 'Hide checklist' : 'Open checklist'}</button>}
-                  {!acked && <button type="button" className="btn" onClick={() => dispatch({ type: 'ack', id: f.id })}>Acknowledge</button>}
-                  <SourceLinks ids={f.sources} compact />
-                </footer>
               </article>
             );
           })}

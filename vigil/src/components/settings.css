@@ -12,6 +12,9 @@
 .settings-gap { margin-top: var(--s-6); }
 .settings-groups { display: grid; gap: var(--s-6); }
 .seed-input { max-width: 200px; }
+/* The seed is a plain number: no native spin control inside the chamfered field (arrow keys and the numeric keypad still work). */
+.seed-input::-webkit-inner-spin-button, .seed-input::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
+.seed-input { -moz-appearance: textfield; appearance: textfield; }
 .import-msg { color: var(--text-2); }
 
 /* Range: hairline track, 24px chamfered square thumb in Text (cut 6, same diagonal pair as the keys). No action colour; the slider is not a primary action. */

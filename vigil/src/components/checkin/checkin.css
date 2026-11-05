@@ -2,6 +2,7 @@
 
 .ci { display: flex; flex-direction: column; gap: var(--s-6); }
 .ci > .page-head { margin-bottom: 0; }
+.ci > .page-head .ci-sim { margin-top: var(--s-1); font-size: 14px; color: var(--text-2); }
 
 /* Re-measure note */
 .ci-remeasure {
@@ -52,7 +53,6 @@ button.ci-rail-btn:hover .ci-marker:not(.is-here) { --cf-fill: var(--surface-3);
 /* Programmatic focus target only (tabindex -1, announced by the step title); never a visible box. */
 .ci-step-head h2:focus, .ci-step-head h2:focus-visible { outline: none; }
 .ci-step-head p { margin: 0; }
-.ci-step-head .ci-sim { margin-top: var(--s-1); font-size: 14px; color: var(--text-2); }
 
 .ci-body { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--s-8); align-items: start; }
 .ci-body.is-wide { grid-template-columns: minmax(0, 1fr); }
@@ -67,6 +67,10 @@ button.ci-rail-btn:hover .ci-marker:not(.is-here) { --cf-fill: var(--surface-3);
 }
 .btn-ghost.ci-optional-btn:hover { --cf-fill: transparent; color: var(--text); text-decoration-color: var(--text); }
 .ci-camera { display: flex; flex-direction: column; gap: var(--s-3); }
+/* Fields sit in two columns here, so every label row is as tall as the camera key's: the bands line up across the pair. */
+@media (min-width: 1360px) {
+  .ci-fields.is-grid .nf-head { min-height: 36px; }
+}
 
 /* Scales: 48px options in one row; KSS wraps 5 + 4 on narrow screens. */
 .ci-scale {
@@ -108,7 +112,7 @@ button.ci-rail-btn:hover .ci-marker:not(.is-here) { --cf-fill: var(--surface-3);
 .ci-cue { padding: var(--s-6); border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface-2); }
 .ci-cue-title { margin-bottom: var(--s-4); font-size: 16px; font-weight: 500; }
 .ci-cue-list { margin: 0 0 var(--s-4); }
-.ci-cue-list dt { font-size: 13px; color: var(--text-muted); margin-top: var(--s-4); }
+.ci-cue-list dt { font-size: 14px; font-weight: 500; line-height: 1.45; color: var(--text-2); margin-top: var(--s-4); }
 .ci-cue-list dt:first-child { margin-top: 0; }
 .ci-cue-list dd { margin: var(--s-1) 0 0; color: var(--text-2); }
 
@@ -139,8 +143,7 @@ button.ci-rail-btn:hover .ci-marker:not(.is-here) { --cf-fill: var(--surface-3);
 /* Review */
 .ci-review { display: flex; flex-direction: column; gap: var(--s-6); }
 .ci-rv-warn { margin: 0; color: var(--red); }
-.ci-rv-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); align-items: start; }
-.ci-rv-groups > * { align-self: start; }
+.ci-rv-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); align-items: stretch; }
 .ci-rv-group { padding: var(--s-4); border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface-2); min-width: 0; }
 .ci-rv-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); margin-bottom: var(--s-2); }
 .ci-rv-head h3 { margin: 0; }

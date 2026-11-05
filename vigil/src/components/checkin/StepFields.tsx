@@ -4,6 +4,7 @@ import { fmt } from '../../lib/format';
 import type { IndicatorId } from '../../lib/types';
 import type { View } from '../../lib/views';
 import { CameraPulse } from '../CameraPulse';
+import { IconCamera } from '../icons';
 import { NumberField } from '../controls/NumberField';
 import { ScaleField } from './ScaleField';
 import { isWeighDay, nextWeighDay, PVT_FIELDS, SCALE_FIELDS, type StepDef } from './steps';
@@ -39,6 +40,14 @@ export function StepFields({ step, draft, focus, onActive, go }: StepFieldsProps
   const [pvtOpen, setPvtOpen] = useState(() => focus !== undefined && PVT_FIELDS.has(focus));
   const [cameraOpen, setCameraOpen] = useState(false);
 
+  /** The camera pulse key lives on the heart-rate field's label row; the capture panel opens under the field. */
+  const cameraKey = (
+    <button type="button" className="btn sm nf-camera" aria-expanded={cameraOpen} aria-label={cameraOpen ? 'Hide camera pulse' : 'Measure with the camera'} onClick={() => setCameraOpen((o) => !o)}>
+      <IconCamera size={16} />
+      <span className="nf-camera-label">{cameraOpen ? 'Hide camera pulse' : 'Measure with the camera'}</span>
+    </button>
+  );
+
   const field = (def: IndicatorDef, tourAnchor = false) => {
     const status = <FieldStatus draft={draft} id={def.id} />;
     if (SCALE_FIELDS.has(def.id)) {
@@ -63,6 +72,7 @@ export function StepFields({ step, draft, focus, onActive, go }: StepFieldsProps
         baseline={draft.preview.byIndicator[def.id].baseline}
         def={def}
         tourAnchor={tourAnchor}
+        headAction={def.id === 'hr' ? cameraKey : undefined}
       >
         {status}
       </NumberField>
@@ -95,19 +105,14 @@ export function StepFields({ step, draft, focus, onActive, go }: StepFieldsProps
             onPointerDown={() => onActive(id)}
           >
             {field(def, step.id === 'vitals' && id === 'hr')}
-            {id === 'hr' && (
+            {id === 'hr' && cameraOpen && (
               <div className="ci-camera">
-                <button type="button" className="btn-ghost ci-optional-btn" aria-expanded={cameraOpen} onClick={() => setCameraOpen((o) => !o)}>
-                  {cameraOpen ? 'Hide camera pulse' : 'Measure with the camera'}
-                </button>
-                {cameraOpen && (
-                  <CameraPulse
-                    onResult={(bpm) => {
-                      draft.setValue('hr', bpm);
-                      setCameraOpen(false);
-                    }}
-                  />
-                )}
+                <CameraPulse
+                  onResult={(bpm) => {
+                    draft.setValue('hr', bpm);
+                    setCameraOpen(false);
+                  }}
+                />
               </div>
             )}
           </div>

@@ -153,7 +153,7 @@ small, .muted { color: var(--text-muted); }
   .btn, .btn-primary, .btn-ghost, .btn-sm, .icon-btn, .link-btn,
   .seg-track, .seg-thumb, .seg-option, .ci-scale, .ci-scale-opt, .ci-marker, .ci-rail-btn,
   .nf-step, .nf-box, .select, .ci-sym, .ci-cue-toggle, .ci-disclosure,
-  .rail-row, .bb-item, .bm-list button, .crew-chip, .crew-tab, .chip, .mission-row, .check
+  .rail-row, .bb-item, .bm-list button, .bm-compact, .crew-chip, .crew-tab, .chip, .mission-row, .check
 ) {
   --c: var(--chamfer);
   --cf-fill: transparent;
@@ -165,7 +165,7 @@ small, .muted { color: var(--text-muted); }
   .btn, .btn-primary, .btn-ghost, .btn-sm, .icon-btn, .link-btn,
   .seg-track, .seg-thumb, .seg-option, .ci-scale, .ci-scale-opt, .ci-marker, .ci-rail-btn,
   .nf-step, .nf-box, .select, .ci-sym, .ci-cue-toggle, .ci-disclosure,
-  .rail-row, .bb-item, .bm-list button, .crew-chip, .crew-tab, .chip, .mission-row, .check
+  .rail-row, .bb-item, .bm-list button, .bm-compact, .crew-chip, .crew-tab, .chip, .mission-row, .check
 )::before {
   content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background-color: var(--cf-fill);
@@ -176,7 +176,7 @@ small, .muted { color: var(--text-muted); }
   .btn, .btn-primary, .btn-ghost, .btn-sm, .icon-btn, .link-btn,
   .seg-track, .seg-thumb, .seg-option, .ci-scale, .ci-scale-opt, .ci-marker, .ci-rail-btn,
   .nf-step, .nf-box, .select, .ci-sym, .ci-cue-toggle, .ci-disclosure,
-  .rail-row, .bb-item, .bm-list button, .crew-chip, .crew-tab, .chip, .mission-row, .check
+  .rail-row, .bb-item, .bm-list button, .bm-compact, .crew-chip, .crew-tab, .chip, .mission-row, .check
 )::after {
   content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
   background-color: var(--cf-edge);
@@ -191,14 +191,14 @@ small, .muted { color: var(--text-muted); }
 :where(
   .btn, .btn-primary, .btn-ghost, .btn-sm, .icon-btn, .link-btn, .ci-rail-btn,
   .nf-step, .ci-sym, .ci-cue-toggle, .ci-disclosure,
-  .rail-row, .bb-item, .bm-list button, .crew-chip, .crew-tab, .chip, .mission-row, .check
+  .rail-row, .bb-item, .bm-list button, .bm-compact, .crew-chip, .crew-tab, .chip, .mission-row, .check
 ):focus-visible,
 :where(.select, .nf-box):focus-within { outline: none; }
 .check input:focus-visible { outline: none; }
 :where(
   .btn, .btn-primary, .btn-ghost, .btn-sm, .icon-btn, .link-btn, .ci-rail-btn,
   .nf-step, .ci-sym, .ci-cue-toggle, .ci-disclosure,
-  .rail-row, .bb-item, .bm-list button, .crew-chip, .crew-tab, .chip, .mission-row, .check
+  .rail-row, .bb-item, .bm-list button, .bm-compact, .crew-chip, .crew-tab, .chip, .mission-row, .check
 ):focus-visible::after,
 :where(.select, .nf-box):focus-within::after,
 .check:has(input:focus-visible)::after {
