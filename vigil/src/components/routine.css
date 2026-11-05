@@ -73,6 +73,4 @@
 /* 3fr / 2fr so the timeline column and the patches column end together. */
 @media (min-width: 1024px) {
   .routine-split { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
-  .routine-split .patch-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-2); }
-  .routine-split .patch { padding: var(--s-4) var(--s-2); }
 }

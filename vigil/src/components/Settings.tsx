@@ -5,6 +5,7 @@ import { MAX_MISSION_DAY, SCENARIOS } from '../lib/simulate';
 import type { Environment, ScenarioId } from '../lib/types';
 import { useStore } from '../state/store';
 import { Segmented } from './controls/Segmented';
+import { Check } from './ui';
 import './screens.css';
 import './settings.css';
 
@@ -33,8 +34,10 @@ export function Settings({ theme, setTheme, onReplayTour }: SettingsProps) {
   const { settings, dispatch, crew, manual } = useStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const [importMsg, setImportMsg] = useState('');
+  const [fileName, setFileName] = useState('');
 
   const importCsv = async (file: File) => {
+    setFileName(file.name);
     const text = await file.text();
     const { records, skipped } = parseCsv(text, crew.map((c) => c.id));
     if (records.length) dispatch({ type: 'manualMany', records });
@@ -67,7 +70,7 @@ export function Settings({ theme, setTheme, onReplayTour }: SettingsProps) {
           <div role="radiogroup" aria-labelledby="env-title" className="option-list">
             {(Object.keys(ENVIRONMENTS) as Environment[]).map((k) => (
               <label key={k} className="check-row top option-row">
-                <input className="check" type="radio" name="env" checked={settings.environment === k} onChange={() => dispatch({ type: 'settings', patch: { environment: k } })} />
+                <Check type="radio" name="env" checked={settings.environment === k} onChange={() => dispatch({ type: 'settings', patch: { environment: k } })} />
                 <span>
                   <span className="option-name">{ENVIRONMENTS[k].label}</span>
                   <small className="option-blurb">{ENVIRONMENTS[k].blurb} Comm delay {ENVIRONMENTS[k].commDelay}; about {ENVIRONMENTS[k].dailyDoseMsv} mSv/day.</small>
@@ -81,7 +84,7 @@ export function Settings({ theme, setTheme, onReplayTour }: SettingsProps) {
           <div role="radiogroup" aria-labelledby="scenario-title" className="option-list">
             {SCENARIOS.map((s) => (
               <label key={s.id} className="check-row top option-row">
-                <input className="check" type="radio" name="scenario" checked={settings.scenario === s.id} onChange={() => dispatch({ type: 'settings', patch: { scenario: s.id as ScenarioId } })} />
+                <Check type="radio" name="scenario" checked={settings.scenario === s.id} onChange={() => dispatch({ type: 'settings', patch: { scenario: s.id as ScenarioId } })} />
                 <span>
                   <span className="option-name">{s.label}</span>
                   <small className="option-blurb">{s.blurb}{s.id !== 'nominal' ? ` Days ${s.startDay}-${s.endDay}.` : ''}</small>
@@ -130,8 +133,12 @@ export function Settings({ theme, setTheme, onReplayTour }: SettingsProps) {
               <span className="hint">All records for all crew, including your manual entries. Nothing leaves the device unless you export it.</span>
             </div>
             <div className="field">
-              <label htmlFor="csv">Import</label>
-              <input ref={fileRef} id="csv" className="input file-input" type="file" accept=".csv,text/csv" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void importCsv(f); }} />
+              <span className="field-label" id="csv-label">Import</span>
+              <div className="file-pick">
+                <button type="button" className="btn" aria-describedby="csv-label" onClick={() => fileRef.current?.click()}>Choose file</button>
+                <span className="file-name">{fileName || 'No file chosen'}</span>
+                <input ref={fileRef} id="csv" className="sr-only" tabIndex={-1} aria-hidden="true" type="file" accept=".csv,text/csv" onChange={(e) => { const f = e.target.files?.[0]; e.target.value = ''; if (f) void importCsv(f); }} />
+              </div>
               <span className="hint">CSV in the same layout as the export (crew, day, one column per indicator). Rows replace the simulated day for that crew member, which is how wearable or cuff exports get in.</span>
               {importMsg && <span className="hint import-msg" role="status">{importMsg}</span>}
             </div>

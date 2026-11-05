@@ -37,7 +37,7 @@ export const TOUR_STEPS: TourStep[] = [
     target: 'band',
     view: 'checkin',
     title: 'Baseline band',
-    body: 'The cyan band is your own normal from 14 pre-flight days, and the tick is the value you are entering. VIGIL compares you with yourself, not only with textbook ranges.',
+    body: 'The cyan band is your own normal and the tick is the value you are entering. VIGIL compares you with your own 14 pre-flight days.',
   },
   {
     target: 'nav-alerts',

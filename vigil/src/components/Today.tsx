@@ -80,7 +80,7 @@ export function Today({ go }: { go: Go }) {
 
   const tasks = routineFor(settings.environment);
   const done = tasks.filter((t) => routineDone[`${selected.id}:${settings.currentDay}:${t.id}`]).length;
-  const meta = `Mission day ${settings.currentDay} · ${selected.callsign}, ${selected.role} · ${env.label}`;
+  const meta = `Mission day ${settings.currentDay} · ${selected.callsign} (${selected.role.split(',')[0]})`;
   const surgeonNote = ev.notifySurgeon ? `The flight surgeon should hear about this. One-way delay to the ground: ${env.commDelay}.` : null;
   const others = evals.filter((e) => e.crew.id !== selected.id);
   const groups = useMemo(() => tileGroups(ev.byIndicator), [ev.byIndicator]);
@@ -104,7 +104,7 @@ export function Today({ go }: { go: Go }) {
               <h2 id={`today-${g.id}-title`}>
                 {g.title} <span className="ind-count mono">{g.defs.length}</span>
               </h2>
-              {gi === 0 && <span className="muted small">Tap a tile for its trend; tap the day bars for the last 14 days</span>}
+              {gi === 0 && <span className="section-hint">Tap a tile for its trend; tap the day bars for the last 14 days</span>}
             </div>
             <div className="ind-grid">
               {g.defs.map((def, i) => {
@@ -144,6 +144,10 @@ export function Today({ go }: { go: Go }) {
         </section>
         <section className="panel today-mission" aria-labelledby="today-mission-title">
           <h2 id="today-mission-title">Mission</h2>
+          <p className="mission-env">
+            <span>Environment</span>
+            <span>{env.label}</span>
+          </p>
           <button type="button" className="mission-row" onClick={() => go('routine')}>
             <span>Today's routine</span>
             <span className="mono">{done} of {tasks.length}</span>

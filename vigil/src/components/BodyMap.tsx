@@ -220,11 +220,12 @@ export function BodyMap({ go, compact = false }: { go: Go; compact?: boolean }) 
       <button type="button" className="bm-compact" onClick={() => go('body')} aria-label={`Open body map. ${summary}.`}>
         <Figure status={status} active={null} />
         <span className="bm-compact-text">
+          <span className="bm-compact-prefix">Body map</span>
           <span className="bm-compact-worst">
             {worstLevel === 'green' ? 'All systems' : worst.label} <Pill level={worstLevel} />
           </span>
           {others.length > 0 && <span className="muted">Also {others.map((o) => `${o.label}: ${LEVEL_LABEL[status[o.id].level]}`).join('; ')}</span>}
-          <span className="bm-compact-cta">Open body map <IconChevronRight size={16} /></span>
+          <span className="bm-compact-cta"><span className="bm-compact-cta-label">Open body map</span> <IconChevronRight size={16} /></span>
         </span>
       </button>
     );

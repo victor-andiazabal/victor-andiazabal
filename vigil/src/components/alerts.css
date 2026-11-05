@@ -23,12 +23,23 @@
 .alert-copy { margin-top: var(--s-3); }
 .alerts-actions { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; }
 .alerts-sent { margin: calc(-1 * var(--s-2)) 0 var(--s-6); color: var(--text-2); }
-.alerts-link { margin-top: var(--s-6); }
+.alerts-link { margin-top: var(--s-6); scroll-margin-top: calc(var(--topbar) + var(--s-4)); }
+.alerts-link:focus { outline: none; }
 
 @media (max-width: 639px) {
   .finding-foot .muted { margin-left: 0; flex-basis: 100%; }
 }
 
 .alerts-crew th, .alerts-crew td { padding: 0 8px; white-space: nowrap; }
-.alerts-crew td.num, .alerts-crew th.num { white-space: normal; min-width: 64px; }
+.alerts-crew td.num, .alerts-crew th.num { min-width: 96px; }
+.flag-cell { display: inline-flex; align-items: center; justify-content: flex-end; gap: var(--s-2); }
+.flag-count { font-family: var(--mono); font-variant-numeric: tabular-nums; }
 .alerts-crew .link-btn { padding: 0; font-size: 13px; color: var(--text); }
+
+/* Findings 3fr, side column 2fr: the crew overview needs room for status and the surgeon flag on one line. Below 1280 the side column stacks under the findings. */
+@media (min-width: 1280px) {
+  .alerts-split { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+}
+@media (max-width: 1279px) {
+  .alerts-split { grid-template-columns: minmax(0, 1fr); }
+}

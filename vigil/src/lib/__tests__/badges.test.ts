@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { CREW } from '../../data/crew';
 import { INDICATORS } from '../../data/indicators';
 import { PVT_TASK_ID, routineFor } from '../../data/routine';
-import { badgeProgress, earnedBadges, EXERCISE_ASSIGNED_MIN } from '../badges';
+import { badgeProgress, earnedBadges, EXERCISE_ASSIGNED_MIN, visiblePatches } from '../badges';
 import { simulateMember } from '../simulate';
 import type { CrewMember, DayRecord, IndicatorId, MissionSettings } from '../types';
 
@@ -23,6 +23,29 @@ const prog = (m: CrewMember, id: string, done: Record<string, boolean> = {}, s =
   badgeProgress(m, done, s).find((p) => p.badge.id === id)!;
 const doneKeys = (m: CrewMember, day: number, taskIds: string[]) =>
   Object.fromEntries(taskIds.map((t) => [`${m.id}:${day}:${t}`, true]));
+
+describe('visiblePatches', () => {
+  it('shows only the closest unearned patch when nothing is earned yet', () => {
+    const v = visiblePatches(badgeProgress(member(), {}, settings));
+    expect(v.shown).toHaveLength(1);
+    expect(v.nextId).toBe(v.shown[0].badge.id);
+    expect(v.hidden).toBe(6);
+  });
+
+  it('shows every earned patch plus the unearned one nearest its target', () => {
+    const m = withManualDays(member(), range(1, 9));
+    const v = visiblePatches(badgeProgress(m, {}, settings));
+    const earned = v.shown.filter((p) => p.earned).map((p) => p.badge.id);
+    expect(earned).toEqual(expect.arrayContaining(['first-checkin', 'streak-7']));
+    expect(v.nextId).toBe('streak-14');
+    expect(v.shown.length + v.hidden).toBe(7);
+  });
+
+  it('has no next patch once everything is earned', () => {
+    const all = badgeProgress(member(), {}, settings).map((p) => ({ ...p, earned: true, current: p.target }));
+    expect(visiblePatches(all)).toMatchObject({ nextId: null, hidden: 0 });
+  });
+});
 
 describe('badges', () => {
   it('awards nothing for a member with no own data in flight days', () => {

@@ -55,7 +55,7 @@ export function SymptomsStep({ draft, onNone }: SymptomsStepProps) {
         <legend>Common</legend>
         {grid(ordinary)}
       </fieldset>
-      <fieldset className="ci-sym-set">
+      <fieldset className="ci-sym-set is-urgent">
         <legend>Urgent: any of these means stop and call the flight surgeon</legend>
         {grid(urgent)}
       </fieldset>

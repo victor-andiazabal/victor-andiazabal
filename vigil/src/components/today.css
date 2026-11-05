@@ -4,6 +4,7 @@
 .today-section { margin-bottom: var(--s-8); }
 .section-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4); flex-wrap: wrap; margin-bottom: var(--s-4); }
 .section-head h2 { margin: 0; }
+.section-hint { font-size: 14px; line-height: 1.45; color: var(--text-2); }
 
 /* Status panel: ring | word + reason + meta, then the one action. */
 .status-panel {
@@ -37,7 +38,7 @@
 .status-word.sweep { animation: status-in var(--t-sweep) var(--ease) both; }
 @keyframes status-in { from { opacity: 0; } }
 .status-reason { font-size: 16px; color: var(--text); margin: 0 0 var(--s-2); }
-.status-meta { font-size: 13px; color: var(--text-muted); margin: 0; }
+.status-meta { font-size: 14px; line-height: 1.45; color: var(--text-2); margin: 0; }
 .status-surgeon { font-size: 14px; line-height: 1.45; color: var(--text-2); margin: var(--s-2) 0 0; }
 
 .status-actions { grid-column: 2; display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-2); max-width: 360px; }
@@ -64,6 +65,7 @@
   transition: background-color var(--t-fast) var(--ease);
 }
 .ind-tile:hover { background: var(--surface-2); }
+.ind-tile.range { min-height: 124px; }
 .ind-tile.attention { background: var(--surface-2); border-color: var(--line-strong); }
 .ind-tile.attention:hover { background: var(--surface-3); }
 .ind-tile:has(.ind-open:active) { transform: translateY(1px); }
@@ -100,12 +102,14 @@
   color: var(--text);
 }
 .crew-chip:hover { --cf-fill: var(--surface-3); }
+.mission-env { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); min-height: var(--hit); margin: 0; color: var(--text-2); font-size: 14px; }
+.mission-env span:last-child { color: var(--text); text-align: right; }
 .mission-row {
   display: grid; grid-template-columns: 1fr auto 20px; align-items: center; gap: var(--s-3);
   width: 100%; min-height: var(--hit); padding: 0 var(--s-2) 0 0;
   border-top: 1px solid var(--line); color: var(--text); text-align: left;
 }
-.mission-row:first-of-type { border-top: 0; }
+.mission-env + .mission-row { border-top: 1px solid var(--line); }
 .mission-row .mono { font-size: 13px; color: var(--text-2); }
 .mission-row svg { color: var(--text-muted); }
 .mission-row:hover svg { color: var(--text); }

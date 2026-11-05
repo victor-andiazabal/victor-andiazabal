@@ -7,7 +7,7 @@ import { evaluate } from '../lib/rules';
 import { scenarioById } from '../lib/simulate';
 import type { IndicatorId } from '../lib/types';
 import { useStore } from '../state/store';
-import { Pill, Select, SourceLinks } from './ui';
+import { Check, Pill, Select, SourceLinks } from './ui';
 import './screens.css';
 import './trends.css';
 
@@ -88,7 +88,7 @@ export function Trends({ initial }: { initial?: IndicatorId }) {
           <p>Pre-flight days (0 and earlier) form your personal baseline. The cyan band is the baseline median plus or minus 2 typical deviations.</p>
         </div>
         <label className="check-row">
-          <input className="check" type="checkbox" checked={compare} onChange={(e) => setCompare(e.target.checked)} />
+          <Check type="checkbox" checked={compare} onChange={(e) => setCompare(e.target.checked)} />
           <span>Compare whole crew</span>
         </label>
       </div>
@@ -110,7 +110,7 @@ export function Trends({ initial }: { initial?: IndicatorId }) {
           </h2>
           <div className="trend-chart">
             <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={data} margin={{ top: 10, right: 16, bottom: 8, left: 0 }}>
+              <LineChart data={data} margin={{ top: 24, right: 68, bottom: 8, left: 0 }}>
                 <CartesianGrid stroke="var(--line)" vertical={false} />
                 <XAxis dataKey="day" type="number" domain={['dataMin', 'dataMax']} allowDecimals={false} stroke="var(--line-strong)" tickLine={false} tick={AXIS_TICK} label={{ value: 'mission day', position: 'insideBottomRight', offset: -2, fill: 'var(--text-muted)', ...CHART_LABEL }} />
                 <YAxis stroke="var(--line-strong)" tickLine={false} tick={AXIS_TICK} domain={['auto', 'auto']} width={44} tickFormatter={(v: number) => String(Number(v.toFixed(1)))} />
@@ -119,9 +119,9 @@ export function Trends({ initial }: { initial?: IndicatorId }) {
                   <ReferenceArea y1={baseline.median - 2 * baseline.mad} y2={baseline.median + 2 * baseline.mad} fill="var(--brand)" fillOpacity={0.1} stroke="none" ifOverflow="hidden" />
                 )}
                 {baseline && !compare && (
-                  <ReferenceLine y={baseline.median} stroke="var(--brand)" strokeOpacity={0.7} strokeWidth={1} label={{ value: 'baseline', fill: 'var(--text-2)', position: 'insideBottomLeft', ...CHART_LABEL }} />
+                  <ReferenceLine y={baseline.median} stroke="var(--brand)" strokeOpacity={0.7} strokeWidth={1} label={{ value: 'baseline', fill: 'var(--text-2)', position: 'right', offset: 6, ...CHART_LABEL }} />
                 )}
-                <ReferenceLine x={0.5} stroke="var(--text-muted)" strokeDasharray="2 3" label={{ value: 'launch', fill: 'var(--text-muted)', position: 'insideTopRight', ...CHART_LABEL }} />
+                <ReferenceLine x={0.5} stroke="var(--text-muted)" strokeDasharray="2 3" label={{ value: 'launch', fill: 'var(--text-2)', position: 'top', offset: 6, ...CHART_LABEL }} />
                 {scenarioActive && (
                   <ReferenceArea x1={scenario.startDay - 0.5} x2={scenario.endDay + 0.5} fill="var(--amber)" fillOpacity={0.14} stroke="none" ifOverflow="hidden" label={{ value: 'scenario', fill: 'var(--text-2)', position: 'insideTop', ...CHART_LABEL }} />
                 )}

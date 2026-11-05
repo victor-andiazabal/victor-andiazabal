@@ -27,9 +27,10 @@ Source of truth for CSS variable names. Defined in `src/styles.css` on `:root` (
 | --shadow-panel | none | 0 1px 2px rgba(14,20,27,0.06), 0 8px 24px rgba(14,20,27,0.06) |
 | --shadow-overlay | none | 0 16px 48px rgba(14,20,27,0.16) |
 | --focus-ring | = --action | = --action |
-| --cf-highlight | rgba(232,238,244,0.05) | rgba(255,255,255,0.7) |
+| --cf-highlight | rgba(232,238,244,0.05) | rgba(255,255,255,0.9) |
 | --cf-highlight-action | rgba(255,255,255,0.28) | rgba(255,255,255,0.22) |
 | --cf-divider | rgba(11,15,20,0.28) | rgba(255,255,255,0.34) |
+| --cf-edge-key (secondary key hairline) | = --line-strong | rgba(14,20,27,0.30) |
 
 
 ## Type
@@ -40,7 +41,7 @@ Scale (px): status 56/40, h1 28/24, h2 20/18, h3 16, body 16, small 13, readout 
 ## Space, size, radius
 --s-1 4 · --s-2 8 · --s-3 12 · --s-4 16 · --s-6 24 · --s-8 32 · --s-12 48 · --s-16 64
 --hit-primary 56px · --hit 48px · --hit-dense 36px (ground tables only) · minimum 44px
---r-control 8px (text inputs) · --r-card 12px · --r-panel 16px · --r-pill 999px · --chamfer-lg 10px · --chamfer 8px · --chamfer-sm 6px (controls, see below)
+--r-control 8px (legacy; text fields are now chamfered, cut 8) · --r-card 12px · --r-panel 16px · --r-pill 999px · --chamfer-lg 10px · --chamfer 8px · --chamfer-sm 6px (controls, see below)
 Shell: rail 240px, top bar 64px, content padding 32/16px, max 1280px. Bottom bar <1024: 64px.
 
 ## Controls: one chamfered family (user's choice, 2026-11-05)
@@ -65,7 +66,9 @@ Other members, same shape: segmented track (8) and sliding thumb (6), comm tabs,
 
 Crew tabs (top bar, T4 from 21st.dev Tabs with Icons id 24990): role="tablist" / "tab" with aria-selected, roving tabindex, arrows / Home / End, selection follows focus. Each tab is 48px: 20px role icon, mono callsign from the role code (CDR, FE1, FE2, MS1), status dot; the accessible name carries the callsign and the status word. Selected = --surface-3 fill + --line-strong hairline + 2px --action underline along the bottom edge (stops at the cut). Below 768px the tabs become icon keys (44px wide) with the callsign under the icon at 12px and the dot on the icon's corner.
 
-Not in the family: panels and cards (radius 12 / 16), status pills (999), text inputs and textareas (8), finding cards (12, one even hairline, no status edge, not clickable).
+Toggles and fields (round 3): checkbox and radio are a 24px chamfered box (cut 6, 1px hairline, the real input stretched invisibly over it via `Check` in ui.tsx; on = --surface-3 fill, --action hairline, tick or inner 10px chamfered square; 48px row hit area; focus ring follows the cut). The range thumb is a 24x24 chamfered square in --text (--action on keyboard focus). The file picker is a hidden input behind a 48px secondary key 'Choose file' with the file name in 14px --text-2. Text inputs and textareas use the same diagonal pair as the select (cut 8): the 1px border draws the straight sides, two gradients draw the diagonals, and keyboard focus is a 2px --focus-ring drawn inside the clip.
+
+Not in the family: panels and cards (radius 12 / 16), status pills (999), finding cards (12, one even hairline, no status edge, not clickable).
 
 ## Motion
 --ease: cubic-bezier(0.16, 1, 0.3, 1) · --t-fast 140ms · --t-menu 200ms · --t-step 360ms · --t-glide 480ms · --t-sweep 700ms

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { COUNTERMEASURES } from '../data/countermeasures';
 import { ENVIRONMENTS } from '../data/indicators';
 import { buildReport, useComm } from '../lib/comm';
@@ -7,7 +7,7 @@ import type { Finding } from '../lib/types';
 import { useStore } from '../state/store';
 import { CommLink } from './CommLink';
 import { useCommSender } from './commSender';
-import { BtnTrail, Pill, SourceLinks } from './ui';
+import { BtnTrail, Check, Pill, SourceLinks } from './ui';
 import './screens.css';
 import './alerts.css';
 
@@ -25,6 +25,13 @@ export function Alerts() {
   const comm = useComm();
   const sendDraft = useCommSender(comm);
   const [sentAt, setSentAt] = useState<number | null>(null);
+  const linkRef = useRef<HTMLDivElement>(null);
+
+  const jumpToLink = () => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    linkRef.current?.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    linkRef.current?.focus({ preventScroll: true });
+  };
 
   const report = useMemo(() => buildReport(selected, ev, settings), [ev, selected, settings]);
   const message = report.body;
@@ -55,6 +62,7 @@ export function Alerts() {
         </div>
         <div className="alerts-actions">
           <Pill level={ev.overall} />
+          <button type="button" className="link-btn" onClick={jumpToLink}>Link and messages</button>
           <button type="button" className="btn-primary" onClick={sendReport}>Send today's report<BtnTrail /></button>
         </div>
       </div>
@@ -63,7 +71,7 @@ export function Alerts() {
           Report sent to the flight surgeon. It arrives {comm.now >= sentAt ? 'now' : `in ${Math.max(0, Math.ceil((sentAt - comm.now) / 1000))} s`}; follow it under In transit below.
         </p>
       )}
-      <div className="split">
+      <div className="split alerts-split">
         <div className="stack-sm">
           {ev.findings.length === 0 && (
             <article className="alert green finding">
@@ -103,7 +111,7 @@ export function Alerts() {
                         return (
                           <li key={key}>
                             <label className={`check-row${ticked[key] ? ' done' : ''}`}>
-                              <input className="check" type="checkbox" checked={Boolean(ticked[key])} onChange={() => toggleStep(key)} />
+                              <Check type="checkbox" checked={Boolean(ticked[key])} onChange={() => toggleStep(key)} />
                               <span><span className="step-no mono">{i + 1}</span>{s}</span>
                             </label>
                           </li>
@@ -136,7 +144,7 @@ export function Alerts() {
                           <button type="button" className="link-btn" aria-label={`Show ${c.callsign}`} aria-current={c.id === selected.id ? 'true' : undefined} onClick={() => dispatch({ type: 'select', crewId: c.id })}>{c.callsign}</button>
                         </td>
                         <td><Pill level={e.overall} /></td>
-                        <td className="num">{e.findings.length}{e.notifySurgeon ? ' · surgeon' : ''}</td>
+                        <td className="num"><span className="flag-cell"><span className="flag-count">{e.findings.length}</span>{e.notifySurgeon && <span className="pill neutral">Surgeon</span>}</span></td>
                       </tr>
                     );
                   })}
@@ -156,7 +164,7 @@ export function Alerts() {
           </div>
         </div>
       </div>
-      <div className="alerts-link">
+      <div className="alerts-link" id="alerts-link" ref={linkRef} tabIndex={-1}>
         <CommLink side="crew" comm={comm} sendDraft={sendDraft} />
       </div>
     </>

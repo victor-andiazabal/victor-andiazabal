@@ -1,27 +1,24 @@
-/* Mission patches: earned = cyan 1px outline and Text icon; locked = muted with a thin progress bar. */
+/* Mission patches: a list of 48px rows. Earned rows are Text on a cyan-hairline icon ring; the next patch carries a thin progress bar. */
 
 .patch-lead { margin: 0 0 var(--s-4); }
-.patch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: var(--s-3); list-style: none; padding: 0; margin: 0; }
+.patch-more { margin: var(--s-3) 0 0; }
+.patch-list { list-style: none; padding: 0; margin: 0; }
 .patch {
-  display: grid; gap: var(--s-2); justify-items: center; align-content: start; text-align: center;
-  padding: var(--s-4) var(--s-3); border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface-2);
-  color: var(--text-muted);
+  display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; column-gap: var(--s-3); align-items: center;
+  min-height: var(--hit); padding: 4px 0; border-top: 1px solid var(--line); color: var(--text-2);
 }
-.patch .emblem {
-  width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
-  border: 1px solid var(--line-strong); color: var(--text-muted);
-}
-.patch-name { font-size: 13px; font-weight: 500; color: var(--text-2); }
-.patch-state { font-size: 13px; color: var(--text-2); }
-.patch small { font-size: 13px; color: var(--text-2); }
-.patch-bar { width: 100%; height: 2px; border-radius: 1px; background: var(--line-strong); overflow: hidden; }
-.patch-bar > span { display: block; height: 100%; background: var(--brand); }
-
-.patch.earned { border-color: var(--brand); background: transparent; }
-.patch.earned .emblem { border-color: var(--brand); color: var(--text); }
+.patch:first-child { border-top: 0; }
+.patch-icon { display: grid; place-items: center; color: var(--text-muted); }
+.patch.earned .patch-icon { color: var(--brand); }
+.patch-name { font-size: 16px; font-weight: 500; color: var(--text-2); min-width: 0; }
 .patch.earned .patch-name { color: var(--text); }
+.patch-state { font-size: 13px; color: var(--text-2); }
+.patch-bar { grid-column: 2 / -1; height: 2px; margin-top: var(--s-1); border-radius: 1px; background: var(--line-strong); overflow: hidden; }
+.patch-bar > span { display: block; height: 100%; background: var(--brand); }
+.patch-how { grid-column: 2 / -1; margin: var(--s-2) 0 var(--s-2); font-size: 14px; line-height: 1.45; color: var(--text-2); }
 
 @media (prefers-reduced-motion: no-preference) {
-  .patch.earned .emblem { animation: patch-in var(--t-step) var(--ease) both; }
+  .patch.earned .patch-icon { animation: patch-in var(--t-step) var(--ease) both; }
 }
 @keyframes patch-in { from { transform: scale(0.8); opacity: 0; } }
+

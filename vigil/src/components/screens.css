@@ -14,11 +14,10 @@
 .small-note { font-size: 14px; line-height: 1.45; color: var(--text-2); margin: var(--s-2) 0 0; }
 .table-wrap { position: relative; overflow-x: auto; }
 
-/* Inputs: 48px, Surface 2 fill, 1px strong hairline, 8px radius. */
+/* Inputs: 48px, Surface 2 fill, 1px strong hairline, chamfered like the select (shape in styles.css). */
 .input {
   display: block; width: 100%; min-height: var(--hit);
-  padding: 10px 12px; background: var(--surface-2); color: var(--text);
-  border: 1px solid var(--line-strong); border-radius: var(--r-control);
+  padding: 10px 12px; color: var(--text);
   font: inherit; line-height: 1.5;
 }
 textarea.input { resize: vertical; min-height: var(--hit); }
@@ -26,30 +25,36 @@ textarea.input { resize: vertical; min-height: var(--hit); }
 .input.mono { font-family: var(--mono); font-size: 13px; line-height: 1.5; }
 .field-label { display: block; font-size: 13px; font-weight: 500; color: var(--text-2); margin-bottom: var(--s-2); }
 
-/* Checkbox and radio: a 24px box (8px radius, 1px strong hairline) that sits inside a 48px row; the tick is drawn in the action colour. */
+/* Checkbox and radio: a 24px chamfered box (cut 6, 1px hairline, same mechanism as the keys) inside a 48px row. The real input is stretched
+   over it, invisible; the mark is the action-coloured tick (checkbox) or inner square (radio). */
 .check {
-  appearance: none; -webkit-appearance: none; flex: none; margin: 0;
-  width: 24px; height: 24px; display: inline-grid; place-content: center;
-  background: var(--surface-2); border: 1px solid var(--line-strong); border-radius: var(--r-control);
-  cursor: pointer;
-  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+  --c: var(--chamfer-sm); --cf-fill: var(--surface-2); --cf-edge: var(--line-strong);
+  flex: none; margin: 0; width: 24px; height: 24px; display: inline-grid; place-items: center;
+  transition: opacity var(--t-fast) var(--ease);
 }
-.check::after {
-  content: ''; width: 16px; height: 16px; background: var(--action); opacity: 0; transform: scale(0.8);
+.check input {
+  position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; opacity: 0; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+}
+.check-mark {
+  width: 16px; height: 16px; background: var(--action); opacity: 0; transform: scale(0.8); pointer-events: none;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
   transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
 }
-.check:hover { border-color: var(--text-muted); }
-.check:checked { background: var(--surface-3); border-color: var(--action); }
-.check:checked::after { opacity: 1; transform: none; }
-.check[type='radio'] { border-radius: 50%; }
-.check[type='radio']::after { width: 10px; height: 10px; border-radius: 50%; -webkit-mask: none; mask: none; }
-.check:disabled { opacity: 0.4; cursor: default; }
+.check-radio .check-mark {
+  width: 10px; height: 10px; -webkit-mask: none; mask: none;
+  clip-path: polygon(3px 0, 100% 0, 100% calc(100% - 3px), calc(100% - 3px) 100%, 0 100%, 0 3px);
+}
+.check:hover { --cf-edge: var(--text-muted); }
+.check:has(input:checked) { --cf-fill: var(--surface-3); --cf-edge: var(--action); }
+.check:has(input:checked) .check-mark { opacity: 1; transform: none; }
+.check:has(input:disabled) { opacity: 0.4; }
+.check:has(input:disabled) input { cursor: default; }
 .check-row {
   display: flex; align-items: center; gap: var(--s-3); min-height: var(--hit); cursor: pointer;
 }
-.check-row:hover .check:not(:checked):not(:disabled) { border-color: var(--text-muted); }
+.check-row:hover .check:not(:has(input:checked)):not(:has(input:disabled)) { --cf-edge: var(--text-muted); }
 .check-row.top { align-items: flex-start; padding: 12px 0; }
 .check-row.top .check { margin-top: 2px; }
 

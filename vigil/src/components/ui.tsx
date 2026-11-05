@@ -1,5 +1,5 @@
 import { sourceById } from '../data/sources';
-import type { SelectHTMLAttributes } from 'react';
+import type { InputHTMLAttributes, SelectHTMLAttributes } from 'react';
 import { LEVEL_LABEL } from '../lib/format';
 import type { Level } from '../lib/types';
 import { IconArrowRight, IconCheckCircle, IconChevronDown } from './icons';
@@ -10,6 +10,16 @@ export function Select({ className = '', children, ...rest }: SelectHTMLAttribut
     <span className="select">
       <select className={`select-input ${className}`.trim()} {...rest}>{children}</select>
       <IconChevronDown className="select-chev" />
+    </span>
+  );
+}
+
+/** Checkbox or radio in the chamfered family: a real input stretched over a 24px chamfered box (screens.css .check). */
+export function Check({ type = 'checkbox', ...rest }: Omit<InputHTMLAttributes<HTMLInputElement>, 'type' | 'className'> & { type?: 'checkbox' | 'radio' }) {
+  return (
+    <span className={`check check-${type}`}>
+      <input type={type} {...rest} />
+      <span className="check-mark" aria-hidden="true" />
     </span>
   );
 }
@@ -65,9 +75,11 @@ export function SourceLinks({ ids, compact = false }: { ids: string[]; compact?:
 export function Disclaimer() {
   return (
     <div className="disclaimer">
-      VIGIL is a decision-support prototype built for the 2026 NASA Space Apps Challenge. It is not a medical device and
-      does not diagnose. All crew data shown is simulated unless you enter it yourself. Reference ranges are quoted from
-      the public sources linked in Learn; operational limits are set by each mission's flight surgeon.
+      <p>
+        VIGIL is a decision-support prototype built for the 2026 NASA Space Apps Challenge. It is not a medical device and
+        does not diagnose. All crew data shown is simulated unless you enter it yourself. Reference ranges are quoted from
+        the public sources linked in Learn; operational limits are set by each mission's flight surgeon.
+      </p>
     </div>
   );
 }

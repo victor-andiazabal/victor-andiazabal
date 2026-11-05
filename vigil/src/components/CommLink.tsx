@@ -7,7 +7,7 @@ import { useStore } from '../state/store';
 import type { CommDraft } from './commSender';
 import { Segmented } from './controls/Segmented';
 import { IconCheckCircle, IconGround, IconInbox } from './icons';
-import { Pill, Select, SourceLinks } from './ui';
+import { Check, Pill, Select, SourceLinks } from './ui';
 import './screens.css';
 import './comm.css';
 
@@ -269,7 +269,7 @@ export function CommLink({ side, comm, sendDraft }: CommLinkProps) {
             </Select>
           </label>
           <label className="comm-toggle check-row">
-            <input className="check" type="checkbox" checked={comm.compressed} onChange={(e) => comm.setCompressed(e.target.checked)} />
+            <Check type="checkbox" checked={comm.compressed} onChange={(e) => comm.setCompressed(e.target.checked)} />
             Demo time: 1 s = 1 min
           </label>
           {side === 'crew' && <a className="btn" href="?view=ground" target="_blank" rel="noopener noreferrer">Open ground console in a new window</a>}

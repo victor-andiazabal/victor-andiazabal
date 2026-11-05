@@ -9,7 +9,7 @@ import { useStore } from '../state/store';
 import { routineFor, type RoutineTask } from '../data/routine';
 import type { View } from '../lib/views';
 import { Badges } from './Badges';
-import { SourceLinks } from './ui';
+import { Check, SourceLinks } from './ui';
 import './screens.css';
 import './routine.css';
 
@@ -104,7 +104,7 @@ export function Routine({ go }: { go: (v: View) => void }) {
                   <span className="tl-dot" aria-hidden="true" />
                   <div className="tl-row">
                     <label className="tl-check">
-                      <input className="check" type="checkbox" checked={on} onChange={(e) => dispatch({ type: 'routine', key: key(t.id), done: e.target.checked })} aria-label={t.label} />
+                      <Check type="checkbox" checked={on} onChange={(e) => dispatch({ type: 'routine', key: key(t.id), done: e.target.checked })} aria-label={t.label} />
                       <span className="tl-time mono">{t.time}</span>
                       <span className="tl-text">
                         <span className="tl-label">{t.label}</span>
