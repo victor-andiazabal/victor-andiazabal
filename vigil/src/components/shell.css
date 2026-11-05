@@ -1,0 +1,147 @@
+/* App shell: 64px top bar, 240px rail at >= 1024px, 64px bottom bar below. */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--rail) minmax(0, 1fr);
+  grid-template-rows: var(--topbar) 1fr;
+  min-height: 100vh;
+}
+
+.topbar {
+  grid-column: 1 / -1;
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: var(--s-3);
+  height: var(--topbar); padding: 0 var(--s-6);
+  background: var(--bg); border-bottom: 1px solid var(--line);
+}
+.brand { display: flex; align-items: center; gap: var(--s-3); }
+.brand-name { font-size: 16px; font-weight: 600; letter-spacing: 0.02em; }
+.topbar-spacer { flex: 1; }
+.day-pill { min-height: 32px; padding: 4px 12px; font-size: 13px; }
+
+/* Crew switcher (T4): icon tabs. Mechanism ported from "Tabs with Icons" by cnippet-dev (21st.dev id 24990),
+   rebuilt as a roving-tabindex radio group; each tab is a chamfered 48px key with the role icon, callsign and status dot. */
+.crew-tabs { flex: 0 0 auto; display: flex; align-items: center; gap: 2px; margin-left: var(--s-6); }
+.crew-tab {
+  --cf-edge: transparent;
+  display: inline-flex; align-items: center; gap: var(--s-2);
+  min-height: var(--hit); padding: 0 14px 0 12px; color: var(--text-2);
+  font-size: 14px; font-weight: 500; white-space: nowrap;
+  transition: color var(--t-fast) var(--ease);
+}
+.crew-tab:hover { --cf-fill: var(--surface-2); color: var(--text); }
+.crew-tab[aria-checked='true'] { --cf-fill: var(--surface-3); --cf-edge: var(--line-strong); color: var(--text); }
+/* Selected underline: 2px action blue along the bottom edge, stopping where the corner is cut. */
+.crew-tab[aria-checked='true']::before {
+  background-image: linear-gradient(var(--action), var(--action));
+  background-repeat: no-repeat; background-position: left bottom; background-size: calc(100% - var(--c)) 2px;
+}
+.crew-tab-icon { position: relative; display: inline-grid; place-items: center; }
+.crew-tab-call { font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: 0; }
+.crew-tab .dot { width: 8px; height: 8px; }
+
+.rail {
+  position: sticky; top: var(--topbar); align-self: start;
+  height: calc(100vh - var(--topbar)); overflow-y: auto;
+  display: flex; flex-direction: column; gap: 2px;
+  padding: var(--s-4) var(--s-3);
+  border-right: 1px solid var(--line);
+}
+.rail-row {
+  display: flex; align-items: center; gap: var(--s-3);
+  width: 100%; min-height: var(--hit); padding: 0 var(--s-3);
+  color: var(--text-2); font-size: 16px; text-align: left;
+  transition: color var(--t-fast) var(--ease);
+}
+.rail-row:hover { --cf-fill: var(--surface-2); color: var(--text); }
+.rail-row[aria-current='page'] { --cf-fill: var(--surface-2); --cf-edge: var(--line); color: var(--text); }
+/* Active marker: a 2px cyan bar inside the chamfered fill (the allowed nav marker, not a status edge). */
+.rail-row[aria-current='page']::before {
+  background-image: linear-gradient(var(--brand), var(--brand));
+  background-repeat: no-repeat; background-position: 0 50%; background-size: 2px 24px;
+}
+.rail-rule { border: 0; border-top: 1px solid var(--line); margin: var(--s-2) var(--s-3); }
+.rail-foot { margin: auto 0 0; padding: var(--s-4) var(--s-3) 0; font-size: 13px; color: var(--text-muted); }
+
+.nav-badge {
+  margin-left: auto; min-width: 24px; height: 22px; padding: 0 6px;
+  display: inline-grid; place-items: center; border-radius: var(--r-pill);
+  font-size: 13px; line-height: 1;
+}
+.nav-badge.green { background: var(--green-bg); color: var(--green); }
+.nav-badge.amber { background: var(--amber-bg); color: var(--amber); }
+.nav-badge.red { background: var(--red-bg); color: var(--red); }
+
+.main { min-width: 0; padding: var(--s-8); }
+.main-inner { max-width: 1280px; margin: 0 auto; }
+
+.bottombar { display: none; }
+
+/* More sheet */
+.sheet-layer { position: fixed; inset: 0; z-index: 30; }
+.sheet-scrim { position: absolute; inset: 0; background: var(--scrim); }
+.sheet {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: grid; gap: 2px;
+  padding: var(--s-3) var(--s-4) calc(var(--bottombar) + var(--s-3) + env(safe-area-inset-bottom));
+  background: var(--surface-3); border-top: 1px solid var(--line-strong);
+  border-radius: var(--r-panel) var(--r-panel) 0 0; box-shadow: var(--shadow-overlay);
+  animation: sheet-in var(--t-menu) var(--ease) both;
+}
+.sheet .rail-row:hover, .sheet .rail-row[aria-current='page'] { --cf-fill: var(--surface-2); }
+@keyframes sheet-in { from { transform: translateY(16px); opacity: 0; } }
+
+@media (max-width: 1023px) {
+  .app { grid-template-columns: minmax(0, 1fr); }
+  .rail { display: none; }
+  .topbar { padding: 0 var(--s-4); gap: var(--s-2); }
+  .main { padding: var(--s-6) var(--s-4) calc(var(--bottombar) + var(--s-6) + env(safe-area-inset-bottom)); }
+  .bottombar {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 35;
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+    height: calc(var(--bottombar) + env(safe-area-inset-bottom));
+    padding: 4px var(--s-2) calc(4px + env(safe-area-inset-bottom));
+    background: var(--bg); border-top: 1px solid var(--line);
+  }
+  .bb-item {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    min-height: var(--hit-primary);
+    color: var(--text-2); font-size: 13px; line-height: 1.2;
+  }
+  .bb-item:hover { --cf-fill: var(--surface-2); }
+  .bb-item[aria-current='page'] { --cf-fill: var(--surface-2); --cf-edge: var(--line); color: var(--text); }
+  /* Active marker: a 2px cyan bar centred on the top edge of the chamfered fill. */
+  .bb-item[aria-current='page']::before {
+    background-image: linear-gradient(var(--brand), var(--brand));
+    background-repeat: no-repeat; background-position: 50% 0; background-size: 24px 2px;
+  }
+  .bb-icon { position: relative; display: inline-grid; place-items: center; }
+  .bb-icon .nav-badge { position: absolute; top: -6px; left: 14px; min-width: 20px; height: 18px; font-size: 12px; }
+}
+
+@media (max-width: 1023px) {
+  .crew-tabs { margin-left: var(--s-3); }
+}
+
+@media (max-width: 1023px) and (min-width: 640px) {
+  .brand-name { display: none; }
+}
+
+/* Narrow: icon-only keys with the callsign under the icon at 12px; the status dot sits on the icon's corner. */
+@media (max-width: 767px) {
+  .crew-tabs { margin-left: var(--s-2); gap: 0; }
+  .crew-tab { --c: var(--chamfer-sm); flex-direction: column; justify-content: center; gap: 1px; min-width: var(--hit-min); padding: 0 6px; font-size: 12px; line-height: 1.1; }
+  .crew-tab .dot { position: absolute; top: 8px; right: 7px; width: 7px; height: 7px; box-shadow: 0 0 0 2px var(--bg); }
+  .crew-tab[aria-checked='true'] .dot { box-shadow: 0 0 0 2px var(--surface-3); }
+}
+
+@media (max-width: 639px) {
+  .main { padding: var(--s-4) var(--s-4) calc(var(--bottombar) + var(--s-6) + env(safe-area-inset-bottom)); }
+  .brand-name, .topbar-theme { display: none; }
+  .topbar { gap: var(--s-1); }
+  .day-pill { padding: 4px 8px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sheet { animation: none; }
+}

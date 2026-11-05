@@ -1,0 +1,34 @@
+/* Learn: a reading page in panels. One --surface-1 panel per block, 24px gaps, 72ch text measure, 14px+ everywhere, chamfered fold rows. */
+
+.learn { max-width: 920px; display: grid; gap: var(--s-6); }
+.learn > .page-head { margin-bottom: 0; }
+.learn p { line-height: 1.5; max-width: 72ch; }
+.learn-section { display: grid; gap: var(--s-4); align-content: start; }
+.learn-section > h2 { margin: 0; }
+.learn-section > p, .learn-section > ul, .learn-section > div { margin: 0; }
+
+.learn-list { list-style: none; margin: 0; padding: 0; }
+.learn-list li { padding: var(--s-4) 0; border-top: 1px solid var(--line); }
+.learn-list li:first-child { border-top: 0; padding-top: 0; }
+.learn-list li:last-child { padding-bottom: 0; }
+.learn-list h3 { margin: 0 0 var(--s-1); }
+.learn-list p { margin: 0; color: var(--text-2); }
+.learn-note { margin: 0; color: var(--text-2); }
+.learn-section > .btn { justify-self: start; }
+
+.learn-folds { display: grid; gap: var(--s-2); }
+.learn-fold { display: block; }
+.learn-unit { font-size: 14px; font-weight: 400; margin-left: var(--s-2); color: var(--text-2); }
+.learn-body { display: grid; gap: var(--s-3); padding: var(--s-4) var(--s-4) var(--s-2); }
+.learn-body p { color: var(--text-2); margin: 0; }
+.learn-body b { color: var(--text); font-weight: 500; }
+.learn .src-list { font-size: 14px; margin: 0; padding-left: 20px; }
+.learn .src-list .muted { color: var(--text-2); }
+.learn-ref { font-size: 14px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-control); padding: 8px 12px; }
+
+.learn-sources { list-style: none; margin: 0; padding: var(--s-2) var(--s-4) 0; }
+.learn-sources li { display: grid; gap: 2px; padding: var(--s-3) 0; border-top: 1px solid var(--line); font-size: 14px; }
+.learn-sources li:first-child { border-top: 0; }
+.learn-sources a { font-size: 16px; }
+.learn-org { color: var(--text-2); }
+.learn-note-line { color: var(--text-2); }

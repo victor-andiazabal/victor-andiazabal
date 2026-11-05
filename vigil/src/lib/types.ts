@@ -10,6 +10,7 @@ export type IndicatorId =
   | 'exercise'
   | 'mood'
   | 'stress'
+  | 'kss'
   | 'pvtRt'
   | 'pvtLapses'
   | 'radDose';
@@ -26,7 +27,11 @@ export interface DayRecord {
   values: Partial<Record<IndicatorId, number>>;
   symptoms: string[];
   notes?: string;
-  source: 'simulated' | 'manual';
+  /**
+   * 'manual' is a saved daily check-in (or an imported row). 'pvt' is a reaction-test result saved before any check-in
+   * that day: its other values are the simulated feed carried over, so it does not count as a check-in.
+   */
+  source: 'simulated' | 'manual' | 'pvt';
 }
 
 export interface CrewMember {

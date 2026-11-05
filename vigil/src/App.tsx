@@ -1,44 +1,32 @@
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Alerts } from './components/Alerts';
 import { CheckIn } from './components/CheckIn';
-import { Dashboard } from './components/Dashboard';
 import { Ground } from './components/Ground';
 import { Learn } from './components/Learn';
+import { BottomBar, Rail } from './components/Nav';
 import { ReactionTest } from './components/ReactionTest';
 import { Routine } from './components/Routine';
 import { Settings } from './components/Settings';
+import { Today } from './components/Today';
+import { TopBar, type Theme } from './components/TopBar';
+import { Tour } from './components/Tour';
+import { focusPage } from './components/pageFocus';
 import { evaluate } from './lib/rules';
+import { markTourSeen, tourSeen } from './lib/tour';
 import type { IndicatorId } from './lib/types';
+import { parseTheme, viewFromQuery, viewTitle, type View } from './lib/views';
 import { useStore } from './state/store';
+import './components/shell.css';
 
 const Trends = lazy(() => import('./components/Trends').then((m) => ({ default: m.Trends })));
 const BodyMap = lazy(() => import('./components/BodyMap').then((m) => ({ default: m.BodyMap })));
 
-export type View = 'dashboard' | 'body' | 'checkin' | 'pvt' | 'trends' | 'alerts' | 'routine' | 'ground' | 'learn' | 'settings';
-
-const NAV: { id: View; label: string; icon: string }[] = [
-  { id: 'dashboard', label: 'Dashboard', icon: '◉' },
-  { id: 'body', label: 'Body map', icon: '♥' },
-  { id: 'checkin', label: 'Check-in', icon: '✎' },
-  { id: 'pvt', label: 'Reaction test', icon: '⚡' },
-  { id: 'trends', label: 'Trends', icon: '📈' },
-  { id: 'alerts', label: 'Alerts', icon: '⚠' },
-  { id: 'routine', label: 'Routine', icon: '☑' },
-  { id: 'ground', label: 'Ground view', icon: '🛰' },
-  { id: 'learn', label: 'Learn', icon: '📖' },
-  { id: 'settings', label: 'Settings', icon: '⚙' },
-];
-
-/** `?view=ground` opens the ground console directly (used by the crew-side link to a second window). */
-function initialView(): View {
-  const wanted = new URLSearchParams(window.location.search).get('view');
-  return NAV.find((n) => n.id === wanted)?.id ?? 'dashboard';
-}
+export type { View } from './lib/views';
 
 function useTheme() {
-  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+  const [theme, setTheme] = useState<Theme>(() => {
     try {
-      return (localStorage.getItem('vigil:theme') as 'dark' | 'light') || 'dark';
+      return parseTheme(localStorage.getItem('vigil:theme'));
     } catch {
       return 'dark';
     }
@@ -50,83 +38,84 @@ function useTheme() {
   return [theme, setTheme] as const;
 }
 
+const startView = viewFromQuery(window.location.search);
+
 export default function App() {
-  const { crew, selected, settings, dispatch, acknowledged } = useStore();
-  const [view, setView] = useState<View>(initialView);
+  const { selected, settings, acknowledged } = useStore();
+  const [view, setView] = useState<View>(startView);
   const [trendIndicator, setTrendIndicator] = useState<IndicatorId | undefined>();
+  // Only "Re-measure in 30 min" opens the check-in with an indicator; any other way in starts at step 1.
+  const [checkinFocus, setCheckinFocus] = useState<IndicatorId | undefined>();
   const [theme, setTheme] = useTheme();
+  // First run shows the tutorial, but not when a deep link (for example the ?view=ground console) opened the app.
+  const [tourOpen, setTourOpen] = useState(() => startView === 'today' && !tourSeen());
 
   const go = (v: View, indicator?: IndicatorId) => {
     if (indicator) setTrendIndicator(indicator);
+    if (v === 'checkin') setCheckinFocus(indicator);
     setView(v);
     window.scrollTo({ top: 0 });
   };
 
+  const startTour = () => {
+    go('today');
+    setTourOpen(true);
+  };
+  const endTour = () => {
+    markTourSeen();
+    setTourOpen(false);
+    go('today');
+  };
+
+  // A screen change names the page and moves focus to its heading, so it is announced. Not on first load (focus
+  // stays at the top of the document) and not while the tutorial drives the screens.
+  // tourOpen is read through a ref, not watched: opening or closing the tutorial is not a screen change.
+  const shownView = useRef(view);
+  const tourOpenRef = useRef(tourOpen);
+  useEffect(() => {
+    tourOpenRef.current = tourOpen;
+  });
+  useEffect(() => {
+    document.title = viewTitle(view);
+    if (shownView.current === view) return;
+    shownView.current = view;
+    if (!tourOpenRef.current) focusPage();
+  }, [view]);
+
   const ev = useMemo(() => evaluate(selected, settings), [selected, settings]);
   const openAlerts = ev.findings.filter((f) => !acknowledged[f.id]).length;
+  const nav = { view, go, openAlerts, alertLevel: ev.overall };
 
   return (
     <div className="app">
-      <header className="topbar">
-        <div className="brand">
-          <svg className="logo" viewBox="0 0 32 32" aria-hidden="true">
-            <circle cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" strokeWidth="2.5" />
-            <path d="M6 17 L11 17 L13 11 L16 23 L19 14 L21 17 L26 17" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span>VIGIL</span>
-          <small className="muted">crew health self-assessment</small>
+      <TopBar theme={theme} setTheme={setTheme} onHelp={startTour} />
+      <Rail {...nav} />
+
+      <main id="main" className="main" tabIndex={-1}>
+        <div className="main-inner">
+          {view === 'today' && <Today go={go} />}
+          {view === 'body' && (
+            <Suspense fallback={<p className="muted">Loading body map…</p>}>
+              <BodyMap go={go} />
+            </Suspense>
+          )}
+          {view === 'checkin' && <CheckIn key={`${selected.id}:${settings.currentDay}:${checkinFocus ?? ''}`} go={go} focus={checkinFocus} />}
+          {view === 'pvt' && <ReactionTest go={go} />}
+          {view === 'trends' && (
+            <Suspense fallback={<p className="muted">Loading charts…</p>}>
+              <Trends key={trendIndicator ?? 'default'} initial={trendIndicator} />
+            </Suspense>
+          )}
+          {view === 'alerts' && <Alerts />}
+          {view === 'routine' && <Routine go={go} />}
+          {view === 'ground' && <Ground go={go} />}
+          {view === 'learn' && <Learn go={go} />}
+          {view === 'settings' && <Settings theme={theme} setTheme={setTheme} onReplayTour={startTour} />}
         </div>
-        <div className="spacer" />
-        <label className="muted" style={{ fontSize: 13 }} htmlFor="crew-select">Crew member</label>
-        <select id="crew-select" value={selected.id} onChange={(e) => dispatch({ type: 'select', crewId: e.target.value })}>
-          {crew.map((c) => (
-            <option key={c.id} value={c.id}>{c.callsign}</option>
-          ))}
-        </select>
-        <span className={`pill ${ev.overall}`}><span className={`dot ${ev.overall}`} />day {settings.currentDay}</span>
-      </header>
-
-      <nav className="sidenav" aria-label="Main">
-        {NAV.map((n) => (
-          <button key={n.id} className={view === n.id ? 'active' : ''} onClick={() => go(n.id)}>
-            <span aria-hidden="true">{n.icon}</span>
-            {n.label}
-            {n.id === 'alerts' && openAlerts > 0 && <span className={`pill ${ev.overall} badge`}>{openAlerts}</span>}
-          </button>
-        ))}
-        <div className="foot">
-          NASA Space Apps 2026<br />Les Tigres de Bethesda
-        </div>
-      </nav>
-
-      <nav className="mobile-nav" aria-label="Main (mobile)">
-        {NAV.map((n) => (
-          <button key={n.id} className={view === n.id ? 'active' : ''} onClick={() => go(n.id)}>
-            {n.label}{n.id === 'alerts' && openAlerts > 0 ? ` (${openAlerts})` : ''}
-          </button>
-        ))}
-      </nav>
-
-      <main>
-        {view === 'dashboard' && <Dashboard go={go} />}
-        {view === 'body' && (
-          <Suspense fallback={<p className="muted">Loading body map…</p>}>
-            <BodyMap go={go} />
-          </Suspense>
-        )}
-        {view === 'checkin' && <CheckIn key={`${selected.id}:${settings.currentDay}`} go={go} />}
-        {view === 'pvt' && <ReactionTest go={go} />}
-        {view === 'trends' && (
-          <Suspense fallback={<p className="muted">Loading charts…</p>}>
-            <Trends key={trendIndicator ?? 'default'} initial={trendIndicator} />
-          </Suspense>
-        )}
-        {view === 'alerts' && <Alerts />}
-        {view === 'routine' && <Routine go={go} />}
-        {view === 'ground' && <Ground go={go} />}
-        {view === 'learn' && <Learn go={go} />}
-        {view === 'settings' && <Settings theme={theme} setTheme={setTheme} />}
       </main>
+
+      <BottomBar {...nav} />
+      {tourOpen && <Tour onClose={endTour} go={go} />}
     </div>
   );
 }

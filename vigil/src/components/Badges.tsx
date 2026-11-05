@@ -1,37 +1,37 @@
 import { useMemo } from 'react';
-import { badgeProgress, type BadgeProgress } from '../lib/badges';
+import { badgeProgress, visiblePatches, type BadgeIcon, type BadgeProgress } from '../lib/badges';
 import { useStore } from '../state/store';
+import { IconCalendar, IconCheckCircle, IconCheckin, IconDumbbell, IconFlame, IconList, IconReaction } from './icons';
+import './badges.css';
 
-const CSS = `
-@keyframes patch-in { from { transform: scale(0.6); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } to { transform: scale(1); } }
-.patch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; list-style: none; padding: 0; margin: 0; }
-.patch { border: 1px solid var(--line); border-radius: 12px; background: var(--bg-2); padding: 12px; display: grid; gap: 6px; justify-items: center; text-align: center; align-content: start; }
-.patch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.patch .emblem { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 16px; border: 2px solid var(--line); color: var(--muted); }
-.patch.earned { border-color: var(--green); background: var(--green-bg); }
-.patch.earned .emblem { background: var(--green); border-color: var(--green); color: #0b1020; animation: patch-in 0.5s ease-out both; }
-.patch.locked .emblem { filter: grayscale(1); }
-.patch .progress { width: 100%; }
-@media (prefers-reduced-motion: reduce) { .patch.earned .emblem { animation: none; } }
-`;
+const PATCH_ICON: Record<BadgeIcon, typeof IconFlame> = {
+  clipboard: IconCheckin,
+  flame: IconFlame,
+  calendar: IconCalendar,
+  check: IconCheckCircle,
+  timer: IconReaction,
+  dumbbell: IconDumbbell,
+  list: IconList,
+};
 
-function Patch({ p }: { p: BadgeProgress }) {
+/** One 48px row: line icon, name, and the count (or "Earned") in mono on the right. The next patch adds its bar and how-to. */
+function Patch({ p, next }: { p: BadgeProgress; next: boolean }) {
   const { badge, earned, current, target } = p;
-  const status = earned ? 'earned' : `locked, ${current} of ${target}`;
+  const PatchIcon = PATCH_ICON[badge.icon];
+  const status = earned ? 'Earned' : `${current} of ${target}`;
+  // Not a control, so no tab stop: the how-to and the reason are read with the row (the visible how-to only on the next patch).
   return (
-    <li className={`patch ${earned ? 'earned' : 'locked'}`} tabIndex={0} aria-label={`${badge.label}, ${status}`} title={`${badge.how} ${badge.why}`}>
-      <div className="emblem" aria-hidden="true">{badge.icon}</div>
-      <strong style={{ fontSize: 14 }}>{badge.label}</strong>
-      {earned ? (
-        <small className="muted">Earned</small>
-      ) : (
+    <li className={`patch ${earned ? 'earned' : 'next'}`} title={`${badge.how} ${badge.why}`}>
+      <span className="patch-icon" aria-hidden="true"><PatchIcon size={20} /></span>
+      <strong className="patch-name">{badge.label}</strong>
+      <span className="patch-state mono" aria-hidden="true">{earned ? 'Earned' : `${current}/${target}`}</span>
+      <span className="sr-only">, {status}{next ? ', next patch' : ''}. {next ? '' : `${badge.how} `}{badge.why}</span>
+      {next && (
         <>
-          <div className="progress" aria-hidden="true">
+          <div className="patch-bar" aria-hidden="true">
             <span style={{ width: `${(current / target) * 100}%` }} />
           </div>
-          <small>{current}/{target}</small>
-          <small className="muted">{badge.how}</small>
-          <small className="muted">{badge.why}</small>
+          <small className="patch-how">{badge.how}</small>
         </>
       )}
     </li>
@@ -41,18 +41,20 @@ function Patch({ p }: { p: BadgeProgress }) {
 export function Badges() {
   const { selected, routineDone, settings } = useStore();
   const progress = useMemo(() => badgeProgress(selected, routineDone, settings), [selected, routineDone, settings]);
-  const earnedCount = progress.filter((p) => p.earned).length;
+  const { shown, nextId, hidden } = useMemo(() => visiblePatches(progress), [progress]);
+  const earnedCount = progress.length - progress.filter((p) => !p.earned).length;
 
   return (
     <div className="panel">
-      <style>{CSS}</style>
-      <h3>Mission patches</h3>
-      <p className="muted" style={{ fontSize: 13, margin: '0 0 10px' }}>
+      <h2>Mission patches</h2>
+      <p className="small-note patch-lead">
         {earnedCount} of {progress.length} earned. Patches reward habits (measuring, testing, exercising), never the readings themselves.
       </p>
-      <ul className="patch-grid">
-        {progress.map((p) => <Patch key={p.badge.id} p={p} />)}
+      <ul className="patch-list">
+        {shown.map((p) => <Patch key={p.badge.id} p={p} next={p.badge.id === nextId} />)}
       </ul>
+      {hidden > 0 && <p className="small-note patch-more">{hidden} more patch{hidden === 1 ? '' : 'es'} appear as you earn the next one.</p>}
     </div>
   );
 }
+

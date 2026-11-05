@@ -1,0 +1,130 @@
+{
+  "title": "VIGIL redesign: three directions",
+  "request": "Full redesign of the VIGIL crew health app: precise and technical, dark default with a designed light theme, glanceable, few taps, plus a first-run tutorial that explains how it works and where to enter things.",
+  "ui_type": "Functional app (crew tablet and phone PWA)",
+  "directions": [
+    {
+      "code": "A",
+      "name": "Flight Deck",
+      "idea": "An instrument panel: one status readout you can read from across the cabin, then every vital as a calibrated gauge against your own baseline band.",
+      "tell": "It's the health app that reads like a spacecraft display: one glance tells you if you're go or no-go.",
+      "theme": "Dark (light theme designed as a daylight panel)",
+      "type": "Display Space Grotesk / Text Inter / Numerals IBM Plex Mono",
+      "motion": "Signature: on saving a check-in, the status ring sweeps once and the tiles settle into their new state in sequence. Interaction: press-depth on big touch targets. Ambient: none, or a static dot grid only. Scroll: none; the dashboard fits one screen.",
+      "palette": [
+        {"name": "Hull", "hex": "#0b0f14", "role": "ground"},
+        {"name": "Panel", "hex": "#131a22", "role": "ground"},
+        {"name": "Instrument cyan", "hex": "#4fd1c5", "role": "brand"},
+        {"name": "Go green", "hex": "#3ddc84", "role": "action"},
+        {"name": "Caution amber", "hex": "#ffb020", "role": "status"},
+        {"name": "Readout white", "hex": "#e8eef4", "role": "text"}
+      ],
+      "recipe": [
+        {"from": "gold: teenage-engineering", "take": "instrument-grade labelling: small caps units, tabular numerals, hairline rules"},
+        {"from": "godly: LocalCan", "take": "a terminal-green technical accent used only for live state"},
+        {"from": "godly: Griffin", "take": "dark layered panels with precise 1px borders instead of shadows"},
+        {"from": "21st: Segmented LCD Number Ticker", "take": "readouts that change digit by digit, for vitals"}
+      ],
+      "original": "The Go / Watch / No-go readout: one word and one ring at the top, sized to read at arm's length, with the reason in one line under it. Status always has a word and a shape, never colour alone.",
+      "references": [
+        {"source": "godly", "name": "LocalCan", "img": "https://cdn.godly.design/sites/localcan/hero-desktop.webp", "link": "https://godly.design/website/localcan", "take": "green-on-black technical accent, mono labels"},
+        {"source": "godly", "name": "Griffin", "img": "https://cdn.godly.design/sites/griffin/hero-desktop.webp", "link": "https://godly.design/website/griffin", "take": "dark panels with hairline borders"}
+      ],
+      "components": [
+        {"code": "A1", "category": "Tutorial", "name": "Product Tour", "author": "laziekiki", "preview": "https://cdn.21st.dev/user_3J39TADh2eUXcUqIKX6ozU6RE62/product-tour/default/preview.1789035375065.webp", "video": "https://cdn.21st.dev/user_3J39TADh2eUXcUqIKX6ozU6RE62/product-tour/default/video.1789035359923.mp4", "link": "https://21st.dev/@laziekiki/components/product-tour", "id": 26918, "why": "The first-run tutorial: a spotlight walks the crew member across the real status readout, the check-in button and the body map, keyboard driven and reduced-motion aware."},
+        {"code": "A2", "category": "Numbers", "name": "Segmented LCD Number Ticker", "author": "shadcnspace", "preview": "https://cdn.21st.dev/user_38qAOtph5HovpSn2yjNYXjbTOm2/number-ticker-08/default/preview.1790152587557.webp", "video": "https://cdn.21st.dev/user_38qAOtph5HovpSn2yjNYXjbTOm2/number-ticker-08/default/video.1790152585034.mp4", "link": "https://21st.dev/@shadcnspace/components/number-ticker-08", "id": 29887, "why": "Instrument-style vitals readouts on the tiles (heart rate, SpO2, dose)."},
+        {"code": "A3", "category": "Input", "name": "Number Field", "author": "coss.com", "preview": "https://cdn.21st.dev/coss.com/number-field/default/preview.1789956912343-241eb51d-2fba-4942-9103-647ff724278a.png", "video": "https://cdn.21st.dev/coss.com/number-field/default/video.1789956912343-241eb51d-2fba-4942-9103-647ff724278a.mp4", "link": "https://21st.dev/@coss.com/components/number-field", "id": 28180, "why": "Big +/- steppers so a value can be nudged from yesterday's reading without a keyboard in microgravity."},
+        {"code": "A4", "category": "Status history", "name": "Uptime Card", "author": "kokonutd", "preview": "https://cdn.21st.dev/user_2rQ1QHrJyxpmWMHhqhANzWMc64n/uptime-card/default/preview.1792518256805.webp", "video": "https://cdn.21st.dev/user_2rQ1QHrJyxpmWMHhqhANzWMc64n/uptime-card/default/video.1792518166638.mp4", "link": "https://21st.dev/@kokonutd/components/uptime-card", "id": 39964, "why": "A status strip per indicator, one bar per mission day coloured Go/Watch/No-go, which shows a drift at a glance."},
+        {"code": "A5", "category": "Interactive", "name": "Segmented Control", "author": "ddoemonn", "preview": "https://cdn.21st.dev/user_2y2pjLtk7oS33zts6BqhEIOHrAj/segmented-control/default/preview.1787348037234.png", "video": "https://cdn.21st.dev/user_2y2pjLtk7oS33zts6BqhEIOHrAj/segmented-control/default/video.1787348050040.mp4", "link": "https://21st.dev/@ddoemonn/components/segmented-control", "id": 23552, "why": "One-tap mood, stress and sleep-quality scales instead of sliders, accessible as a radio group."},
+        {"code": "A6", "category": "Background", "name": "Dot Grid", "author": "halaska-studio", "preview": "https://cdn.21st.dev/halaska-studio/dot-grid/tight-spacing/preview.1790829636514-2f73a648-9c33-478d-a444-cc1abb42efd9.png", "video": null, "link": "https://21st.dev/@halaska-studio/components/dot-grid", "id": 34704, "why": "A static plotting-grid texture behind the status panel only, like a scope screen; no motion, no cost."}
+      ]
+    },
+    {
+      "code": "B",
+      "name": "Procedure Card",
+      "idea": "The daily check-in as a NASA-style procedure: numbered steps, one action per screen, a cue card that tells you exactly what to measure and where it goes.",
+      "tell": "It's the health app that walks you through your check-in like a flight procedure, one step at a time.",
+      "theme": "Light first (paper procedure), dark designed for sleep periods",
+      "type": "Display Inter Tight / Text Inter / Step numbers JetBrains Mono",
+      "motion": "Signature: each step slides in from the right and the step rail fills as you go, ending on a one-screen summary. Interaction: large tap rows with a check mark that stamps in. Ambient: none.",
+      "palette": [
+        {"name": "Procedure paper", "hex": "#f4f2ec", "role": "ground"},
+        {"name": "Ink", "hex": "#14171c", "role": "text"},
+        {"name": "Procedure blue", "hex": "#1f5fd6", "role": "action"},
+        {"name": "Caution amber", "hex": "#c77700", "role": "status"},
+        {"name": "Warning red", "hex": "#c62828", "role": "status"},
+        {"name": "Rule grey", "hex": "#d7d3c8", "role": "ground"}
+      ],
+      "recipe": [
+        {"from": "godly: Rerun", "take": "light technical layout with precise type and generous whitespace"},
+        {"from": "gold: stripe-press", "take": "editorial numbering and rules that make long content scannable"},
+        {"from": "21st: Wizard Steps", "take": "a clickable progress rail with direction-aware transitions for the check-in"},
+        {"from": "21st: Timeline", "take": "the daily routine as a vertical timeline with now-marker"}
+      ],
+      "original": "Every input step carries a cue card: what to measure, how (cuff, camera, wearable), and why it matters in space, so a crew member never wonders where a number goes.",
+      "references": [
+        {"source": "godly", "name": "Rerun", "img": "https://cdn.godly.design/sites/rerun/hero-desktop.webp", "link": "https://godly.design/website/rerun", "take": "precise light technical type and grid"},
+        {"source": "godly", "name": "Serro AI", "img": "https://cdn.godly.design/sites/serro/hero-desktop.webp", "link": "https://godly.design/website/serro", "take": "dashboard density with clear sectioning"}
+      ],
+      "components": [
+        {"code": "B1", "category": "Check-in flow", "name": "Wizard Steps", "author": "ddoemonn", "preview": "https://cdn.21st.dev/ddoemonn/wizard-steps/default/preview.1785481100595-bd34f56b-c117-4c3f-850c-17f9fe106632.png", "video": "https://cdn.21st.dev/ddoemonn/wizard-steps/default/video.1785481100595-bd34f56b-c117-4c3f-850c-17f9fe106632.mp4", "link": "https://21st.dev/@ddoemonn/components/wizard-steps", "id": 23576, "why": "Turns the long check-in form into 5 short steps (Vitals, Body, Sleep and mind, Symptoms, Review) with keyboard navigation."},
+        {"code": "B2", "category": "Tutorial", "name": "Onboarding Checklist", "author": "chowlol202", "preview": "https://cdn.21st.dev/user_2uI4jcWkLCShhQZpb7z39hnaByr/onboarding-checklist/default/preview.1787178260438.webp", "video": "https://cdn.21st.dev/user_2uI4jcWkLCShhQZpb7z39hnaByr/onboarding-checklist/default/video.1785519707450.mp4", "link": "https://21st.dev/@chowlol202/components/onboarding-checklist", "id": 5587, "why": "The tutorial as a first-day checklist with coachmarks: do your first check-in, run the reaction test, read an alert, send a report."},
+        {"code": "B3", "category": "Routine", "name": "Timeline", "author": "kuratlielia", "preview": "https://cdn.21st.dev/user_registry_kuratlielia_1790903117010/timeline/default/preview.1790977806085.webp", "video": "https://cdn.21st.dev/user_registry_kuratlielia_1790903117010/timeline/default/video.1790977802337.mp4", "link": "https://21st.dev/@kuratlielia/components/timeline", "id": 35051, "why": "The mission day schedule (wake test 06:15, vitals 06:30, exercise 13:00) with a drawing connector to 'now'."},
+        {"code": "B4", "category": "Input", "name": "Increment Slider", "author": "coss.com", "preview": "https://cdn.21st.dev/user_cosscom/p-slider-14/default/preview.1790098592835.png", "video": "https://cdn.21st.dev/user_cosscom/p-slider-14/default/video.1790098615729.mp4", "link": "https://21st.dev/@coss.com/components/p-slider-14", "id": 29208, "why": "Sleep hours and exercise minutes: drag for the rough value, +/- for the exact one."},
+        {"code": "B5", "category": "Alerts", "name": "Notice Alert", "author": "corr", "preview": "https://cdn.21st.dev/corr/notice-alert/default/preview.1784723104620-22d682d0-eefc-4af7-8ae9-1855c45c3304.png", "video": "https://cdn.21st.dev/corr/notice-alert/default/video.1784723104620-22d682d0-eefc-4af7-8ae9-1855c45c3304.mp4", "link": "https://21st.dev/@corr/components/notice-alert", "id": 19366, "why": "Restrained Caution / Warning callouts in procedure style for each finding."},
+        {"code": "B6", "category": "Progress", "name": "Meter", "author": "redrob-labs", "preview": "https://cdn.21st.dev/redrob-labs/meter/default/preview.1791974783279-4e3739d1-d873-41ca-92f4-b58bada26214.png", "video": null, "link": "https://21st.dev/@redrob-labs/components/meter", "id": 38114, "why": "Cumulative radiation dose against the 600 mSv career limit, colour escalating at the app's 50% and 80% conventions."}
+      ]
+    },
+    {
+      "code": "C",
+      "name": "Flight Deck + Procedures (recommended)",
+      "idea": "A fusion: the Flight Deck's one-glance dashboard for reading your status, and the Procedure Card's step-by-step flow for entering data. Read like an instrument, enter like a checklist.",
+      "tell": "It's the health app where you see go or no-go in one glance, and the daily check-in walks you through in under two minutes.",
+      "theme": "Dark default + designed light (daylight panel)",
+      "type": "Display Space Grotesk / Text Inter / Numerals IBM Plex Mono",
+      "motion": "Signature: the status ring sweeps on save and the tiles update in sequence. Check-in steps slide with a filling step rail. Tutorial spotlight glides between real elements. Ambient: none. Everything has a reduced-motion fallback.",
+      "palette": [
+        {"name": "Hull", "hex": "#0b0f14", "role": "ground"},
+        {"name": "Panel", "hex": "#131a22", "role": "ground"},
+        {"name": "Instrument cyan", "hex": "#4fd1c5", "role": "brand"},
+        {"name": "Action blue", "hex": "#5b8cff", "role": "action"},
+        {"name": "Caution amber", "hex": "#ffb020", "role": "status"},
+        {"name": "Readout white", "hex": "#e8eef4", "role": "text"}
+      ],
+      "recipe": [
+        {"from": "gold: teenage-engineering", "take": "instrument labelling and tabular numerals"},
+        {"from": "gold: oura", "take": "a calm health app that leads with one readiness answer, then detail on demand"},
+        {"from": "godly: Griffin", "take": "dark layered panels, hairline borders"},
+        {"from": "21st: Product Tour + Wizard Steps", "take": "spotlight tutorial on the real UI, and a stepped check-in"}
+      ],
+      "original": "A 'Today' screen with exactly three things: your status word with its reason, the one next action (Start check-in, Run reaction test, or Send report), and the body map. Everything else is one tap away.",
+      "references": [
+        {"source": "godly", "name": "Griffin", "img": "https://cdn.godly.design/sites/griffin/hero-desktop.webp", "link": "https://godly.design/website/griffin", "take": "dark panels with hairline borders"},
+        {"source": "godly", "name": "Rerun", "img": "https://cdn.godly.design/sites/rerun/hero-desktop.webp", "link": "https://godly.design/website/rerun", "take": "light theme precision for the daylight variant"}
+      ],
+      "components": [
+        {"code": "C1", "category": "Tutorial", "name": "Product Tour", "author": "laziekiki", "preview": "https://cdn.21st.dev/user_3J39TADh2eUXcUqIKX6ozU6RE62/product-tour/default/preview.1789035375065.webp", "video": "https://cdn.21st.dev/user_3J39TADh2eUXcUqIKX6ozU6RE62/product-tour/default/video.1789035359923.mp4", "link": "https://21st.dev/@laziekiki/components/product-tour", "id": 26918, "why": "The first-run tutorial on the real screens: status, next action, where each number goes, alerts, reports."},
+        {"code": "C2", "category": "Check-in flow", "name": "Wizard Steps", "author": "ddoemonn", "preview": "https://cdn.21st.dev/ddoemonn/wizard-steps/default/preview.1785481100595-bd34f56b-c117-4c3f-850c-17f9fe106632.png", "video": "https://cdn.21st.dev/ddoemonn/wizard-steps/default/video.1785481100595-bd34f56b-c117-4c3f-850c-17f9fe106632.mp4", "link": "https://21st.dev/@ddoemonn/components/wizard-steps", "id": 23576, "why": "The stepped check-in, prefilled from the wearable so most steps are a single 'confirm'."},
+        {"code": "C3", "category": "Input", "name": "Number Field", "author": "coss.com", "preview": "https://cdn.21st.dev/coss.com/number-field/default/preview.1789956912343-241eb51d-2fba-4942-9103-647ff724278a.png", "video": "https://cdn.21st.dev/coss.com/number-field/default/video.1789956912343-241eb51d-2fba-4942-9103-647ff724278a.mp4", "link": "https://21st.dev/@coss.com/components/number-field", "id": 28180, "why": "Big +/- steppers for vitals; no keyboard needed."},
+        {"code": "C4", "category": "Interactive", "name": "Segmented Control", "author": "ddoemonn", "preview": "https://cdn.21st.dev/user_2y2pjLtk7oS33zts6BqhEIOHrAj/segmented-control/default/preview.1787348037234.png", "video": "https://cdn.21st.dev/user_2y2pjLtk7oS33zts6BqhEIOHrAj/segmented-control/default/video.1787348050040.mp4", "link": "https://21st.dev/@ddoemonn/components/segmented-control", "id": 23552, "why": "One-tap mood and stress scales, and the light/dark theme switch."},
+        {"code": "C5", "category": "Status history", "name": "Uptime Card", "author": "kokonutd", "preview": "https://cdn.21st.dev/user_2rQ1QHrJyxpmWMHhqhANzWMc64n/uptime-card/default/preview.1792518256805.webp", "video": "https://cdn.21st.dev/user_2rQ1QHrJyxpmWMHhqhANzWMc64n/uptime-card/default/video.1792518166638.mp4", "link": "https://21st.dev/@kokonutd/components/uptime-card", "id": 39964, "why": "Per-indicator mission-day status strip; tap a day to see that day's finding."},
+        {"code": "C6", "category": "Numbers", "name": "Animate Digits", "author": "unlumen", "preview": "https://cdn.21st.dev/unlumen/animate-digits/default/preview.1784317870310.png", "video": "https://cdn.21st.dev/unlumen/animate-digits/default/video.1784284788831-76432d1d-ea59-401e-bbe8-11849a9b44cb.mp4", "link": "https://21st.dev/@unlumen/components/animate-digits", "id": 20071, "why": "Only changed digits slide on update, for readouts and the delay countdown."},
+        {"code": "C7", "category": "Routine", "name": "Timeline", "author": "kuratlielia", "preview": "https://cdn.21st.dev/user_registry_kuratlielia_1790903117010/timeline/default/preview.1790977806085.webp", "video": "https://cdn.21st.dev/user_registry_kuratlielia_1790903117010/timeline/default/video.1790977802337.mp4", "link": "https://21st.dev/@kuratlielia/components/timeline", "id": 35051, "why": "The mission-day routine with a now-marker."}
+      ]
+    }
+  ],
+  "shelf": [
+    {"code": "S1", "category": "Tutorial", "name": "Product Tour Popover", "author": "shadcnspace", "preview": "https://cdn.21st.dev/user_38qAOtph5HovpSn2yjNYXjbTOm2/product-tour-popover/default/preview.1790152371510.webp", "video": "https://cdn.21st.dev/user_38qAOtph5HovpSn2yjNYXjbTOm2/product-tour-popover/default/video.1790152360798.mp4", "link": "https://21st.dev/@shadcnspace/components/product-tour-popover", "id": 29891},
+    {"code": "S2", "category": "Tutorial", "name": "Step Onboarding Wizard", "author": "ziegfiroyt", "preview": "https://cdn.21st.dev/ziegfiroyt/onboarding9/default/preview.1790087072613-3599e25e-3014-41fb-b679-21c39786bbd0.png", "video": "https://cdn.21st.dev/ziegfiroyt/onboarding9/default/video.1790087072613-3599e25e-3014-41fb-b679-21c39786bbd0.mp4", "link": "https://21st.dev/@ziegfiroyt/components/onboarding9", "id": 29526},
+    {"code": "S3", "category": "Check-in flow", "name": "Stepper with Square Badges", "author": "shadcnspace", "preview": "https://cdn.21st.dev/shadcnspace/stepper-01/default/preview.1789986786825-6fc7c015-c74b-4e1a-b38a-085d3cdd6380.png", "video": "https://cdn.21st.dev/shadcnspace/stepper-01/default/video.1789986786825-6fc7c015-c74b-4e1a-b38a-085d3cdd6380.mp4", "link": "https://21st.dev/@shadcnspace/components/stepper-01", "id": 28546},
+    {"code": "S4", "category": "Input", "name": "Quantity Stepper", "author": "arihantcodes", "preview": "https://cdn.21st.dev/arihantcodes_1f7b8c4d/quantity-stepper/default/preview.1790143727039-972a67ec-3190-46f9-8a22-faa114441bb0.png", "video": "https://cdn.21st.dev/arihantcodes_1f7b8c4d/quantity-stepper/default/video.1790143727039-972a67ec-3190-46f9-8a22-faa114441bb0.mp4", "link": "https://21st.dev/@arihantcodes_1f7b8c4d/components/quantity-stepper", "id": 29940},
+    {"code": "S5", "category": "Input", "name": "Slider (rolling value)", "author": "kuratlielia", "preview": "https://cdn.21st.dev/user_registry_kuratlielia_1790903117010/slider/default/preview.1790978106946.webp", "video": "https://cdn.21st.dev/kuratlielia/slider/default/video.1790978103786.mp4", "link": "https://21st.dev/@kuratlielia/components/slider", "id": 35040},
+    {"code": "S6", "category": "Progress", "name": "Circular Progress", "author": "shadcnui-blocks", "preview": "https://cdn.21st.dev/user_registry_shadcnui-blocks_1783488755809/progress-10/default/preview.1788202482883.png", "video": "https://cdn.21st.dev/user_registry_shadcnui-blocks_1783488755809/progress-10/default/video.1788202495648.mp4", "link": "https://21st.dev/@shadcnui-blocks/components/progress-10", "id": 22095},
+    {"code": "S7", "category": "Progress", "name": "Meter", "author": "redrob-labs", "preview": "https://cdn.21st.dev/redrob-labs/meter/default/preview.1791974783279-4e3739d1-d873-41ca-92f4-b58bada26214.png", "video": null, "link": "https://21st.dev/@redrob-labs/components/meter", "id": 38114},
+    {"code": "S8", "category": "Navigation", "name": "Animated Sidebar", "author": "starc007", "preview": "https://cdn.21st.dev/starc007/animated-sidebar/default/preview.1790065868192-e608260d-b9c7-49c1-94e7-1915131dba73.png", "video": "https://cdn.21st.dev/starc007/animated-sidebar/default/video.1790065868192-e608260d-b9c7-49c1-94e7-1915131dba73.mp4", "link": "https://21st.dev/@starc007/components/animated-sidebar", "id": 29334},
+    {"code": "S9", "category": "Alerts", "name": "Notice Alert", "author": "corr", "preview": "https://cdn.21st.dev/corr/notice-alert/default/preview.1784723104620-22d682d0-eefc-4af7-8ae9-1855c45c3304.png", "video": "https://cdn.21st.dev/corr/notice-alert/default/video.1784723104620-22d682d0-eefc-4af7-8ae9-1855c45c3304.mp4", "link": "https://21st.dev/@corr/components/notice-alert", "id": 19366},
+    {"code": "S10", "category": "Numbers", "name": "Segmented LCD Number Ticker", "author": "shadcnspace", "preview": "https://cdn.21st.dev/user_38qAOtph5HovpSn2yjNYXjbTOm2/number-ticker-08/default/preview.1790152587557.webp", "video": "https://cdn.21st.dev/user_38qAOtph5HovpSn2yjNYXjbTOm2/number-ticker-08/default/video.1790152585034.mp4", "link": "https://21st.dev/@shadcnspace/components/number-ticker-08", "id": 29887},
+    {"code": "S11", "category": "Background", "name": "Dot Grid", "author": "halaska-studio", "preview": "https://cdn.21st.dev/halaska-studio/dot-grid/tight-spacing/preview.1790829636514-2f73a648-9c33-478d-a444-cc1abb42efd9.png", "video": null, "link": "https://21st.dev/@halaska-studio/components/dot-grid", "id": 34704},
+    {"code": "S12", "category": "Cards", "name": "Activity Card (rings)", "author": "kokonutd", "preview": "https://cdn.21st.dev/user_2rQ1QHrJyxpmWMHhqhANzWMc64n/activity-card/default/preview.png", "video": "https://cdn.21st.dev/user_2rQ1QHrJyxpmWMHhqhANzWMc64n/activity-card/default/video.mp4", "link": "https://21st.dev/@kokonutd/components/activity-card", "id": 1375}
+  ]
+}

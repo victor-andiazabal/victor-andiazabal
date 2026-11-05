@@ -82,8 +82,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener('storage', onStorage);
   }, []);
 
+  // The simulation depends on the settings only, so a manual entry does not re-run it.
+  const sim = useMemo(() => simulateCrew(state.settings), [state.settings]);
   const crew = useMemo(() => {
-    const sim = simulateCrew(state.settings);
     // Manual entries replace the simulated record for that day.
     return sim.map((m) => {
       const covered = new Set(m.records.map((r) => r.day));
@@ -93,7 +94,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const records = [...m.records.map((r) => state.manual[`${m.id}:${r.day}`] ?? r), ...extra].sort((a, b) => a.day - b.day);
       return { ...m, records };
     });
-  }, [state.settings, state.manual]);
+  }, [sim, state.manual]);
 
   const selected = crew.find((c) => c.id === state.selectedCrewId) ?? crew[0];
 

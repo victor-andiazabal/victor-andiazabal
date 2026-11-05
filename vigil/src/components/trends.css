@@ -1,0 +1,29 @@
+/* Trends: instrument chart on a panel, one indicator picker, a stats panel beside it. */
+
+.trend-picker { max-width: 360px; margin-bottom: var(--s-6); }
+.trend-select { font-weight: 500; }
+
+.trend-title { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; margin-bottom: var(--s-4); }
+.trend-unit { font-weight: 400; font-size: 16px; font-family: var(--mono); }
+.trend-chart { width: 100%; height: 340px; }
+.trend-ref { font-size: 13px; color: var(--text-2); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-control); padding: 8px 12px; margin: var(--s-2) 0; }
+
+.trend-legend { list-style: none; display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-6); margin: var(--s-4) 0 0; padding: 0; font-size: 13px; color: var(--text-2); }
+.trend-legend li { display: inline-flex; align-items: center; gap: var(--s-2); }
+.legend-band { width: 28px; height: 8px; border-radius: 2px; background: var(--brand); opacity: 0.35; }
+
+.legend-scenario { width: 28px; height: 8px; border-radius: 2px; background: var(--amber); opacity: 0.4; }
+
+.kv { display: grid; grid-template-columns: auto 1fr; gap: var(--s-2) var(--s-4); font-size: 13px; margin: 0; }
+.kv dt { color: var(--text-muted); }
+.kv dd { margin: 0; text-align: right; }
+
+/* Recharts tooltip on Surface 3 with a mono readout. */
+.recharts-default-tooltip { background: var(--surface-3) !important; border: 1px solid var(--line-strong) !important; border-radius: var(--r-control) !important; color: var(--text) !important; box-shadow: var(--shadow-overlay); font-family: var(--mono); font-size: 13px; }
+.recharts-tooltip-label { color: var(--text-muted) !important; }
+.recharts-tooltip-item { color: var(--text) !important; }
+
+@media (max-width: 1023px) {
+  .trend-chart { height: 280px; }
+  .trend-picker { max-width: none; }
+}

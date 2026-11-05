@@ -201,6 +201,27 @@ export const SOURCES: Source[] = [
     url: 'https://doi.org/10.1097/JOM.0000000000000158',
     note: 'For each 1 mmHg increase in cabin CO2, the odds of a crew member reporting a headache doubled.',
   },
+  {
+    id: 'russell-2023',
+    org: 'Russell et al., npj Microgravity 9 (2023), NASA ExMC',
+    title: 'The value of a spaceflight clinical decision support system for earth-independent medical operations',
+    url: 'https://doi.org/10.1038/s41526-023-00284-1',
+    note: 'Deep-space crews will have to detect, diagnose and treat medical events without real-time ground support; a clinical decision support system guides the crew through measuring, acting and reassessing.',
+  },
+  {
+    id: 'kaida-2006',
+    org: 'Kaida et al., Clin Neurophysiol 117 (2006)',
+    title: 'Validation of the Karolinska sleepiness scale against performance and EEG variables',
+    url: 'https://doi.org/10.1016/j.clinph.2006.03.011',
+    note: 'KSS ratings (1 extremely alert to 9 extremely sleepy, fighting sleep) rose with PVT reaction time, lapses and EEG alpha/theta power; ratings are a useful proxy for behavioural sleepiness.',
+  },
+  {
+    id: 'dev-2024',
+    org: 'Dev et al., Front Physiol 15 (2024), NASA Behavioral Health and Performance Laboratory',
+    title: 'Cognitive performance in ISS astronauts on 6-month low earth orbit missions',
+    url: 'https://doi.org/10.3389/fphys.2024.1451269',
+    note: 'Twenty-five ISS astronauts: slower processing speed and sustained attention in early flight, and no clear association between measured cognitive performance and self-rated alertness.',
+  },
 ];
 
 export const sourceById = (id: string) => SOURCES.find((s) => s.id === id);

@@ -8,6 +8,7 @@ import { systemStatus, worstSystem, type SystemStatus } from '../lib/bodymap';
 import { evaluate, type Evaluation } from '../lib/rules';
 import type { IndicatorId, Level } from '../lib/types';
 import { useStore } from '../state/store';
+import { IconChevronRight } from './icons';
 import { Pill, SourceLinks } from './ui';
 import './bodymap.css';
 
@@ -79,7 +80,8 @@ function Figure({ status, active, onPick }: { status: StatusMap; active: BodySys
         <path className="bm-icon-line" d="M84 30 Q92 20 100 28 Q108 20 116 30 M92 36 Q100 31 108 36" />
       </Region>
       <Region id="eyes" {...r}>
-        <rect x="82" y="40" width="36" height="13" rx="6" className="bm-hit" />
+        {/* Hit area only over the eyes (36x10), so the centre of the head still selects the head. */}
+        <rect x="82" y="42" width="36" height="10" rx="5" className="bm-hit" />
         <ellipse className="bm-shape" cx="91" cy="46.5" rx="5.5" ry="3.4" />
         <ellipse className="bm-shape" cx="109" cy="46.5" rx="5.5" ry="3.4" />
         <circle className="bm-icon" cx="91" cy="46.5" r="1.6" />
@@ -136,7 +138,7 @@ function IndicatorRows({ sys, ev, go }: { sys: BodySystem; ev: Evaluation; go: G
             <span className={`dot ${s.level}`} aria-hidden="true" />
             <span className="bm-row-label">{def.label}</span>
             <span className="mono">{fmt(id, s.value)} <small>{def.unit}</small></span>
-            <button type="button" className="btn sm" onClick={() => go('trends', id)} aria-label={`Open ${def.label} trend`}>
+            <button type="button" className="btn" onClick={() => go('trends', id)} aria-label={`Open ${def.label} trend`}>
               Trend
             </button>
           </li>
@@ -164,7 +166,7 @@ function SystemDetail({ sys, st, ev, go }: { sys: BodySystem; st: SystemStatus; 
         </div>
       ))}
       {st.findings.length > 0 && (
-        <button type="button" className="btn sm" onClick={() => go('alerts')}>Open alerts for actions</button>
+        <button type="button" className="btn" onClick={() => go('alerts')}>Open alerts for actions</button>
       )}
 
       <h3>Linked indicators</h3>
@@ -211,13 +213,19 @@ export function BodyMap({ go, compact = false }: { go: Go; compact?: boolean }) 
 
   if (compact) {
     const summary = summaryOf(status);
+    const worst = bodySystemById(active);
+    const worstLevel = status[active].level;
+    const others = BODY_SYSTEMS.filter((o) => o.id !== active && status[o.id].level !== 'green');
     return (
       <button type="button" className="bm-compact" onClick={() => go('body')} aria-label={`Open body map. ${summary}.`}>
         <Figure status={status} active={null} />
         <span className="bm-compact-text">
-          <b>Body map</b>
-          <span className="muted">{summary}</span>
-          <span className="bm-compact-cta">Open body map</span>
+          <span className="bm-compact-prefix">Body map</span>
+          <span className="bm-compact-worst">
+            {worstLevel === 'green' ? 'All systems' : worst.label} <Pill level={worstLevel} />
+          </span>
+          {others.length > 0 && <span className="muted">Also {others.map((o) => `${o.label}: ${LEVEL_LABEL[status[o.id].level]}`).join('; ')}</span>}
+          <span className="bm-compact-cta"><span className="bm-compact-cta-label">Open body map</span> <IconChevronRight size={16} /></span>
         </span>
       </button>
     );

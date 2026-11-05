@@ -1,0 +1,74 @@
+/* Routine: vertical timeline (1px rail, markers, a "now" marker), streak. */
+
+.routine-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-4); margin-bottom: var(--s-3); }
+.routine-head h2 { margin: 0; }
+.routine-count { font-size: 13px; color: var(--text-2); }
+.routine-progress { margin-bottom: var(--s-6); }
+
+.tl { list-style: none; margin: 0; padding: 0; }
+.tl-item, .tl-now { position: relative; padding-left: 40px; }
+
+/*
+ * One marker per row: the 24px chamfered checkbox is the node on the 1px rail (centre x 16). The rail runs from the bottom of
+ * one box to the top of the next (box spans y 14 to 38 inside its row).
+ */
+.tl-item:not(:last-child)::after, .tl-now::after {
+  content: ''; position: absolute; left: 16px; top: 38px; bottom: -14px; width: 1px;
+  background: var(--line-strong); transform-origin: top;
+}
+.tl-now:last-child::after { display: none; }
+.tl-item:first-child::before {
+  content: ''; position: absolute; left: 16px; top: 0; height: 14px; width: 1px; background: var(--line-strong);
+}
+.tl-check .check { position: absolute; left: -36px; top: 8px; }
+
+.tl-row { display: flex; align-items: center; gap: var(--s-3); min-height: var(--hit); padding: 6px 0; border-bottom: 1px solid var(--line); }
+.tl-item:last-child .tl-row { border-bottom: 0; }
+.tl-check { position: relative; flex: 1; min-width: 0; display: flex; align-items: flex-start; gap: var(--s-3); min-height: var(--hit); padding: 8px 0; cursor: pointer; }
+.tl-time { flex: none; width: 52px; font-size: 13px; line-height: 24px; color: var(--text-2); }
+.tl-text { display: grid; gap: 2px; min-width: 0; }
+.tl-label { line-height: 24px; }
+.tl-why { color: var(--text-2); }
+.tl-item.done .tl-label { color: var(--text-muted); text-decoration: line-through; text-decoration-color: var(--text-muted); }
+.tl-open { flex: none; }
+
+/* Now marker: the only cyan on this screen. */
+.tl-now { display: flex; align-items: center; gap: var(--s-3); min-height: 36px; }
+.tl-now-dot {
+  position: absolute; left: 10px; top: 50%; width: 13px; height: 13px; margin-top: -6.5px; z-index: 1;
+  border-radius: 50%; background: var(--brand); border: 4px solid var(--surface-1); background-clip: padding-box;
+}
+.tl-now::after { top: 50%; }
+.tl-now-label { flex: none; font-size: 13px; font-weight: 500; color: var(--text); }
+.tl-now-rule { flex: 1; height: 1px; background: var(--brand); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .tl-item:not(:last-child)::after, .tl-now::after { animation: tl-draw var(--t-step) var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
+  .tl-now-dot { animation: tl-pop var(--t-step) var(--ease) both; animation-delay: calc(var(--i) * 60ms); }
+}
+@keyframes tl-draw { from { transform: scaleY(0); } }
+@keyframes tl-pop { from { opacity: 0; transform: scale(0.6); } }
+
+/* Streak: the count and its unit are one mono line, the sentence sits under it. */
+.streak-count { display: flex; align-items: baseline; gap: var(--s-2); margin: 0 0 var(--s-1); }
+.streak-count .num { font-size: 32px; font-weight: 500; line-height: 1; letter-spacing: -0.01em; }
+.streak-count .unit { font-size: 16px; color: var(--text-2); }
+.streak-text { margin: 0; color: var(--text); }
+
+@media (max-width: 639px) {
+  .tl-row { flex-wrap: wrap; gap: 0; }
+  .tl-check {
+    flex: 1 1 100%; display: grid; grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'time' 'text'; row-gap: 0;
+  }
+  .tl-time { grid-area: time; width: auto; }
+  .tl-text { grid-area: text; }
+  .tl-open { margin: 0 0 var(--s-2) 0; }
+}
+
+/* 3fr / 2fr so the timeline column and the patches column end together. */
+@media (min-width: 1024px) {
+  .routine-split { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: stretch; }
+  .routine-split > .stack:first-child { align-content: stretch; }
+  .routine-split > .stack:last-child { grid-template-rows: auto auto 1fr; align-content: stretch; }
+}

@@ -1,0 +1,29 @@
+{
+  "runs": [
+    {
+      "url": "http://localhost:4182/",
+      "width": 1440,
+      "frames": 123,
+      "p50": 8.3,
+      "p95": 8.4,
+      "dropped": 0,
+      "longestTask": 0,
+      "clsLoad": 0.0023,
+      "clsTotal": 0.0069,
+      "pass": true
+    },
+    {
+      "url": "http://localhost:4182/",
+      "width": 1440,
+      "frames": 130,
+      "p50": 8.3,
+      "p95": 8.5,
+      "dropped": 0,
+      "longestTask": 0,
+      "clsLoad": 0.001,
+      "clsTotal": 0.001,
+      "pass": true
+    }
+  ],
+  "pass": true
+}

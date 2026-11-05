@@ -1,0 +1,39 @@
+/* Settings: option rows, range slider, button rows. */
+
+.option-list { display: grid; }
+.option-row { padding: 12px 0; border-top: 1px solid var(--line); }
+.option-list > .option-row:first-child { border-top: 0; padding-top: 0; }
+.option-name { display: block; font-weight: 500; }
+.option-blurb { display: block; margin-top: 2px; color: var(--text-muted); }
+
+.settings .field { gap: var(--s-2); }
+.settings .field > label, .settings .field-label { margin-bottom: 0; }
+.settings-row { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.settings-gap { margin-top: var(--s-6); }
+.settings-groups { display: grid; gap: var(--s-6); }
+.seed-input { max-width: 200px; }
+/* The seed is a plain number: no native spin control inside the chamfered field (arrow keys and the numeric keypad still work). */
+.seed-input::-webkit-inner-spin-button, .seed-input::-webkit-outer-spin-button { -webkit-appearance: none; appearance: none; margin: 0; }
+.seed-input { -moz-appearance: textfield; appearance: textfield; }
+.import-msg { color: var(--text-2); }
+
+/* Range: hairline track, 24px chamfered square thumb in Text (cut 6, same diagonal pair as the keys). No action colour; the slider is not a primary action. */
+.range { appearance: none; -webkit-appearance: none; width: 100%; height: var(--hit); margin: 0; padding: 0; background: transparent; cursor: pointer; }
+.range::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: var(--line-strong); }
+.range::-moz-range-track { height: 4px; border-radius: 2px; background: var(--line-strong); }
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 24px; height: 24px; margin-top: -10px; border: 0; border-radius: 0; background: var(--text);
+  clip-path: polygon(var(--chamfer-sm) 0, 100% 0, 100% calc(100% - var(--chamfer-sm)), calc(100% - var(--chamfer-sm)) 100%, 0 100%, 0 var(--chamfer-sm));
+}
+.range::-moz-range-thumb {
+  width: 24px; height: 24px; border: 0; border-radius: 0; background: var(--text);
+  clip-path: polygon(var(--chamfer-sm) 0, 100% 0, 100% calc(100% - var(--chamfer-sm)), calc(100% - var(--chamfer-sm)) 100%, 0 100%, 0 var(--chamfer-sm));
+}
+.range:focus-visible { outline: none; }
+.range:focus-visible::-webkit-slider-thumb { background: var(--action); }
+.range:focus-visible::-moz-range-thumb { background: var(--action); }
+
+/* File picker: the native input is hidden; a 48px secondary key opens it and the chosen name sits beside it. */
+.file-pick { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.file-name { font-size: 14px; color: var(--text-2); min-width: 0; overflow-wrap: anywhere; }
+.field + .settings-row { margin-top: var(--s-3); }

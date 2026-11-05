@@ -1,0 +1,123 @@
+/* Shared controls: segmented, animated digits, baseline band, status strip. Tokens only. */
+
+/* Segmented (C4): options are the full height; the thumb sits 3px inside its cell. Track, thumb and option focus are chamfered (styles.css family). */
+.seg { display: inline-flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
+.seg-track {
+  --cf-fill: var(--surface-2); --cf-edge: var(--line);
+  display: grid;
+  grid-template-columns: repeat(var(--count), minmax(0, 1fr));
+}
+.seg-thumb {
+  --c: var(--chamfer-sm); --cf-fill: var(--surface-3); --cf-edge: var(--line-strong);
+  position: absolute; top: 3px; bottom: 3px; left: 3px;
+  width: calc((100% - 6px) / var(--count));
+  transform: translateX(calc(var(--index) * 100%));
+  transition: transform var(--t-menu) var(--ease);
+  pointer-events: none;
+}
+.seg-option {
+  z-index: 1; min-height: var(--hit); padding: 0 16px;
+  color: var(--text-2); font-size: 16px; font-weight: 500; white-space: nowrap;
+  transition: color var(--t-fast) var(--ease);
+}
+.seg-option:hover { color: var(--text); }
+.seg-option[aria-checked='true'] { color: var(--text); }
+.seg-lg .seg-option { min-height: var(--hit-primary); }
+.seg-hint { margin: 0; min-height: 1.45em; font-size: 13px; color: var(--text-2); }
+
+/* Animate digits (C6) */
+.digits { display: inline-flex; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.digits-row { display: inline-flex; }
+.digit { display: inline-block; }
+.digit-cell { display: inline-grid; }
+.digit-cell > .digit { grid-area: 1 / 1; }
+.digit-in { animation: digit-in-up var(--t-fast) var(--ease) both; animation-duration: 160ms; }
+.digit-in.down { animation-name: digit-in-down; }
+.digit-out { animation: digit-out-up 160ms var(--ease) forwards; }
+.digit-out.down { animation-name: digit-out-down; }
+@keyframes digit-in-up { from { opacity: 0; transform: translateY(6px); } }
+@keyframes digit-in-down { from { opacity: 0; transform: translateY(-6px); } }
+@keyframes digit-out-up { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes digit-out-down { to { opacity: 0; transform: translateY(6px); } }
+
+/* Baseline band: hairline track, cyan normal range, a tick for today. */
+.band { position: relative; height: 12px; }
+.band-track { position: absolute; left: 0; right: 0; top: 5px; height: 2px; border-radius: 1px; background: var(--line-strong); }
+.band-range { position: absolute; top: 4px; height: 4px; border-radius: 2px; background: var(--brand); }
+.band-tick { position: absolute; top: 0; width: 2px; height: 12px; margin-left: -1px; border-radius: 1px; background: var(--text); }
+
+/* Status strip (C5): 4px bars, 2px gap; the padded box keeps a 44px hit area. */
+.strip {
+  position: relative; display: flex; align-items: center; min-height: var(--hit-min);
+  border-radius: var(--r-control); touch-action: pan-y; cursor: pointer; outline-offset: 0;
+}
+/* Bars stand on one baseline. Nominal: 16px neutral. Watch 20px and Act now 24px, status colour at 70%. Today (last bar) is full strength with a 2px underline. */
+.strip-bars { display: flex; align-items: flex-end; gap: 2px; height: 26px; margin-bottom: 4px; }
+.strip-bar { position: relative; width: 4px; height: 16px; border-radius: 1px; background: var(--line-strong); transition: opacity var(--t-fast) var(--ease); }
+.strip-bar.amber { height: 20px; background: color-mix(in srgb, var(--amber) 70%, transparent); }
+.strip-bar.red { height: 24px; background: color-mix(in srgb, var(--red) 70%, transparent); }
+.strip-bar.none { height: 4px; }
+.strip-bar.amber.is-today, .strip-bar.amber.is-active { background: var(--amber); }
+.strip-bar.red.is-today, .strip-bar.red.is-active { background: var(--red); }
+.strip-bar.green.is-today, .strip-bar.green.is-active { background: var(--text-muted); }
+.strip-bar.is-today::after { content: ''; position: absolute; left: 0; right: 0; top: calc(100% + 2px); height: 2px; border-radius: 1px; background: var(--text); }
+.strip:hover .strip-bar:not(.is-active), .strip:focus-visible .strip-bar:not(.is-active) { opacity: 0.55; }
+.strip-tip {
+  position: absolute; left: 0; right: 0; bottom: calc(100% + 4px); z-index: 3;
+  width: max-content; max-width: 100%;
+  padding: 6px 10px; border-radius: var(--r-control);
+  background: var(--surface-3); border: 1px solid var(--line-strong); box-shadow: var(--shadow-overlay);
+  font-size: 13px; line-height: 1.4; color: var(--text); pointer-events: none;
+}
+
+/* Number field (C3): label row, 56px field between two 48px square steppers, band, messages. */
+.nf { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; container-type: inline-size; }
+.nf-head { display: flex; align-items: center; justify-content: flex-start; gap: var(--s-2); flex-wrap: wrap; }
+.nf-head > .nf-chip { margin-left: auto; }
+.nf-head > .nf-chip:has(+ .nf-head-action) { margin-left: 0; }
+/* A small key on the label row (camera pulse): 44px tall, pulled into the row so the field keeps its height. */
+.nf-head-action { margin: -4px 0 -4px auto; }
+.nf-camera { gap: var(--s-2); }
+/* Two fields per row leave about 295px: the camera key shrinks to its icon (the name stays as its accessible label). */
+@container (max-width: 310px) {
+  .nf-camera { width: var(--hit-min); padding: 8px 0; }
+  .nf-camera-label { display: none; }
+}
+.nf-label { font-size: 14px; font-weight: 500; color: var(--text-2); }
+.nf-chip {
+  display: inline-flex; align-items: center; min-height: 22px; padding: 1px 8px;
+  border: 1px solid var(--line); border-radius: var(--r-control); background: var(--surface-2);
+  font-size: 13px; line-height: 1.4; color: var(--text-muted);
+}
+.nf-row { display: flex; align-items: center; gap: var(--s-2); }
+.nf-step {
+  --c: var(--chamfer-sm); --cf-fill: var(--surface-2); --cf-edge: var(--line-strong);
+  flex: 0 0 auto; display: grid; place-items: center; width: var(--hit); height: var(--hit); padding: 0; color: var(--text);
+  touch-action: manipulation; user-select: none;
+  transition: transform var(--t-fast) var(--ease);
+}
+.nf-step:hover { --cf-fill: var(--surface-3); }
+.nf-step:active { transform: translateY(2px); }
+.nf-step:disabled { opacity: 0.4; pointer-events: none; }
+.nf-box {
+  --c: var(--chamfer-lg); --cf-fill: var(--surface-2); --cf-edge: var(--line-strong);
+  flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--s-2);
+  height: var(--hit-primary); padding: 0 var(--s-3);
+}
+.nf-row.is-invalid .nf-box { --cf-edge: var(--red); }
+.nf-input {
+  flex: 1 1 auto; min-width: 0; width: 100%; height: 100%; padding: 0;
+  border: 0; background: transparent; color: var(--text); text-align: center;
+  font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 40px; font-weight: 500;
+  line-height: 1; letter-spacing: -0.02em;
+}
+.nf-input:focus, .nf-input:focus-visible { outline: none; }
+.nf-input::placeholder { color: var(--text-muted); }
+.nf-unit { flex: 0 0 auto; font-size: 13px; color: var(--text-muted); }
+.nf-msg { margin: 0; font-size: 13px; color: var(--red); }
+/* Level preview live region: kept in the tree so changes are announced, with no gap while it is empty. */
+.nf-live:empty { margin-top: calc(-1 * var(--s-2)); }
+.nf-hint { margin: 0; font-size: 14px; line-height: 1.45; color: var(--text-2); }
+@media (max-width: 1023px) {
+  .nf-input { font-size: 36px; }
+}

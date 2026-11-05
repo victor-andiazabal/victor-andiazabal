@@ -1,0 +1,19 @@
+/* Camera pulse (part of the check-in vitals step). Tokens only. */
+.cp {
+  display: flex; flex-direction: column; gap: var(--s-3);
+  padding: var(--s-4); border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface-2);
+}
+.cp-head { display: flex; align-items: center; gap: var(--s-2); }
+.cp-head h3 { margin: 0; }
+.cp-text { margin: 0; font-size: 13px; color: var(--text-2); }
+.cp .seg-track { --cf-fill: var(--surface-1); }
+.cp-body { display: flex; gap: var(--s-3); align-items: flex-start; flex-wrap: wrap; }
+.cp-video { display: none; width: 160px; height: 120px; border-radius: var(--r-control); background: var(--bg); object-fit: cover; }
+.cp-video[data-on='true'] { display: block; }
+.cp-state { flex: 1 1 220px; display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
+.cp-progress { width: 100%; }
+.cp-row { display: flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; margin: 0; }
+.cp-error { margin: 0; color: var(--red); }
+.cp-weak { margin: 0; color: var(--amber); }
+.cp-wave { background: var(--surface-1); border-radius: var(--r-control); }
+.cp-bpm { font-size: 28px; font-weight: 500; }

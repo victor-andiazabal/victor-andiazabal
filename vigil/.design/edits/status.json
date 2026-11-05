@@ -1,0 +1,17 @@
+{
+  "batch-mw3slp23-f053": {
+    "state": "done",
+    "note": "Every button and tab is now a chamfered panel (B1); Start check-in has a trailing arrow; crew dropdown replaced by icon tabs (T4)",
+    "at": "2026-11-05T17:33:49.811Z"
+  },
+  "batch-mw3snk23-pgv4": {
+    "state": "done",
+    "note": "Coloured left edge removed from every card; status shows in the pill",
+    "at": "2026-11-05T17:33:49.978Z"
+  },
+  "batch-mw3so7hq-qi7i": {
+    "state": "done",
+    "note": "Finding cards are plain panels now, no edge strip",
+    "at": "2026-11-05T17:33:50.207Z"
+  }
+}
