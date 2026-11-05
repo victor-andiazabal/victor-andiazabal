@@ -7,3 +7,6 @@
 
 ## batch-mw3snk23-pgv4
 1. Alert card 4px left status edge: "dont put this edge anywhere, it is horrible" -> remove the left edge everywhere; status carried by pill + dot + word.
+
+## batch-mw3so7hq-qi7i
+1. Ground/Alerts finding card (article "Watch Commander: Mood below your usual...") "this type of button is horrible" -> same as the left-edge note: no coloured edge strip on finding cards; treated within the B1 family change.

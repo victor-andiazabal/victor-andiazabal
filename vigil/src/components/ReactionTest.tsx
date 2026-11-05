@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { PVT_TASK_ID } from '../data/routine';
 import { evaluate } from '../lib/rules';
 import { useStore } from '../state/store';
-import { SourceLinks } from './ui';
+import { BtnTrail, SourceLinks } from './ui';
 import type { View } from '../lib/views';
 import './screens.css';
 import './reaction.css';
@@ -168,11 +168,11 @@ export function ReactionTest({ go }: { go: (v: View) => void }) {
           </div>
           <div className="pvt-actions">
             {!running && phase !== 'done' && (
-              <button type="button" className="btn-primary" onClick={start}>Start 60 s test</button>
+              <button type="button" className="btn-primary" onClick={start}>Start 60 s test<BtnTrail /></button>
             )}
             {phase === 'done' && (
               <>
-                <button type="button" className="btn-primary" onClick={save} disabled={rts.length === 0}>{saved ? 'Saved to today\'s check-in' : 'Save result'}</button>
+                <button type="button" className="btn-primary" onClick={save} disabled={rts.length === 0}>{saved ? 'Saved to today\'s check-in' : 'Save result'}<BtnTrail icon="check" /></button>
                 <button type="button" className="btn" onClick={start}>Run again</button>
                 {saved && <button type="button" className="btn" onClick={() => go('today')}>Back to Today</button>}
               </>

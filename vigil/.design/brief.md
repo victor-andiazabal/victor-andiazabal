@@ -72,6 +72,7 @@ Sentence case everywhere. No uppercase micro-labels, no letter-spaced eyebrows, 
 - Gaps: 24px between panels; 16px inside a panel; 8px between a label and its value.
 - Touch targets (glove-friendly, NASA JSC touchscreen evaluations, NTRS 20140006198): **primary crew actions 56px tall**; secondary buttons, nav rows, segmented options and steppers 48px; never under 44px. Button padding 16/32 at 56px, 12/24 at 48px, 8/16 at 36px (36px only for in-table and dense ground-view controls).
 - Radius: controls 8px, tiles and cards 12px, panels 16px, pills 999px only for status pills. Nested radius = outer minus padding.
+- **Controls use chamfers (user's choice, 2026-11-05).** Every button, tab and toggle is a chamfered panel (top-left and bottom-right cut at 45 degrees: 10px on 56px, 8px on 48px, 6px on 36px / icon controls), with a 1px hairline and a focus ring that follow the cut. Panels, cards, text inputs and status pills keep the radii above. No coloured edge strips anywhere: finding cards, red-flag symptoms and notes carry status through the pill (dot + word) and the word "urgent". Details in design-system.md.
 - Depth: dark uses surface steps + 1px hairlines, no shadows. Light uses `0 1px 2px rgba(14,20,27,0.06), 0 8px 24px rgba(14,20,27,0.06)` on panels only. Overlays (menu, tutorial card, sheet) use Surface 3 and, in light, `0 16px 48px rgba(14,20,27,0.16)`. No glass, no glows.
 
 ## 5. Layout, screen by screen
@@ -88,7 +89,7 @@ Sentence case everywhere. No uppercase micro-labels, no letter-spaced eyebrows, 
 
 ### 5.2 Check-in (stepped procedure; C2 Wizard Steps + C3 Number Field)
 - Task: enter today's values fast and correctly.
-- Five steps, rail at the top: 1 Vitals (BP systolic/diastolic, resting HR with the Camera pulse button, SpO2, temperature) · 2 Body (fasting glucose, body mass on weekly days, exercise minutes, dosimeter reading) · 3 Sleep and alertness (sleep hours, **Karolinska Sleepiness Scale 1-9**, mood 1-5, stress 1-5) · 4 Symptoms (tap grid, red-flag symptoms marked with a word "urgent" and a red edge) · 5 Review (every value, what will flag, Save).
+- Five steps, rail at the top: 1 Vitals (BP systolic/diastolic, resting HR with the Camera pulse button, SpO2, temperature) · 2 Body (fasting glucose, body mass on weekly days, exercise minutes, dosimeter reading) · 3 Sleep and alertness (sleep hours, **Karolinska Sleepiness Scale 1-9**, mood 1-5, stress 1-5) · 4 Symptoms (tap grid, red-flag symptoms marked with the word "urgent" (no edge, per the user 2026-11-05)) · 5 Review (every value, what will flag, Save).
 - Each step = one panel: left 1.4fr fields, right 1fr **cue card** ("What it is", "How to measure on board", "Why it matters in space" from `indicators.ts` `what`/`how` + a new `whySpace` line per indicator citing the existing hazard sources). <1024: cue card collapses into a 48px "How to measure" disclosure above the fields.
 - Fields: label above; value in 40px mono inside a 56px-tall field with − / + steppers (48px squares) on either side; unit to the right; the baseline band live under the field; prefilled values carry a "from wearable" or "from yesterday" chip; one-tap "Confirm all on this step" secondary button at the step bottom when every field is prefilled.
 - 1-5 scales (KSS, mood, stress) are segmented controls (C4) with 48px options, each option showing its number and, for KSS, its short anchor on hover/focus and under the selected option ("7, sleepy, no effort to stay awake" per Åkerstedt/Kaida wording).
@@ -99,12 +100,12 @@ Sentence case everywhere. No uppercase micro-labels, no letter-spaced eyebrows, 
 Keep the existing figure and panel, restyle to tokens: figure strokes 1px hairline-strong, region fills = status tint, selected region 2px cyan outline, panel sections separated by hairlines. Fix the eyes hit area so it no longer covers the centre of the head (eyes rect only over the eyes, 36x10).
 
 ### 5.4 Trends, Alerts, Routine, Ground view, Learn, Settings, Reaction test
-Same functions, restyled to the system: panels, hairlines, one primary button per view, tables 44px rows with mono right-aligned numbers, sticky headers. Routine uses a vertical timeline (C7) with a "now" marker and 48px check rows. Alerts: finding cards with a 4px left status edge, status pill, "Why" and "Do now" as two labelled paragraphs, checklist rows 48px. Reaction test: one huge 320px target zone, readout of the last RT in 56px mono.
+Same functions, restyled to the system: panels, hairlines, one primary button per view, tables 44px rows with mono right-aligned numbers, sticky headers. Routine uses a vertical timeline (C7) with a "now" marker and 48px check rows. Alerts: finding cards (one even hairline, no status edge; superseded 2026-11-05), status pill, "Why" and "Do now" as two labelled paragraphs, checklist rows 48px. Reaction test: one huge 320px target zone, readout of the last RT in 56px mono.
 
 ### 5.5 Navigation
 - ≥1024: left rail 240px, rows 48px: Today, Check-in, Body map, Trends, Alerts (count badge), then a hairline, then Routine, Reaction test, Ground view, Learn, Settings. Active row: Surface 2 fill + 2px cyan marker on the left edge. Icons: one 1px-stroke line set (inline SVG, 20px), no emoji.
 - <1024: bottom bar with 5 items (Today, Check-in, Body, Alerts, More), 64px tall, 56px targets; More opens a sheet with the rest.
-- Top bar 64px: logo + "VIGIL", crew member selector (48px), mission day pill in mono, help "?" button (48px) that replays the tutorial, theme toggle (C4 segmented, Dark/Light).
+- Top bar 64px: logo + "VIGIL", crew member tabs (48px icon tabs, replaced the selector 2026-11-05), mission day pill in mono, help "?" button (48px) that replays the tutorial, theme toggle (C4 segmented, Dark/Light).
 
 ### 5.6 First-run tutorial (C1 Product Tour)
 - Shown once on first open (flag `vigil:tour:v2`), replayable from the "?" button and Settings.

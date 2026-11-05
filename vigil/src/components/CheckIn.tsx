@@ -9,7 +9,7 @@ import { StepRail } from './checkin/StepRail';
 import { REVIEW_STEP, STEPS, stepOf, SYMPTOMS_STEP, visibleFields } from './checkin/steps';
 import { SymptomsStep } from './checkin/SymptomsStep';
 import { useCheckinDraft } from './checkin/useCheckinDraft';
-import { Pill, SourceLinks } from './ui';
+import { BtnTrail, Pill, SourceLinks } from './ui';
 import './checkin/checkin.css';
 
 const SYMPTOM_CUE: Cue = {
@@ -157,10 +157,12 @@ export function CheckIn({ go, focus }: CheckInProps) {
           {index < REVIEW_STEP ? (
             <button type="button" className="btn-primary" onClick={next}>
               Next
+              <BtnTrail />
             </button>
           ) : (
             <button type="button" className="btn-primary" onClick={saveAndExit}>
               Save check-in
+              <BtnTrail icon="check" />
             </button>
           )}
         </div>

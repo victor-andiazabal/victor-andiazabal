@@ -1,6 +1,6 @@
-/* Alerts: finding cards with a 4px status edge, Why / Do now paragraphs, 48px checklist rows. */
+/* Alerts: finding cards (plain hairline blocks, status in the pill), Why / Do now paragraphs, 48px checklist rows. */
 
-.finding { margin: 0; padding: var(--s-4) var(--s-4) var(--s-4) var(--s-6); display: grid; gap: var(--s-3); }
+.finding { margin: 0; padding: var(--s-4) var(--s-6); display: grid; gap: var(--s-3); }
 .finding.acked { opacity: 1; }
 .finding.acked .finding-head h3 { color: var(--text-2); }
 .finding-head { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }

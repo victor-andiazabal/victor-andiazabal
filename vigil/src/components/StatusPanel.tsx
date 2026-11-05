@@ -6,6 +6,7 @@ import type { Evaluation } from '../lib/rules';
 import { groupTiles, inRangeShare, reasonLine, type NextAction } from '../lib/today';
 import type { IndicatorId } from '../lib/types';
 import type { View } from '../lib/views';
+import { BtnTrail } from './ui';
 
 const REMEASURE_SOURCE = 'russell-2023';
 
@@ -89,6 +90,7 @@ export function StatusPanel({ ev, action, sweep, meta, surgeonNote, go }: Status
       <div className="status-actions">
         <button type="button" className="btn-primary next-action" data-tour="next-action" onClick={() => go(action.view, action.indicator)}>
           {action.label}
+          <BtnTrail />
         </button>
         {action.kind === 'remeasure' && (
           <p className="remeasure-note">

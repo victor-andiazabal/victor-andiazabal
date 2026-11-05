@@ -24,6 +24,8 @@
 .file-input { padding: 8px 12px; font-size: 13px; color: var(--text-2); }
 .file-input::file-selector-button {
   min-height: 32px; margin-right: var(--s-3); padding: 4px 16px; cursor: pointer;
-  background: var(--surface-3); color: var(--text); border: 1px solid var(--line-strong); border-radius: var(--r-control); font: inherit; font-size: 13px; font-weight: 500;
+  background: var(--surface-3); color: var(--text); border: 0; border-radius: 0; font: inherit; font-size: 13px; font-weight: 500;
+  /* Chamfer family (cut 6); a native pseudo-button cannot carry the hairline layer, so it is a solid surface step. */
+  clip-path: polygon(var(--chamfer-sm) 0, 100% 0, 100% calc(100% - var(--chamfer-sm)), calc(100% - var(--chamfer-sm)) 100%, 0 100%, 0 var(--chamfer-sm));
 }
 .field + .settings-row { margin-top: var(--s-3); }

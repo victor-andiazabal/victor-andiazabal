@@ -6,6 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProp
 import { createPortal } from 'react-dom';
 import { TOUR_STEPS } from '../lib/tour';
 import type { View } from '../lib/views';
+import { BtnTrail } from './ui';
 import './tour.css';
 
 type Box = { top: number; left: number; width: number; height: number };
@@ -198,7 +199,7 @@ export function Tour({ onClose, go }: TourProps) {
           </div>
           <div className="tour-buttons">
             {index > 0 && <button type="button" className="btn" onClick={back}>Back</button>}
-            <button type="button" className="btn-primary tour-next" data-primary onClick={next}>{last ? 'Done' : 'Next'}</button>
+            <button type="button" className="btn-primary tour-next" data-primary onClick={next}>{last ? 'Done' : 'Next'}<BtnTrail icon={last ? 'check' : 'arrow'} /></button>
           </div>
         </div>
         <button type="button" className="link-btn tour-skip" onClick={onClose}>Skip tour</button>

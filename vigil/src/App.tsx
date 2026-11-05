@@ -75,7 +75,7 @@ export default function App() {
       <TopBar theme={theme} setTheme={setTheme} onHelp={startTour} />
       <Rail {...nav} />
 
-      <main className="main">
+      <main id="main" className="main">
         <div className="main-inner">
           {view === 'today' && <Today go={go} />}
           {view === 'body' && (

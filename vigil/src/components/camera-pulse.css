@@ -6,7 +6,7 @@
 .cp-head { display: flex; align-items: center; gap: var(--s-2); }
 .cp-head h3 { margin: 0; }
 .cp-text { margin: 0; font-size: 13px; color: var(--text-2); }
-.cp .seg-track { background: var(--surface-1); }
+.cp .seg-track { --cf-fill: var(--surface-1); }
 .cp-body { display: flex; gap: var(--s-3); align-items: flex-start; flex-wrap: wrap; }
 .cp-video { display: none; width: 160px; height: 120px; border-radius: var(--r-control); background: var(--bg); object-fit: cover; }
 .cp-video[data-on='true'] { display: block; }

@@ -7,7 +7,7 @@ import type { Finding } from '../lib/types';
 import { useStore } from '../state/store';
 import { CommLink } from './CommLink';
 import { useCommSender } from './commSender';
-import { Pill, SourceLinks } from './ui';
+import { BtnTrail, Pill, SourceLinks } from './ui';
 import './screens.css';
 import './alerts.css';
 
@@ -55,7 +55,7 @@ export function Alerts() {
         </div>
         <div className="alerts-actions">
           <Pill level={ev.overall} />
-          <button type="button" className="btn-primary" onClick={sendReport}>Send today's report</button>
+          <button type="button" className="btn-primary" onClick={sendReport}>Send today's report<BtnTrail /></button>
         </div>
       </div>
       {sentAt !== null && (

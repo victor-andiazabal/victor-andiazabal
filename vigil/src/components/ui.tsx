@@ -2,7 +2,7 @@ import { sourceById } from '../data/sources';
 import type { SelectHTMLAttributes } from 'react';
 import { LEVEL_LABEL } from '../lib/format';
 import type { Level } from '../lib/types';
-import { IconChevronDown } from './icons';
+import { IconArrowRight, IconCheckCircle, IconChevronDown } from './icons';
 
 /** The one select: a native control (keyboard and mobile pickers keep working) with the line chevron drawn on top. */
 export function Select({ className = '', children, ...rest }: SelectHTMLAttributes<HTMLSelectElement>) {
@@ -12,6 +12,11 @@ export function Select({ className = '', children, ...rest }: SelectHTMLAttribut
       <IconChevronDown className="select-chev" />
     </span>
   );
+}
+
+/** Trailing 20px icon for a primary button, set off by a 1px divider (styles.css .btn-trail). */
+export function BtnTrail({ icon = 'arrow' }: { icon?: 'arrow' | 'check' }) {
+  return <span className="btn-trail" aria-hidden="true">{icon === 'check' ? <IconCheckCircle /> : <IconArrowRight />}</span>;
 }
 
 export function Pill({ level, children }: { level: Level | 'neutral'; children?: React.ReactNode }) {

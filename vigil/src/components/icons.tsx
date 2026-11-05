@@ -102,6 +102,20 @@ export const IconArrowRight = (p: IconProps) => (
   <Svg {...p}><path d="M4 10h12M11.5 5.5L16 10l-4.5 4.5" /></Svg>
 );
 
+/* Crew role icons for the top-bar crew tabs. */
+export const IconCommander = (p: IconProps) => (
+  <Svg {...p}><path d="M10 2.5l2.1 4.3 4.7.7-3.4 3.3.8 4.7L10 13.3l-4.2 2.2.8-4.7-3.4-3.3 4.7-.7z" /><path d="M6 18h8" /></Svg>
+);
+export const IconMedic = (p: IconProps) => (
+  <Svg {...p}><path d="M8 3.5h4v4.5h4.5v4H12v4.5H8V12H3.5V8H8z" /></Svg>
+);
+export const IconEva = (p: IconProps) => (
+  <Svg {...p}><path d="M4 11a6 6 0 0 1 12 0v4.5a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" /><path d="M6.5 11.5a3.5 2.5 0 0 1 7 0v1.5h-7z" /></Svg>
+);
+export const IconScience = (p: IconProps) => (
+  <Svg {...p}><path d="M8 2.5h4M8.5 2.5v5l-4.5 8a1.3 1.3 0 0 0 1.1 2h9.8a1.3 1.3 0 0 0 1.1-2l-4.5-8v-5M6.5 12.5h7" /></Svg>
+);
+
 /** The VIGIL pulse-ring mark, drawn in the brand colour. */
 export function Logo({ size = 28 }: { size?: number }) {
   return (
