@@ -201,6 +201,13 @@ export const SOURCES: Source[] = [
     url: 'https://doi.org/10.1097/JOM.0000000000000158',
     note: 'For each 1 mmHg increase in cabin CO2, the odds of a crew member reporting a headache doubled.',
   },
+  {
+    id: 'russell-2023',
+    org: 'Russell et al., npj Microgravity 9 (2023), NASA ExMC',
+    title: 'The value of a spaceflight clinical decision support system for earth-independent medical operations',
+    url: 'https://doi.org/10.1038/s41526-023-00284-1',
+    note: 'Deep-space crews will have to detect, diagnose and treat medical events without real-time ground support; a clinical decision support system guides the crew through measuring, acting and reassessing.',
+  },
 ];
 
 export const sourceById = (id: string) => SOURCES.find((s) => s.id === id);

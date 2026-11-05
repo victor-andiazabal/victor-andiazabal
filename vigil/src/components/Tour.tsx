@@ -1,0 +1,187 @@
+/*
+ * First-run tutorial: dims the app and moves a spotlight across real elements, with a card beside each.
+ * Mechanism ported from "Product Tour" by laziekiki (21st.dev id 26918); plain React + CSS, no framer-motion.
+ */
+import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
+import { createPortal } from 'react-dom';
+import { TOUR_STEPS } from '../lib/tour';
+import './tour.css';
+
+type Box = { top: number; left: number; width: number; height: number };
+
+const PAD = 8;
+const GAP = 16;
+const EDGE = 16;
+const STACK_BELOW = 640;
+const RETRY_MS = 100;
+const RETRIES = 20;
+
+/** The first visible element carrying this anchor; the rail and the bottom bar both carry nav anchors. */
+function findTarget(id: string): HTMLElement | null {
+  const all = document.querySelectorAll<HTMLElement>(`[data-tour="${id}"]`);
+  return Array.from(all).find((el) => {
+    const r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0;
+  }) ?? null;
+}
+
+/** Card position: beside the spotlight (right, left, below, above), clamped on screen; stacked on small screens. */
+function placeCard(spot: Box | null, card: { w: number; h: number }, vw: number, vh: number): CSSProperties {
+  if (vw < STACK_BELOW) {
+    const lowTarget = spot !== null && spot.top + spot.height / 2 > vh / 2;
+    return lowTarget ? { left: EDGE, right: EDGE, top: EDGE } : { left: EDGE, right: EDGE, bottom: EDGE };
+  }
+  const clampX = (x: number) => Math.min(Math.max(EDGE, x), vw - EDGE - card.w);
+  const clampY = (y: number) => Math.min(Math.max(EDGE, y), vh - EDGE - card.h);
+  if (!spot) return { left: clampX((vw - card.w) / 2), top: clampY((vh - card.h) / 2) };
+  const right = spot.left + spot.width + GAP;
+  if (right + card.w <= vw - EDGE) return { left: right, top: clampY(spot.top) };
+  const left = spot.left - GAP - card.w;
+  if (left >= EDGE) return { left, top: clampY(spot.top) };
+  const below = spot.top + spot.height + GAP;
+  if (below + card.h <= vh - EDGE) return { left: clampX(spot.left), top: below };
+  return { left: clampX(spot.left), top: clampY(spot.top - GAP - card.h) };
+}
+
+export function Tour({ onClose }: { onClose: () => void }) {
+  const [index, setIndex] = useState(0);
+  const [spot, setSpot] = useState<Box | null>(null);
+  const [card, setCard] = useState<{ w: number; h: number } | null>(null);
+  const [vp, setVp] = useState({ w: window.innerWidth, h: window.innerHeight });
+  const [gliding, setGliding] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const step = TOUR_STEPS[index];
+  const last = index === TOUR_STEPS.length - 1;
+
+  // The spotlight glides only while moving between steps, so scrolling never makes it lag.
+  const next = useCallback(() => {
+    if (last) {
+      onClose();
+      return;
+    }
+    setGliding(true);
+    setIndex((i) => i + 1);
+  }, [last, onClose]);
+  const back = useCallback(() => {
+    setGliding(index > 0);
+    setIndex((i) => Math.max(0, i - 1));
+  }, [index]);
+
+  useEffect(() => {
+    if (!gliding) return;
+    const t = window.setTimeout(() => setGliding(false), 520);
+    return () => window.clearTimeout(t);
+  }, [gliding, index]);
+
+  // Keep the rest of the app out of reach while the tour is open, and give focus back afterwards.
+  useEffect(() => {
+    const root = document.getElementById('root');
+    const before = document.activeElement as HTMLElement | null;
+    if (root) root.inert = true;
+    return () => {
+      if (root) root.inert = false;
+      before?.focus?.();
+    };
+  }, []);
+
+  // Measure the target now, after scrolling it into view, and whenever the page moves.
+  useEffect(() => {
+    let tries = 0;
+    let timer = 0;
+    let frame = 0;
+    const measure = () => {
+      setVp({ w: window.innerWidth, h: window.innerHeight });
+      const el = findTarget(step.target);
+      if (!el) {
+        setSpot(null);
+        if (tries++ < RETRIES) timer = window.setTimeout(measure, RETRY_MS);
+        return;
+      }
+      const r = el.getBoundingClientRect();
+      setSpot({ top: r.top - PAD, left: r.left - PAD, width: r.width + PAD * 2, height: r.height + PAD * 2 });
+    };
+    const onMove = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measure);
+    };
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    findTarget(step.target)?.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+    measure();
+    const settle = window.setTimeout(measure, 360);
+    window.addEventListener('scroll', onMove, true);
+    window.addEventListener('resize', onMove);
+    return () => {
+      window.clearTimeout(timer);
+      window.clearTimeout(settle);
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', onMove, true);
+      window.removeEventListener('resize', onMove);
+    };
+  }, [step.target]);
+
+  useLayoutEffect(() => {
+    const r = cardRef.current?.getBoundingClientRect();
+    if (r) setCard({ w: r.width, h: r.height });
+  }, [index, vp.w]);
+
+  useEffect(() => {
+    cardRef.current?.querySelector<HTMLElement>('[data-primary]')?.focus();
+  }, [index]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        next();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        back();
+      } else if (e.key === 'Tab') {
+        const items = cardRef.current?.querySelectorAll<HTMLElement>('button');
+        if (!items?.length) return;
+        const first = items[0];
+        const end = items[items.length - 1];
+        const inside = cardRef.current?.contains(document.activeElement);
+        if (!inside || (e.shiftKey && document.activeElement === first)) {
+          e.preventDefault();
+          (e.shiftKey ? end : first).focus();
+        } else if (!e.shiftKey && document.activeElement === end) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [next, back, onClose]);
+
+  const cardStyle = { ...placeCard(spot, card ?? { w: 360, h: 200 }, vp.w, vp.h), visibility: card ? 'visible' : 'hidden' } as CSSProperties;
+  const spotStyle = spot
+    ? ({ transform: `translate(${spot.left}px, ${spot.top}px)`, width: spot.width, height: spot.height } as CSSProperties)
+    : undefined;
+
+  return createPortal(
+    <div className="tour-layer" role="dialog" aria-modal="true" aria-labelledby="tour-title" aria-describedby="tour-body">
+      {spot ? <div className={`tour-spot${gliding ? ' is-gliding' : ''}`} style={spotStyle} /> : <div className="tour-dim" />}
+      <div ref={cardRef} className="tour-card" style={cardStyle} key={index}>
+        <p className="sr-only">Step {index + 1} of {TOUR_STEPS.length}</p>
+        <h2 id="tour-title" className="tour-title">{step.title}</h2>
+        <p id="tour-body" className="tour-body">{step.body}</p>
+        <div className="tour-foot">
+          <div className="tour-dots" aria-hidden="true">
+            {TOUR_STEPS.map((s, i) => <span key={s.target} className={i === index ? 'is-on' : ''} />)}
+          </div>
+          <div className="tour-buttons">
+            {index > 0 && <button type="button" className="btn" onClick={back}>Back</button>}
+            <button type="button" className="btn-primary tour-next" data-primary onClick={next}>{last ? 'Done' : 'Next'}</button>
+          </div>
+        </div>
+        <button type="button" className="link-btn tour-skip" onClick={onClose}>Skip tour</button>
+      </div>
+    </div>,
+    document.body,
+  );
+}

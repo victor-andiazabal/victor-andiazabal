@@ -47,7 +47,7 @@ export function Ground({ go }: { go: (v: View) => void }) {
             {evals.map(({ crew: c, ev }) => (
               <tr key={c.id}>
                 <td>
-                  <button className="btn sm" style={{ border: 0, background: 'transparent', padding: '2px 4px' }} onClick={() => { dispatch({ type: 'select', crewId: c.id }); go('dashboard'); }}>
+                  <button className="btn sm" style={{ border: 0, background: 'transparent', padding: '2px 4px' }} onClick={() => { dispatch({ type: 'select', crewId: c.id }); go('today'); }}>
                     {c.callsign}
                   </button>
                 </td>

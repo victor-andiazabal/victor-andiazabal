@@ -15,7 +15,13 @@ function download(name: string, text: string, type = 'application/json') {
   URL.revokeObjectURL(url);
 }
 
-export function Settings({ theme, setTheme }: { theme: 'dark' | 'light'; setTheme: (t: 'dark' | 'light') => void }) {
+interface SettingsProps {
+  theme: 'dark' | 'light';
+  setTheme: (t: 'dark' | 'light') => void;
+  onReplayTour: () => void;
+}
+
+export function Settings({ theme, setTheme, onReplayTour }: SettingsProps) {
   const { settings, dispatch, crew, manual } = useStore();
   const fileRef = useRef<HTMLInputElement>(null);
   const [importMsg, setImportMsg] = useState('');
@@ -100,6 +106,13 @@ export function Settings({ theme, setTheme }: { theme: 'dark' | 'light'; setThem
                 <button className={theme === 'dark' ? 'on' : ''} onClick={() => setTheme('dark')}>Dark (cabin)</button>
                 <button className={theme === 'light' ? 'on' : ''} onClick={() => setTheme('light')}>Light</button>
               </div>
+            </div>
+            <div className="field">
+              <label>Tutorial</label>
+              <div>
+                <button type="button" className="btn" onClick={onReplayTour}>Replay tutorial</button>
+              </div>
+              <span className="hint">The seven-step tour of Today, the check-in, alerts and the ground link.</span>
             </div>
             <div className="field">
               <label>Export</label>

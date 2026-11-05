@@ -151,7 +151,7 @@ export function ReactionTest({ go }: { go: (v: View) => void }) {
               <>
                 <button className="btn primary" onClick={save} disabled={rts.length === 0}>{saved ? 'Saved to today\'s check-in' : 'Save result'}</button>
                 <button className="btn" onClick={start}>Run again</button>
-                {saved && <button className="btn" onClick={() => go('dashboard')}>Back to dashboard</button>}
+                {saved && <button className="btn" onClick={() => go('today')}>Back to Today</button>}
               </>
             )}
             <span className="muted mono">{Math.min(TEST_SECONDS, elapsed).toFixed(0)} / {TEST_SECONDS} s</span>

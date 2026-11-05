@@ -200,7 +200,7 @@ export function CheckIn({ go }: { go: (v: View) => void }) {
           ))}
           <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
             <button className="btn primary" onClick={save}>{saved ? 'Saved' : 'Save check-in'}</button>
-            {saved && <button className="btn" onClick={() => go('dashboard')}>Back to dashboard</button>}
+            {saved && <button className="btn" onClick={() => go('today')}>Back to Today</button>}
           </div>
         </div>
       </div>
