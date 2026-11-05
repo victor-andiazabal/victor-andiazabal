@@ -158,6 +158,49 @@ export const SOURCES: Source[] = [
     url: 'https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/',
     note: 'Challenge statement this project answers.',
   },
+  // Body map: one citation per hazard-to-system claim in data/bodySystems.ts.
+  {
+    id: 'lee-sans',
+    org: 'Lee et al., npj Microgravity 6 (2020)',
+    title: 'Spaceflight associated neuro-ocular syndrome (SANS) and the neuro-ophthalmologic effects of microgravity: a review and an update',
+    url: 'https://doi.org/10.1038/s41526-020-0097-9',
+    note: 'Long-duration microgravity produces optic disc edema, globe flattening, choroidal and retinal folds and hyperopic (near-vision) shifts.',
+  },
+  {
+    id: 'cucinotta-cataract',
+    org: 'Cucinotta et al., Radiation Research 156 (2001)',
+    title: 'Space radiation and cataracts in astronauts',
+    url: 'https://doi.org/10.1667/0033-7587(2001)156[0460:SRACIA]2.0.CO;2',
+    note: 'Astronauts with higher lens doses of space radiation showed an increased incidence and earlier appearance of cataracts.',
+  },
+  {
+    id: 'crucian-immune',
+    org: 'Crucian et al., Frontiers in Immunology 9 (2018)',
+    title: 'Immune system dysregulation during spaceflight: potential countermeasures for deep space exploration missions',
+    url: 'https://doi.org/10.3389/fimmu.2018.01437',
+    note: 'Immune dysregulation and latent herpesvirus reactivation persist through 6-month orbital flights; some crews have persistent hypersensitivity reactions, which deep-space radiation may compound.',
+  },
+  {
+    id: 'hughson-2016',
+    org: 'Hughson et al., Am J Physiol Heart Circ Physiol 310 (2016)',
+    title: 'Increased postflight carotid artery stiffness and inflight insulin resistance resulting from 6-mo spaceflight in male and female astronauts',
+    url: 'https://doi.org/10.1152/ajpheart.00802.2015',
+    note: 'After 6 months on the ISS, carotid artery stiffness was 17-30% higher on return, and an index of insulin resistance rose in flight.',
+  },
+  {
+    id: 'sibonga-2019',
+    org: 'Sibonga et al., Bone 128 (2019)',
+    title: 'Resistive exercise in astronauts on prolonged spaceflights provides partial protection against spaceflight-induced bone loss',
+    url: 'https://doi.org/10.1016/j.bone.2019.07.013',
+    note: 'Hip and spine bone density fall on ~6-month ISS flights; resistive exercise alone only partly attenuates the loss.',
+  },
+  {
+    id: 'law-co2',
+    org: 'Law et al., J Occup Environ Med 56 (2014)',
+    title: 'Relationship between carbon dioxide levels and reported headaches on the International Space Station',
+    url: 'https://doi.org/10.1097/JOM.0000000000000158',
+    note: 'For each 1 mmHg increase in cabin CO2, the odds of a crew member reporting a headache doubled.',
+  },
 ];
 
 export const sourceById = (id: string) => SOURCES.find((s) => s.id === id);
