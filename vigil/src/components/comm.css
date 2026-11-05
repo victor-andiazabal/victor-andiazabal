@@ -1,71 +1,44 @@
-/* Crew <-> ground comm link. Uses the theme variables from styles.css so dark and light both work. */
-.comm { display: grid; gap: 14px; }
-.comm-small { font-size: 12px; }
-.comm-empty { margin: 0; padding: 10px 14px; border: 1px dashed var(--line); border-radius: var(--radius); }
+/* Crew <-> ground comm link. Tokens only. The transit lane is the one cyan element here. */
+.comm { display: grid; gap: var(--s-6); }
+.comm-small { font-size: 13px; }
+.comm-empty { margin: 0; padding: var(--s-3) var(--s-4); border: 1px dashed var(--line-strong); border-radius: var(--r-card); }
 
-.comm-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; flex-wrap: wrap; }
-.comm-head p { margin: 0 0 4px; }
-.comm-controls { display: flex; align-items: flex-end; gap: 10px; flex-wrap: wrap; }
-.comm-field { display: grid; gap: 4px; margin: 8px 0; }
-.comm-field select,
-.comm-field textarea,
-.comm-log textarea {
-  width: 100%;
-  background: var(--bg-2);
-  color: var(--text);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 6px 8px;
-  font: inherit;
-  box-sizing: border-box;
-}
-.comm-controls .comm-field { margin: 0; }
-.comm-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; min-height: 32px; }
-.comm-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 6px 0 10px; }
+.comm-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s-4); flex-wrap: wrap; }
+.comm-head h2 { margin-bottom: var(--s-2); }
+.comm-head p { margin: 0 0 var(--s-2); max-width: 72ch; }
+.comm-controls { display: flex; align-items: flex-end; gap: var(--s-3); flex-wrap: wrap; }
+.comm-field { display: grid; gap: var(--s-1); margin: var(--s-3) 0; }
+.comm-controls .comm-field { margin: 0; min-width: 220px; }
+.comm-toggle { font-size: 16px; font-weight: 500; }
+.comm-row { display: flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; margin: var(--s-2) 0 var(--s-4); }
+.comm .panel > .btn-primary { margin-bottom: var(--s-2); }
+.comm .panel > .btn { margin-top: var(--s-1); }
 
-.comm-lanes { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
-.comm-lane { display: flex; align-items: center; gap: 10px; }
-.comm-icon { width: 26px; height: 26px; flex: none; color: var(--accent); }
-.comm-icon.earth { color: var(--green); }
+.comm-lanes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4); }
+.comm-lane { display: flex; align-items: center; gap: var(--s-3); }
+.comm-icon { width: 28px; height: 28px; flex: none; color: var(--text-2); }
 .comm-track {
-  position: relative;
-  flex: 1;
-  height: 4px;
-  border-radius: 2px;
-  background: repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px);
+  position: relative; flex: 1; height: 1px;
+  background: repeating-linear-gradient(90deg, var(--line-strong) 0 8px, transparent 8px 14px);
 }
 .comm-dot {
-  position: absolute;
-  top: 50%;
-  width: 12px;
-  height: 12px;
-  margin: -6px 0 0 -6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 4px var(--panel), 0 0 10px var(--accent);
+  position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px;
+  border-radius: 50%; background: var(--brand); border: 3px solid var(--surface-1); box-sizing: content-box;
   transition: left 250ms linear;
 }
-.comm-dot.ground { background: var(--green); box-shadow: 0 0 0 4px var(--panel), 0 0 10px var(--green); }
-.comm-meta { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; font-size: 13px; margin-top: 4px; }
+.comm-meta { display: flex; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; font-size: 13px; margin-top: var(--s-2); color: var(--text-2); }
 
-.comm-log { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
-.comm-log > li { padding-top: 10px; border-top: 1px solid var(--line); display: grid; gap: 4px; }
+.comm-log { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4); }
+.comm-log > li { padding-top: var(--s-4); border-top: 1px solid var(--line); display: grid; gap: var(--s-1); }
 .comm-log > li:first-child { border-top: 0; padding-top: 0; }
-.comm-log-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.comm-body { margin: 2px 0 0; white-space: pre-wrap; }
+.comm-log-head { display: flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; }
+.comm-body { margin: var(--s-1) 0 0; white-space: pre-wrap; }
 .comm-pre {
-  margin: 6px 0 0;
-  padding: 8px;
-  max-height: 260px;
-  overflow: auto;
-  white-space: pre-wrap;
-  font-family: var(--mono);
-  font-size: 12px;
-  background: var(--bg-2);
-  border: 1px solid var(--line);
-  border-radius: 10px;
+  margin: 0; padding: var(--s-3); max-height: 260px; overflow: auto; white-space: pre-wrap;
+  font-family: var(--mono); font-size: 13px; line-height: 1.5;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-card);
 }
-.comm-reply { margin: 0; display: flex; gap: 6px; align-items: baseline; flex-wrap: wrap; }
+.comm-reply { margin: 0; display: flex; gap: var(--s-2); align-items: baseline; flex-wrap: wrap; }
 .comm-log .btn { justify-self: start; }
 
 @media (prefers-reduced-motion: reduce) {

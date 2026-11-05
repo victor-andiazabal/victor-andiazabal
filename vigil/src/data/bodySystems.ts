@@ -46,10 +46,10 @@ export const BODY_SYSTEMS: BodySystem[] = [
       { id: 'distance', effect: 'Communication delays mean the crew has to solve problems on its own, which adds workload and stress.' },
       { id: 'closedEnv', effect: 'Higher cabin CO2 makes headaches more likely: on the ISS, each 1 mmHg rise doubled the odds of a reported headache.' },
     ],
-    indicators: ['sleep', 'pvtRt', 'pvtLapses', 'mood', 'stress'],
+    indicators: ['sleep', 'kss', 'pvtRt', 'pvtLapses', 'mood', 'stress'],
     symptoms: ['headache', 'fatigue', 'sleepTrouble', 'severeHeadache', 'confusion'],
     checklists: ['sleep', 'alertness', 'mood'],
-    sources: ['hrp-hazards', 'hfbp', 'comm-delay', 'law-co2', 'barger-2014', 'pvt-b'],
+    sources: ['hrp-hazards', 'hfbp', 'comm-delay', 'law-co2', 'barger-2014', 'pvt-b', 'kaida-2006'],
   },
   {
     id: 'eyes',

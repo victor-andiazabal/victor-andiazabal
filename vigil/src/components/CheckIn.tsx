@@ -1,209 +1,168 @@
-import { useMemo, useState } from 'react';
-import { INDICATORS, SYMPTOMS } from '../data/indicators';
-import { evaluate } from '../lib/rules';
-import type { DayRecord, IndicatorId } from '../lib/types';
-import { useStore } from '../state/store';
-import { CameraPulse } from './CameraPulse';
+import { useEffect, useRef, useState, type KeyboardEvent } from 'react';
+import { indicatorById } from '../data/indicators';
+import type { IndicatorId } from '../lib/types';
+import type { View } from '../lib/views';
+import { CueCard, type Cue } from './checkin/CueCard';
+import { ReviewStep } from './checkin/ReviewStep';
+import { StepFields } from './checkin/StepFields';
+import { StepRail } from './checkin/StepRail';
+import { REVIEW_STEP, STEPS, stepOf, SYMPTOMS_STEP, visibleFields } from './checkin/steps';
+import { SymptomsStep } from './checkin/SymptomsStep';
+import { useCheckinDraft } from './checkin/useCheckinDraft';
 import { Pill, SourceLinks } from './ui';
-import type { View } from '../App';
+import './checkin/checkin.css';
 
-type Draft = Partial<Record<IndicatorId, string>>;
+const SYMPTOM_CUE: Cue = {
+  title: 'Symptoms',
+  what: 'Anything unusual you noticed since the last check-in, from a headache to trouble sleeping.',
+  how: 'Tap everything that applies. A symptom on three days in a row, or three at once, is flagged to watch; anything marked urgent is treated as urgent.',
+  whySpace: 'Distance from Earth means the flight surgeon cannot examine you, so what you report is the first line of diagnosis.',
+  sources: ['hrp-hazards'],
+};
 
-export function CheckIn({ go }: { go: (v: View) => void }) {
-  const { selected, settings, dispatch, manual } = useStore();
-  const day = settings.currentDay;
-  const existing = selected.records.find((r) => r.day === day);
-  const isManual = Boolean(manual[`${selected.id}:${day}`]);
+interface CheckInProps {
+  go: (v: View) => void;
+  /** Open on the step that holds this indicator and focus its field (Re-measure in 30 min). */
+  focus?: IndicatorId;
+}
 
-  const [draft, setDraft] = useState<Draft>(() => {
-    const d: Draft = {};
-    for (const def of INDICATORS) {
-      const v = existing?.values[def.id];
-      if (Number.isFinite(v)) d[def.id] = String(v);
+export function CheckIn({ go, focus }: CheckInProps) {
+  const draft = useCheckinDraft();
+  const [index, setIndex] = useState(() => stepOf(focus));
+  const [furthest, setFurthest] = useState(index);
+  const [dir, setDir] = useState<'fwd' | 'back'>('fwd');
+  const [active, setActive] = useState<IndicatorId | undefined>(() => focus ?? STEPS[stepOf(focus)].fields[0]);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const headRef = useRef<HTMLHeadingElement>(null);
+  const moved = useRef(false);
+
+  const step = STEPS[index];
+
+  // After a step change, put focus on the new step's title and bring the rail back into view if it scrolled away.
+  useEffect(() => {
+    if (!moved.current) return;
+    moved.current = false;
+    headRef.current?.focus({ preventScroll: true });
+    const top = rootRef.current?.getBoundingClientRect().top ?? 0;
+    if (top < 0) rootRef.current?.scrollIntoView({ block: 'start' });
+  }, [index]);
+
+  // Re-measure: focus the flagged field once on open.
+  useEffect(() => {
+    if (!focus) return;
+    const el = document.getElementById(`nf-${focus}`) ?? document.querySelector<HTMLElement>(`[data-field="${focus}"] [role="radio"][tabindex="0"]`);
+    el?.focus({ preventScroll: true });
+    el?.scrollIntoView({ block: 'center' });
+  }, [focus]);
+
+  const goTo = (to: number) => {
+    const target = Math.max(0, Math.min(REVIEW_STEP, to));
+    if (target === index) return;
+    moved.current = true;
+    setDir(target > index ? 'fwd' : 'back');
+    setIndex(target);
+    setFurthest((f) => Math.max(f, target));
+    setActive(STEPS[target].fields[0]);
+  };
+  const next = () => goTo(index + 1);
+  const back = () => goTo(index - 1);
+  const saveAndExit = () => {
+    draft.save();
+    go('today');
+  };
+
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Enter') return;
+    const t = e.target as HTMLElement;
+    if (t.tagName === 'TEXTAREA' || t.tagName === 'A') return;
+    if (e.shiftKey) {
+      e.preventDefault();
+      back();
+      return;
     }
-    return d;
-  });
-  const [symptoms, setSymptoms] = useState<string[]>(existing?.symptoms ?? []);
-  const [notes, setNotes] = useState(existing?.notes ?? '');
-  const [saved, setSaved] = useState(false);
-
-  const record: DayRecord = useMemo(() => {
-    const values: Partial<Record<IndicatorId, number>> = {};
-    for (const def of INDICATORS) {
-      const raw = draft[def.id];
-      if (raw === undefined || raw === '') continue;
-      const n = Number(raw);
-      if (Number.isFinite(n) && n >= def.min && n <= def.max) values[def.id] = n;
-    }
-    return { day, values, symptoms, notes, source: 'manual' };
-  }, [draft, symptoms, notes, day]);
-
-  const outOfRange = (id: IndicatorId): boolean => {
-    const raw = draft[id];
-    if (raw === undefined || raw === '') return false;
-    const n = Number(raw);
-    const def = INDICATORS.find((i) => i.id === id)!;
-    return !Number.isFinite(n) || n < def.min || n > def.max;
-  };
-  const invalidCount = INDICATORS.filter((i) => outOfRange(i.id)).length;
-
-  // Live preview: evaluate the crew member as if this draft were today's record.
-  const preview = useMemo(() => {
-    const copy = { ...selected, records: selected.records.map((r) => (r.day === day ? record : r)) };
-    return evaluate(copy, settings);
-  }, [selected, record, settings, day]);
-
-  const set = (id: IndicatorId, v: string) => {
-    setSaved(false);
-    setDraft((d) => ({ ...d, [id]: v }));
+    if (t.tagName === 'BUTTON' && t.getAttribute('role') !== 'radio') return;
+    if (index >= REVIEW_STEP) return;
+    e.preventDefault();
+    next();
   };
 
-  const save = () => {
-    dispatch({ type: 'manual', crewId: selected.id, record });
-    setSaved(true);
-  };
-
-  const groups: { key: (typeof INDICATORS)[number]['group']; title: string; blurb: string }[] = [
-    { key: 'vitals', title: 'Vitals', blurb: 'Cuff, oximeter and thermometer. Sit quietly for 5 minutes first.' },
-    { key: 'metabolic', title: 'Nutrition', blurb: 'Fasting glucose each morning; body mass weekly.' },
-    { key: 'behavioral', title: 'Sleep, mood and alertness', blurb: 'Honest ratings matter more than good ones. Run the reaction test for the PVT fields.' },
-    { key: 'environment', title: 'Radiation', blurb: 'From the personal dosimeter.' },
-  ];
+  const fields = visibleFields(step, draft.day, draft.draft.weight);
+  const canConfirmAll = fields.length > 0 && fields.every((id) => draft.prefill[id] !== undefined);
+  const activeDef = active ? indicatorById(active) : null;
+  const cue: Cue | null = step.id === 'symptoms' ? SYMPTOM_CUE : activeDef ? { title: activeDef.label, what: activeDef.what, how: activeDef.how, whySpace: activeDef.whySpace, sources: activeDef.sources } : null;
+  const flags = draft.preview.findings.length;
 
   return (
-    <>
+    <div className="ci" ref={rootRef}>
       <div className="page-head">
         <div>
-          <h1>Daily check-in · day {day}</h1>
+          <h1>Daily check-in</h1>
           <p>
-            {selected.callsign}. {isManual ? 'You already saved an entry today; editing it.' : 'Wearable values are pre-filled; correct anything that looks wrong.'}
+            Day <span className="mono">{draft.day}</span> · {draft.selected.callsign}.{' '}
+            {draft.isManual ? 'You already saved an entry today; editing it.' : 'Wearable values are pre-filled; correct anything that looks wrong.'}
           </p>
         </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <Pill level={preview.overall}>{preview.findings.length ? `${preview.findings.length} flag${preview.findings.length > 1 ? 's' : ''}` : 'no flags'}</Pill>
-          <button className="btn primary" onClick={save}>
-            {saved ? 'Saved' : 'Save check-in'}
-          </button>
-        </div>
+        <Pill level={draft.preview.overall}>{flags ? `${flags} flag${flags > 1 ? 's' : ''}` : 'No flags'}</Pill>
       </div>
-      {invalidCount > 0 && (
-        <p style={{ color: 'var(--red)', marginBottom: 10 }}>{invalidCount} value{invalidCount > 1 ? 's are' : ' is'} outside the measurable range and will be left out of the entry.</p>
+
+      {focus && (
+        <div className="ci-remeasure" role="note">
+          <p>
+            Re-measure {indicatorById(focus).label.toLowerCase()} 30 minutes after acting on the alert, then save again. The ground confirms later; you reassess now.
+          </p>
+          <SourceLinks ids={['russell-2023']} compact />
+        </div>
       )}
 
-      <div className="grid cols-2">
-        {groups.map((g) => (
-          <div key={g.key} className="panel">
-            <h3>{g.title}</h3>
-            <p className="muted" style={{ fontSize: 13 }}>{g.blurb}</p>
-            <div className="form">
-              {INDICATORS.filter((i) => i.group === g.key).map((def) => {
-                const st = preview.byIndicator[def.id];
-                const isScale = def.id === 'mood' || def.id === 'stress';
-                return (
-                  <div key={def.id} className="field">
-                    <label htmlFor={`in-${def.id}`}>{def.label}</label>
-                    {isScale ? (
-                      <div className="scale" role="radiogroup" aria-label={def.label}>
-                        {[1, 2, 3, 4, 5].map((n) => (
-                          <button key={n} type="button" className={draft[def.id] === String(n) ? 'on' : ''} onClick={() => set(def.id, String(n))}>
-                            {n}
-                          </button>
-                        ))}
-                      </div>
-                    ) : (
-                      <div className="row">
-                        <input
-                          id={`in-${def.id}`}
-                          type="number"
-                          inputMode="decimal"
-                          min={def.min}
-                          max={def.max}
-                          step={def.step}
-                          value={draft[def.id] ?? ''}
-                          placeholder={def.entry === 'device' ? 'from wearable' : 'enter'}
-                          onChange={(e) => set(def.id, e.target.value)}
-                        />
-                        <span className="unit">{def.unit}</span>
-                      </div>
-                    )}
-                    <span className="hint">{def.reference}</span>
-                    {outOfRange(def.id) && (
-                      <span className="inline-status" style={{ color: 'var(--red)' }}>
-                        Outside {def.min}-{def.max} {def.unit}: check the entry. It will not be saved.
-                      </span>
-                    )}
-                    {draft[def.id] && !outOfRange(def.id) && (
-                      <span className="inline-status">
-                        <span className={`dot ${st.level}`} />
-                        {st.level === 'green' ? 'within range' : st.level === 'amber' ? 'flagged: watch' : 'flagged: act now'}
-                        {st.baseline && st.z !== null && Math.abs(st.z) >= 2 && (
-                          <span className="muted"> · {st.z > 0 ? 'above' : 'below'} your usual</span>
-                        )}
-                      </span>
-                    )}
-                  </div>
-                );
-              })}
-              {g.key === 'behavioral' && (
-                <button className="btn sm" type="button" onClick={() => go('pvt')}>
-                  Run the 60-second reaction test
-                </button>
+      <StepRail steps={STEPS} index={index} furthest={furthest} onGo={goTo} />
+
+      <section className="panel ci-panel" aria-labelledby="ci-step-title" onKeyDown={onKeyDown}>
+        <div key={index} className={`ci-step ci-step-${dir}`}>
+          <div className="ci-step-head">
+            <h2 id="ci-step-title" ref={headRef} tabIndex={-1}>
+              {step.label}
+            </h2>
+            <p className="text-2">{step.blurb}</p>
+          </div>
+
+          <div className={`ci-body${cue && index !== REVIEW_STEP ? '' : ' is-wide'}`}>
+            <div className="ci-main">
+              {step.fields.length > 0 && <StepFields step={step} draft={draft} focus={focus} onActive={setActive} go={go} />}
+              {index === SYMPTOMS_STEP && <SymptomsStep draft={draft} onNone={() => { draft.clearSymptoms(); goTo(REVIEW_STEP); }} />}
+              {index === REVIEW_STEP && <ReviewStep draft={draft} onEdit={goTo} />}
+              {canConfirmAll && (
+                <div className="ci-confirm">
+                  <button type="button" className="btn" onClick={next}>
+                    Confirm all on this step
+                  </button>
+                  <span className="muted small">Every value here is prefilled; confirm to keep them and move on</span>
+                </div>
               )}
-              {g.key === 'vitals' && <CameraPulse onResult={(bpm) => set('hr', String(bpm))} />}
             </div>
-          </div>
-        ))}
-
-        <div className="panel" style={{ gridColumn: '1 / -1' }}>
-          <h3>Symptoms today</h3>
-          <p className="muted" style={{ fontSize: 13 }}>Tap everything that applies. Items in red are treated as urgent.</p>
-          <div className="chips">
-            {SYMPTOMS.map((s) => {
-              const on = symptoms.includes(s.id);
-              return (
-                <button
-                  key={s.id}
-                  type="button"
-                  className={`chip ${s.redFlag ? 'red' : ''} ${on ? 'on' : ''}`}
-                  onClick={() => {
-                    setSaved(false);
-                    setSymptoms((cur) => (on ? cur.filter((x) => x !== s.id) : [...cur, s.id]));
-                  }}
-                >
-                  {s.label}
-                </button>
-              );
-            })}
-          </div>
-          <div className="field" style={{ marginTop: 12 }}>
-            <label htmlFor="notes">Notes for the log</label>
-            <textarea id="notes" rows={3} value={notes} onChange={(e) => { setSaved(false); setNotes(e.target.value); }} placeholder="Anything the flight surgeon should know: pain level, what changed, meds taken." />
+            {cue && index !== REVIEW_STEP && <CueCard cue={cue} />}
           </div>
         </div>
 
-        <div className="panel" style={{ gridColumn: '1 / -1' }}>
-          <h3>
-            What this entry triggers <Pill level={preview.overall} />
-          </h3>
-          {preview.findings.length === 0 && <p className="muted">No rules fire on these values. Save to keep your baseline fresh.</p>}
-          {preview.findings.map((f) => (
-            <div key={f.id} className={`alert ${f.level}`}>
-              <div className="head">
-                <Pill level={f.level} />
-                <h3>{f.title}</h3>
-                {f.notifySurgeon && <span className="pill neutral">notify flight surgeon</span>}
-              </div>
-              <div className="why"><b>Why</b> {f.reason}</div>
-              <div className="why"><b>Do</b> {f.action}</div>
-              <div className="foot"><SourceLinks ids={f.sources} compact /></div>
-            </div>
-          ))}
-          <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
-            <button className="btn primary" onClick={save}>{saved ? 'Saved' : 'Save check-in'}</button>
-            {saved && <button className="btn" onClick={() => go('today')}>Back to Today</button>}
-          </div>
+        <div className="ci-foot">
+          {index > 0 ? (
+            <button type="button" className="btn" onClick={back}>
+              Back
+            </button>
+          ) : (
+            <span />
+          )}
+          <span className="ci-foot-keys muted small">Enter for next, Shift+Enter for back</span>
+          {index < REVIEW_STEP ? (
+            <button type="button" className="btn-primary" onClick={next}>
+              Next
+            </button>
+          ) : (
+            <button type="button" className="btn-primary" onClick={saveAndExit}>
+              Save check-in
+            </button>
+          )}
         </div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 }

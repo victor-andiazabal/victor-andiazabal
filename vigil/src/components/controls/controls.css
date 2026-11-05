@@ -69,3 +69,45 @@
   background: var(--surface-3); border: 1px solid var(--line-strong); box-shadow: var(--shadow-overlay);
   font-size: 13px; line-height: 1.4; color: var(--text); pointer-events: none;
 }
+
+/* Number field (C3): label row, 56px field between two 48px square steppers, band, messages. */
+.nf { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
+.nf-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); flex-wrap: wrap; }
+.nf-label { font-size: 13px; font-weight: 500; color: var(--text-2); }
+.nf-chip {
+  display: inline-flex; align-items: center; min-height: 22px; padding: 1px 8px;
+  border: 1px solid var(--line); border-radius: var(--r-control); background: var(--surface-2);
+  font-size: 13px; line-height: 1.4; color: var(--text-muted);
+}
+.nf-row { display: flex; align-items: center; gap: var(--s-2); }
+.nf-step {
+  flex: 0 0 auto; display: grid; place-items: center; width: var(--hit); height: var(--hit); padding: 0;
+  border: 1px solid var(--line-strong); border-radius: var(--r-control); background: var(--surface-2); color: var(--text);
+  touch-action: manipulation; user-select: none;
+  transition: background-color var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
+}
+.nf-step:hover { background: var(--surface-3); }
+.nf-step:active { transform: translateY(1px); }
+.nf-step:disabled { opacity: 0.4; pointer-events: none; }
+.nf-box {
+  flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: var(--s-2);
+  height: var(--hit-primary); padding: 0 var(--s-3);
+  border: 1px solid var(--line-strong); border-radius: var(--r-control); background: var(--surface-2);
+  transition: border-color var(--t-fast) var(--ease);
+}
+.nf-box:focus-within { outline: 2px solid var(--action); outline-offset: 2px; }
+.nf-row.is-invalid .nf-box { border-color: var(--red); }
+.nf-input {
+  flex: 1 1 auto; min-width: 0; width: 100%; height: 100%; padding: 0;
+  border: 0; background: transparent; color: var(--text); text-align: center;
+  font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 40px; font-weight: 500;
+  line-height: 1; letter-spacing: -0.02em;
+}
+.nf-input:focus, .nf-input:focus-visible { outline: none; }
+.nf-input::placeholder { color: var(--text-muted); }
+.nf-unit { flex: 0 0 auto; font-size: 13px; color: var(--text-muted); }
+.nf-msg { margin: 0; font-size: 13px; color: var(--red); }
+.nf-hint { margin: 0; font-size: 13px; line-height: 1.45; color: var(--text-muted); }
+@media (max-width: 1023px) {
+  .nf-input { font-size: 36px; }
+}

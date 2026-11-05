@@ -1,0 +1,15 @@
+/* Ground view: crew status grid (44px rows, sticky header, mono numbers), watch list, notes. */
+
+.ground-section { margin-bottom: var(--s-6); }
+.ground-table { min-width: 1000px; }
+.ground-table th, .ground-table td { padding: 0 8px; }
+.ground-table td, .ground-table th { white-space: nowrap; }
+.ground-table th[scope='row'] { text-align: left; font-weight: 500; color: var(--text); background: transparent; position: static; padding: 0 4px; white-space: nowrap; }
+.ground-table th.num { white-space: nowrap; }
+.ground-table .link-btn { min-height: var(--hit-min); padding: 0 8px; color: var(--text); justify-content: flex-start; white-space: nowrap; }
+.cell-val { display: inline-flex; align-items: center; gap: var(--s-2); }
+
+.ground-watch-title { margin: var(--s-4) 0 0; }
+.ground-watch { list-style: none; margin: 0; padding: 0; }
+.ground-watch li { display: flex; align-items: center; gap: var(--s-3); min-height: var(--hit); padding: 8px 0; border-top: 1px solid var(--line); }
+.ground-watch li:last-child { border-bottom: 1px solid var(--line); }

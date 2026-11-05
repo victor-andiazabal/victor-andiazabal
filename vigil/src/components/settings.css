@@ -1,0 +1,29 @@
+/* Settings: option rows, range slider, button rows. */
+
+.option-list { display: grid; }
+.option-row { padding: 12px 0; border-top: 1px solid var(--line); }
+.option-list > .option-row:first-child { border-top: 0; padding-top: 0; }
+.option-name { display: block; font-weight: 500; }
+.option-blurb { display: block; margin-top: 2px; color: var(--text-muted); }
+
+.settings .field { gap: var(--s-2); }
+.settings .field > label, .settings .field-label { margin-bottom: 0; }
+.settings-row { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.settings-gap { margin-top: var(--s-6); }
+.settings-groups { display: grid; gap: var(--s-6); }
+.seed-input { max-width: 200px; }
+.import-msg { color: var(--text-2); }
+
+/* Range: hairline track, Text thumb. No action colour; the slider is not a primary action. */
+.range { appearance: none; -webkit-appearance: none; width: 100%; height: var(--hit); margin: 0; padding: 0; background: transparent; cursor: pointer; }
+.range::-webkit-slider-runnable-track { height: 4px; border-radius: 2px; background: var(--line-strong); }
+.range::-moz-range-track { height: 4px; border-radius: 2px; background: var(--line-strong); }
+.range::-webkit-slider-thumb { -webkit-appearance: none; width: 22px; height: 22px; margin-top: -9px; border-radius: 50%; background: var(--text); border: 0; }
+.range::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: var(--text); border: 0; }
+
+.file-input { padding: 8px 12px; font-size: 13px; color: var(--text-2); }
+.file-input::file-selector-button {
+  min-height: 32px; margin-right: var(--s-3); padding: 4px 16px; cursor: pointer;
+  background: var(--surface-3); color: var(--text); border: 1px solid var(--line-strong); border-radius: var(--r-control); font: inherit; font-size: 13px; font-weight: 500;
+}
+.field + .settings-row { margin-top: var(--s-3); }

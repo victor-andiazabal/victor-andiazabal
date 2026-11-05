@@ -3,7 +3,9 @@ import { PVT_TASK_ID } from '../data/routine';
 import { evaluate } from '../lib/rules';
 import { useStore } from '../state/store';
 import { SourceLinks } from './ui';
-import type { View } from '../App';
+import type { View } from '../lib/views';
+import './screens.css';
+import './reaction.css';
 
 const TEST_SECONDS = 60;
 const LAPSE_MS = 355; // PVT-B lapse threshold (Basner, Mollicone and Dinges 2011)
@@ -11,6 +13,17 @@ const MIN_ISI = 1000;
 const MAX_ISI = 4000; // PVT-B uses 1-4 s inter-stimulus intervals
 
 type Phase = 'idle' | 'armed' | 'go' | 'false' | 'done';
+
+/** What the target zone says in each phase: a word, so the state never rests on colour. */
+function stageCopy(phase: Phase, running: boolean, display: string): { word: string; readout: string } {
+  const ms = /^\d+$/.test(display) ? `${display} ms` : '·';
+  if (phase === 'done') return { word: 'Test finished', readout: ms };
+  if (!running) return { word: 'Press start', readout: '·' };
+  if (phase === 'go') return { word: 'Tap', readout: ms };
+  if (phase === 'false') return { word: 'Too early', readout: '·' };
+  if (phase === 'armed') return { word: 'Wait', readout: '·' };
+  return { word: 'Last response', readout: ms };
+}
 
 export function ReactionTest({ go }: { go: (v: View) => void }) {
   const { selected, settings, dispatch } = useStore();
@@ -120,6 +133,14 @@ export function ReactionTest({ go }: { go: (v: View) => void }) {
     setSaved(true);
   };
 
+  const copy = stageCopy(phase, running, display);
+  const stats = [
+    { n: String(rts.length), label: 'responses' },
+    { n: rts.length ? String(Math.round(mean)) : '--', label: 'mean ms' },
+    { n: rts.length ? String(Math.round(median)) : '--', label: 'median ms' },
+    { n: String(lapses), label: `lapses ≥ ${LAPSE_MS} ms` },
+  ];
+
   return (
     <>
       <div className="page-head">
@@ -132,49 +153,53 @@ export function ReactionTest({ go }: { go: (v: View) => void }) {
         </div>
       </div>
 
-      <div className="grid cols-3">
-        <div style={{ gridColumn: 'span 2' }}>
+      <div className="split">
+        <div>
           <div
-            className={`pvt-stage ${phase}`}
+            className={`pvt-stage ${phase}${running ? ' live' : ''}`}
             role="button"
             tabIndex={0}
-            aria-label="Reaction test area"
+            aria-label={`Reaction test area. ${copy.word}`}
             onPointerDown={(e) => { e.preventDefault(); if (running) respond(); }}
           >
-            {phase === 'done' ? 'done' : running ? (display || '·') : 'press start'}
+            <span className="pvt-word">{copy.word}</span>
+            <span className="pvt-readout mono">{copy.readout}</span>
+            {phase === 'false' && <span className="pvt-sub">Wait for the counter, then tap</span>}
           </div>
-          <div style={{ display: 'flex', gap: 8, marginTop: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+          <div className="pvt-actions">
             {!running && phase !== 'done' && (
-              <button className="btn primary" onClick={start}>Start 60 s test</button>
+              <button type="button" className="btn-primary" onClick={start}>Start 60 s test</button>
             )}
             {phase === 'done' && (
               <>
-                <button className="btn primary" onClick={save} disabled={rts.length === 0}>{saved ? 'Saved to today\'s check-in' : 'Save result'}</button>
-                <button className="btn" onClick={start}>Run again</button>
-                {saved && <button className="btn" onClick={() => go('today')}>Back to Today</button>}
+                <button type="button" className="btn-primary" onClick={save} disabled={rts.length === 0}>{saved ? 'Saved to today\'s check-in' : 'Save result'}</button>
+                <button type="button" className="btn" onClick={start}>Run again</button>
+                {saved && <button type="button" className="btn" onClick={() => go('today')}>Back to Today</button>}
               </>
             )}
-            <span className="muted mono">{Math.min(TEST_SECONDS, elapsed).toFixed(0)} / {TEST_SECONDS} s</span>
+            <span className="muted mono pvt-clock">{Math.min(TEST_SECONDS, elapsed).toFixed(0)} / {TEST_SECONDS} s</span>
           </div>
-          <div className="pvt-stats">
-            <div className="panel"><div className="n">{rts.length}</div><small>responses</small></div>
-            <div className="panel"><div className="n">{rts.length ? Math.round(mean) : '--'}</div><small>mean ms</small></div>
-            <div className="panel"><div className="n">{rts.length ? Math.round(median) : '--'}</div><small>median ms</small></div>
-            <div className="panel"><div className="n">{lapses}</div><small>lapses ≥ {LAPSE_MS} ms</small></div>
-          </div>
-          {falseStarts > 0 && <p className="muted" style={{ marginTop: 8 }}>{falseStarts} false start{falseStarts > 1 ? 's' : ''} (pressed before the counter).</p>}
+          <dl className="pvt-stats">
+            {stats.map((s) => (
+              <div key={s.label} className="pvt-stat">
+                <dt>{s.label}</dt>
+                <dd className="mono">{s.n}</dd>
+              </div>
+            ))}
+          </dl>
+          {falseStarts > 0 && <p className="small-note">{falseStarts} false start{falseStarts > 1 ? 's' : ''} (pressed before the counter).</p>}
         </div>
         <div className="panel">
-          <h3>How to read it</h3>
+          <h2>How to read it</h2>
           <p>
-            Your pre-flight baseline: <b>{b ? `${Math.round(b.median)} ms` : 'not available'}</b>
-            {b && ` (typical spread ±${Math.round(b.mad)} ms)`}.
+            Your pre-flight baseline: <b className="mono">{b ? `${Math.round(b.median)} ms` : 'not available'}</b>
+            {b && <span className="mono"> (typical spread ±{Math.round(b.mad)} ms)</span>}.
           </p>
           <p>
             Response time slows and lapses increase with sleep loss, often before you feel tired. VIGIL flags a mean 15% slower than your
             baseline as Watch, and 35% slower or 6 extra lapses as Act now.
           </p>
-          <p className="muted" style={{ fontSize: 13 }}>
+          <p className="small-note">
             The full PVT-B lasts 3 minutes; this 60-second version is for the prototype and keeps the same 355 ms lapse threshold and 1-4 s
             random wait.
           </p>

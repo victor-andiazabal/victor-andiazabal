@@ -10,6 +10,7 @@ export type IndicatorId =
   | 'exercise'
   | 'mood'
   | 'stress'
+  | 'kss'
   | 'pvtRt'
   | 'pvtLapses'
   | 'radDose';

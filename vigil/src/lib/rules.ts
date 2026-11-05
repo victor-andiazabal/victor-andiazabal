@@ -1,4 +1,4 @@
-import { ENVIRONMENTS, symptomById } from '../data/indicators';
+import { ENVIRONMENTS, kssAnchor, symptomById } from '../data/indicators';
 import { baselineOf, consecutive, robustZ, round, seriesFor, slope, type Baseline } from './analytics';
 import type { CrewMember, DayRecord, Finding, IndicatorId, Level, MissionSettings } from './types';
 
@@ -39,6 +39,7 @@ const CHECKLIST: Record<string, string> = {
   'glu-low2': 'glucoseLow', 'glu-low1': 'glucoseLow', 'glu-high2': 'glucoseHigh', 'glu-high1': 'glucoseHigh', 'glu-pre': 'glucoseHigh',
   'sleep-red': 'sleep', 'sleep-amber': 'sleep',
   'pvt-red': 'alertness', 'pvt-amber': 'alertness',
+  'kss-high': 'alertness', 'kss-mismatch': 'alertness',
   'mood-low': 'mood', 'stress-high': 'mood',
   'rad-red': 'radiation', 'rad-amber': 'radiation', 'rad-career': 'radiation',
   'weight-loss': 'weight', 'exercise-low': 'exercise',
@@ -298,6 +299,40 @@ function rulePVT(ctx: Ctx) {
   }
 }
 
+/** KSS 7 is "sleepy, but no effort to keep awake" on the Karolinska scale (Kaida 2006). */
+export const KSS_SLEEPY = 7;
+/** At or below this rating the person reports feeling at least somewhat alert. */
+export const KSS_ALERT_MAX = 4;
+
+/** Runs after rulePVT: the mismatch rule reads today's reaction-test finding. */
+function ruleSleepiness(ctx: Ctx) {
+  const k = v(ctx, 'kss');
+  if (k === null) return;
+  if (k >= KSS_SLEEPY) {
+    add(ctx, 'kss-high', {
+      indicator: 'kss', level: 'amber', basis: 'reference',
+      title: 'Sleepy today',
+      reason: `You rated ${k}/9 on the Karolinska scale (${kssAnchor(k)}). Ratings of 7 or more go with slower reaction times and more lapses (Kaida 2006).`,
+      action: 'Protect the next sleep period, avoid critical tasks until a reaction test is back near your baseline, and take a short nap if the timeline allows.',
+      notifySurgeon: false, sources: ['kaida-2006'],
+    });
+    return;
+  }
+  const pvt = ctx.findings.find((f) => f.indicator === 'pvtRt' && f.day === ctx.rec.day && (f.level === 'amber' || f.level === 'red'));
+  const rt = v(ctx, 'pvtRt');
+  const b = ctx.baselines.pvtRt;
+  if (k <= KSS_ALERT_MAX && pvt && rt !== null && b) {
+    const pct = Math.round(((rt - b.median) / b.median) * 100);
+    add(ctx, 'kss-mismatch', {
+      indicator: 'kss', level: 'amber', basis: 'baseline',
+      title: 'You feel alert but your reaction test is slow',
+      reason: `You rated ${k}/9 (${kssAnchor(k)}), but your reaction test averaged ${Math.round(rt)} ms, ${pct}% slower than your pre-flight median of ${Math.round(b.median)} ms. In ISS astronauts, self-rated alertness did not track measured performance.`,
+      action: 'Trust the test, not the feeling, for critical tasks today: hold EVA prep, docking or driving until a repeat test is back near your baseline.',
+      notifySurgeon: false, sources: ['dev-2024', 'pvt-b'],
+    });
+  }
+}
+
 function ruleMood(ctx: Ctx) {
   const m = v(ctx, 'mood');
   const st = v(ctx, 'stress');
@@ -453,7 +488,7 @@ export function evaluate(crew: CrewMember, settings: MissionSettings): Evaluatio
   const rec = flight[flight.length - 1] ?? null;
 
   const baselines: Partial<Record<IndicatorId, Baseline>> = {};
-  const ids: IndicatorId[] = ['hr', 'bpSys', 'bpDia', 'spo2', 'temp', 'glucose', 'weight', 'sleep', 'exercise', 'mood', 'stress', 'pvtRt', 'pvtLapses', 'radDose'];
+  const ids: IndicatorId[] = ['hr', 'bpSys', 'bpDia', 'spo2', 'temp', 'glucose', 'weight', 'sleep', 'exercise', 'mood', 'stress', 'kss', 'pvtRt', 'pvtLapses', 'radDose'];
   for (const id of ids) {
     const b = baselineOf(pre.map((r) => r.values[id]).filter((x): x is number => Number.isFinite(x)));
     if (b) baselines[id] = b;
@@ -490,6 +525,7 @@ export function evaluate(crew: CrewMember, settings: MissionSettings): Evaluatio
   ruleGlucose(ctx);
   ruleSleep(ctx);
   rulePVT(ctx);
+  ruleSleepiness(ctx);
   ruleMood(ctx);
   ruleWeight(ctx);
   ruleExercise(ctx);

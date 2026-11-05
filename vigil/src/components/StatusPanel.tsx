@@ -68,8 +68,8 @@ export function StatusPanel({ ev, action, sweep, meta, surgeonNote, go }: Status
         </button>
         {action.kind === 'remeasure' && (
           <p className="remeasure-note">
-            Rest, then take the flagged reading again in 30 minutes. Repeating the measurement before acting is the reassess step
-            of a crew decision-support loop.{' '}
+            Repeat the flagged reading about 30 minutes after acting. NASA's decision-support concept for Mars missions re-checks the
+            crew member 30 minutes after an alert (scenario in Russell 2023).{' '}
             {src && (
               <a href={src.url} target="_blank" rel="noopener noreferrer">
                 {src.org}

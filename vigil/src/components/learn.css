@@ -1,0 +1,24 @@
+/* Learn: a reading page. 16px body, 72ch measure, hairline-separated lists, disclosure rows. */
+
+.learn { max-width: 72ch; }
+.learn p { line-height: 1.5; }
+.learn-section { margin-bottom: var(--s-12); }
+.learn-section > h2 { margin-bottom: var(--s-4); }
+
+.learn-list { list-style: none; margin: 0 0 var(--s-4); padding: 0; }
+.learn-list li { padding: var(--s-4) 0; border-top: 1px solid var(--line); }
+.learn-list li:last-child { border-bottom: 1px solid var(--line); }
+.learn-list h3 { margin: 0 0 var(--s-1); }
+.learn-list p { margin: 0; color: var(--text-2); }
+.learn-note { margin: var(--s-4) 0 var(--s-3); color: var(--text-2); }
+
+.learn-unit { font-size: 13px; font-weight: 400; margin-left: var(--s-2); }
+.learn-body p { color: var(--text-2); }
+.learn-body b { color: var(--text); font-weight: 500; }
+.learn-ref { font-size: 13px; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-control); padding: 8px 12px; }
+
+.learn-sources { list-style: none; margin: 0; padding: 0; }
+.learn-sources li { display: grid; gap: 2px; padding: var(--s-3) 0; border-top: 1px solid var(--line); font-size: 13px; }
+.learn-sources li:last-child { border-bottom: 1px solid var(--line); }
+.learn-sources a { font-size: 16px; }
+.learn-org { color: var(--text-2); }

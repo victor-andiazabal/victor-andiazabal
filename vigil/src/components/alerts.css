@@ -1,0 +1,32 @@
+/* Alerts: finding cards with a 4px status edge, Why / Do now paragraphs, 48px checklist rows. */
+
+.finding { margin: 0; padding: var(--s-4) var(--s-4) var(--s-4) var(--s-6); display: grid; gap: var(--s-3); }
+.finding.acked { opacity: 1; }
+.finding.acked .finding-head h3 { color: var(--text-2); }
+.finding-head { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
+.finding-head h3 { margin: 0; font-size: 18px; font-weight: 600; letter-spacing: -0.01em; }
+.finding-tags { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.finding-block { display: grid; gap: var(--s-1); }
+.finding-label { margin: 0; font-size: 13px; font-weight: 500; color: var(--text-muted); letter-spacing: 0; }
+.finding-text { margin: 0; color: var(--text); max-width: 72ch; }
+.finding-foot { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-2) var(--s-3); padding-top: var(--s-2); border-top: 1px solid var(--line); }
+.finding-foot .muted { margin-left: auto; }
+
+.finding-checklist { display: grid; gap: var(--s-2); padding: var(--s-4); background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-card); }
+.checklist { list-style: none; margin: 0; padding: 0; }
+.checklist li { border-top: 1px solid var(--line); }
+.checklist li:first-child { border-top: 0; }
+.checklist .check-row { padding: 6px 0; min-height: var(--hit); align-items: center; }
+.checklist .check-row.done > span { color: var(--text-muted); text-decoration: line-through; }
+.step-no { display: inline-block; min-width: 24px; color: var(--text-muted); font-size: 13px; }
+
+.alert-copy { margin-top: var(--s-3); }
+.alerts-ground { margin-top: var(--s-8); }
+.alerts-ground > h2 { margin-bottom: var(--s-2); }
+
+@media (max-width: 639px) {
+  .finding-foot .muted { margin-left: 0; flex-basis: 100%; }
+}
+
+.alerts-crew th, .alerts-crew td { padding: 0 8px; white-space: nowrap; }
+.alerts-crew .link-btn { padding: 0; font-size: 13px; color: var(--text); }

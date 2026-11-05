@@ -1,11 +1,14 @@
 import { useMemo } from 'react';
 import { ENVIRONMENTS, INDICATORS } from '../data/indicators';
-import { fmt } from '../lib/format';
+import { fmt, LEVEL_LABEL } from '../lib/format';
 import { evaluate } from '../lib/rules';
+import type { View } from '../lib/views';
 import { useStore } from '../state/store';
 import { CommLink } from './CommLink';
 import { Pill } from './ui';
-import type { View } from '../App';
+import './screens.css';
+import './alerts.css';
+import './ground.css';
 
 /**
  * The ground-side view: what the flight surgeon sees at the next downlink.
@@ -25,86 +28,103 @@ export function Ground({ go }: { go: (v: View) => void }) {
           <h1>Ground view · day {settings.currentDay}</h1>
           <p>What the flight surgeon receives at the downlink. One-way delay {env.commDelay}; every item here was raised by the crew's own device.</p>
         </div>
-        <Pill level={queue.length ? 'red' : watch.length ? 'amber' : 'green'}>{queue.length ? `${queue.length} for the surgeon` : watch.length ? `${watch.length} to watch` : 'crew nominal'}</Pill>
+        <Pill level={queue.length ? 'red' : watch.length ? 'amber' : 'green'}>{queue.length ? `${queue.length} for the surgeon` : watch.length ? `${watch.length} to watch` : 'Crew nominal'}</Pill>
       </div>
 
-      <div style={{ marginBottom: 14 }}>
+      <div className="ground-section">
         <CommLink side="ground" />
       </div>
 
-      <div className="panel" style={{ marginBottom: 14, overflowX: 'auto' }}>
-        <h3>Crew status grid</h3>
-        <table className="table">
-          <thead>
-            <tr>
-              <th>Crew</th>
-              <th>Status</th>
-              {INDICATORS.map((i) => <th key={i.id} title={i.label}>{i.short}</th>)}
-              <th>Dose (mission)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {evals.map(({ crew: c, ev }) => (
-              <tr key={c.id}>
-                <td>
-                  <button className="btn sm" style={{ border: 0, background: 'transparent', padding: '2px 4px' }} onClick={() => { dispatch({ type: 'select', crewId: c.id }); go('today'); }}>
-                    {c.callsign}
-                  </button>
-                </td>
-                <td><Pill level={ev.overall} /></td>
-                {INDICATORS.map((i) => {
-                  const st = ev.byIndicator[i.id];
-                  return (
-                    <td key={i.id} className="mono" title={`${i.label}: ${fmt(i.id, st.value)} ${i.unit}${st.baseline ? ` (baseline ${fmt(i.id, st.baseline.median)})` : ''}`}>
-                      <span className={`dot ${st.level}`} style={{ marginRight: 5 }} />
-                      {fmt(i.id, st.value)}
-                    </td>
-                  );
-                })}
-                <td className="mono">{ev.cumulativeDoseMsv.toFixed(0)} mSv</td>
+      <div className="panel ground-section">
+        <h2>Crew status grid</h2>
+        <div className="table-wrap">
+          <table className="table ground-table">
+            <caption className="sr-only">Today's status and readings for every crew member</caption>
+            <thead>
+              <tr>
+                <th scope="col">Crew</th>
+                <th scope="col">Status</th>
+                {INDICATORS.map((i) => <th key={i.id} scope="col" className="num" title={i.label}>{i.short}</th>)}
+                <th scope="col" className="num">Dose (mission)</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <p className="muted" style={{ fontSize: 12, margin: '8px 0 0' }}>Dot colour is the rule result for that indicator today; hover a cell for the value and baseline.</p>
+            </thead>
+            <tbody>
+              {evals.map(({ crew: c, ev }) => (
+                <tr key={c.id}>
+                  <th scope="row">
+                    <button type="button" className="link-btn" onClick={() => { dispatch({ type: 'select', crewId: c.id }); go('today'); }}>
+                      {c.callsign}
+                    </button>
+                  </th>
+                  <td><Pill level={ev.overall} /></td>
+                  {INDICATORS.map((i) => {
+                    const st = ev.byIndicator[i.id];
+                    return (
+                      <td key={i.id} className="num" title={`${i.label}: ${fmt(i.id, st.value)} ${i.unit}${st.baseline ? ` (baseline ${fmt(i.id, st.baseline.median)})` : ''}`}>
+                        <span className="cell-val">
+                          <span className={`dot ${st.level}`} aria-hidden="true" />
+                          <span className="sr-only">{LEVEL_LABEL[st.level]}: </span>
+                          {fmt(i.id, st.value)}
+                        </span>
+                      </td>
+                    );
+                  })}
+                  <td className="num">{ev.cumulativeDoseMsv.toFixed(0)} mSv</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="small-note">Each dot is the rule result for that indicator today (green Nominal, amber Watch, red Act now). Hover or focus a cell for the value and baseline.</p>
       </div>
 
-      <div className="grid cols-2">
-        <div>
-          <h3>Flagged for the surgeon</h3>
+      <div className="split split-even">
+        <div className="stack-sm">
+          <h2>Flagged for the surgeon</h2>
           {queue.length === 0 && <p className="muted">Nothing needs the ground today.</p>}
           {queue.map(({ crew: c, f }) => (
-            <div key={f.id} className={`alert ${f.level} ${acknowledged[f.id] ? 'acked' : ''}`}>
-              <div className="head">
+            <article key={f.id} className={`alert ${f.level} finding${acknowledged[f.id] ? ' acked' : ''}`}>
+              <header className="finding-head">
                 <Pill level={f.level} />
                 <h3>{c.callsign}: {f.title}</h3>
-                {acknowledged[f.id] && <span className="pill neutral">acknowledged by crew</span>}
+              </header>
+              {acknowledged[f.id] && <div className="finding-tags"><span className="pill neutral">Acknowledged by crew</span></div>}
+              <div className="finding-block">
+                <h4 className="finding-label">Why</h4>
+                <p className="finding-text">{f.reason}</p>
               </div>
-              <div className="why"><b>Why</b> {f.reason}</div>
-              <div className="why"><b>Crew action</b> {f.action}</div>
-            </div>
+              <div className="finding-block">
+                <h4 className="finding-label">Crew action</h4>
+                <p className="finding-text">{f.action}</p>
+              </div>
+            </article>
           ))}
           {watch.length > 0 && (
             <>
-              <h3 style={{ marginTop: 14 }}>Watch items (crew handles these)</h3>
-              <ul style={{ margin: 0, paddingLeft: 18 }}>
+              <h3 className="ground-watch-title">Watch items (crew handles these)</h3>
+              <ul className="ground-watch">
                 {watch.map(({ crew: c, f }) => (
-                  <li key={f.id} style={{ marginBottom: 4 }}><span className={`dot ${f.level}`} style={{ marginRight: 6 }} />{c.callsign}: {f.title}</li>
+                  <li key={f.id}>
+                    <span className={`dot ${f.level}`} aria-hidden="true" />
+                    <span><span className="sr-only">{LEVEL_LABEL[f.level]}: </span>{c.callsign}: {f.title}</span>
+                  </li>
                 ))}
               </ul>
             </>
           )}
         </div>
-        <div style={{ display: 'grid', gap: 14, alignContent: 'start' }}>
+        <div className="stack-sm">
+          <h2>Surgeon notes</h2>
           {crew.map((c) => (
             <div key={c.id} className="panel">
-              <h3>Surgeon notes · {c.callsign}</h3>
+              <label className="field-label" htmlFor={`note-${c.id}`}>Surgeon notes · {c.callsign}</label>
               <textarea
+                id={`note-${c.id}`}
+                className="input"
                 rows={3}
                 value={surgeonNotes[c.id] ?? ''}
                 onChange={(e) => dispatch({ type: 'surgeonNote', crewId: c.id, text: e.target.value })}
                 placeholder="Per-crew limits, medication changes, schedule adjustments. Stored on this device."
-                style={{ width: '100%', background: 'var(--bg-2)', color: 'var(--text)', border: '1px solid var(--line)', borderRadius: 10, padding: 8, font: 'inherit' }}
               />
             </div>
           ))}

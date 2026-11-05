@@ -1,0 +1,77 @@
+/* Shared pieces for the secondary screens (Trends, Alerts, Routine, Ground, Learn, Settings, Reaction test, Comm link). Tokens only. */
+
+/* Two-column page split: main column + side column, one column under 1024px. */
+.split { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--s-6); align-items: start; }
+.split-even { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.stack { display: grid; gap: var(--s-6); align-content: start; min-width: 0; }
+.stack-sm { display: grid; gap: var(--s-3); align-content: start; min-width: 0; }
+@media (max-width: 1023px) {
+  .split, .split-even { grid-template-columns: minmax(0, 1fr); }
+}
+
+.panel > h2:first-child, .panel > h3:first-child { margin-bottom: var(--s-3); }
+.panel-lead { color: var(--text-2); margin: 0 0 var(--s-4); max-width: 72ch; }
+.small-note { font-size: 13px; line-height: 1.45; color: var(--text-muted); margin: var(--s-2) 0 0; }
+.table-wrap { position: relative; overflow-x: auto; }
+
+/* Inputs: 48px, Surface 2 fill, 1px strong hairline, 8px radius. */
+.input {
+  display: block; width: 100%; min-height: var(--hit);
+  padding: 10px 12px; background: var(--surface-2); color: var(--text);
+  border: 1px solid var(--line-strong); border-radius: var(--r-control);
+  font: inherit; line-height: 1.5;
+}
+textarea.input { resize: vertical; }
+.input::placeholder { color: var(--text-muted); }
+.input.mono { font-family: var(--mono); font-size: 13px; line-height: 1.5; }
+.field-label { display: block; font-size: 13px; font-weight: 500; color: var(--text-2); margin-bottom: var(--s-2); }
+
+/* Checkbox and radio: one 24px box, Text fill when on, 48px row around it. */
+.check {
+  appearance: none; -webkit-appearance: none; flex: none; margin: 0;
+  width: 24px; height: 24px; display: inline-grid; place-content: center;
+  background: var(--surface-2); border: 1px solid var(--line-strong); border-radius: var(--r-control);
+  cursor: pointer;
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.check::after {
+  content: ''; width: 16px; height: 16px; background: var(--bg); opacity: 0;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.check:checked { background: var(--text); border-color: var(--text); }
+.check:checked::after { opacity: 1; }
+.check[type='radio'] { border-radius: 50%; }
+.check[type='radio']::after { width: 10px; height: 10px; border-radius: 50%; -webkit-mask: none; mask: none; }
+.check:disabled { opacity: 0.4; cursor: default; }
+.check-row {
+  display: flex; align-items: center; gap: var(--s-3); min-height: var(--hit); cursor: pointer;
+}
+.check-row.top { align-items: flex-start; padding: 12px 0; }
+.check-row.top .check { margin-top: 2px; }
+
+/* Destructive secondary: the secondary button with a red edge and word. */
+.btn-destructive { color: var(--red); border-color: var(--red); }
+.btn-destructive:hover { background: var(--red-bg); }
+
+/* Disclosure rows (Learn, comm logs). */
+.disclosure { border-top: 1px solid var(--line); }
+.disclosure:last-child { border-bottom: 1px solid var(--line); }
+.disclosure > summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s-4);
+  min-height: var(--hit); padding: 8px 0; cursor: pointer; list-style: none;
+  font-weight: 500; letter-spacing: -0.01em;
+}
+.disclosure > summary::-webkit-details-marker { display: none; }
+.disclosure > summary::after {
+  content: ''; width: 20px; height: 20px; flex: none; background: var(--text-2);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 8l5 5 5-5' fill='none' stroke='black' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 8l5 5 5-5' fill='none' stroke='black' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: transform var(--t-menu) var(--ease);
+}
+.disclosure[open] > summary::after { transform: rotate(180deg); }
+.disclosure-body { padding: 0 0 var(--s-4); }
+
+@media (prefers-reduced-motion: reduce) {
+  .disclosure > summary::after { transition: none; }
+}
