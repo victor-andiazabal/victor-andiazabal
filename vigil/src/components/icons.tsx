@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-/** One line icon set: 20px, 1px stroke, square caps. Decorative by default; pass a label to expose one. */
+/** One line icon set: drawn on a 20px grid, 1px rendered stroke at any size (24px for patches). Decorative by default; pass a label to expose one. */
 interface IconProps {
   size?: number;
   label?: string;
@@ -15,7 +15,7 @@ function Svg({ size = 20, label, className, children }: IconProps & { children: 
       viewBox="0 0 20 20"
       fill="none"
       stroke="currentColor"
-      strokeWidth={1}
+      strokeWidth={20 / size}
       strokeLinecap="round"
       strokeLinejoin="round"
       className={className}
@@ -70,6 +70,27 @@ export const IconClose = (p: IconProps) => (
 );
 export const IconChevronRight = (p: IconProps) => (
   <Svg {...p}><path d="M8 5l5 5-5 5" /></Svg>
+);
+export const IconChevronDown = (p: IconProps) => (
+  <Svg {...p}><path d="M5 8l5 5 5-5" /></Svg>
+);
+export const IconFlame = (p: IconProps) => (
+  <Svg {...p}><path d="M10 2.5c.5 3 3.5 4.5 3.5 8a3.5 3.5 0 0 1-7 0c0-1.2.5-2 1-2.6.3 1 .8 1.4 1.3 1.6C8.6 7.5 9 5 10 2.5zM10 17.5a2 2 0 0 1-2-2c0-1 .8-1.7 2-2.5 1.2.8 2 1.5 2 2.5a2 2 0 0 1-2 2z" /></Svg>
+);
+export const IconCalendar = (p: IconProps) => (
+  <Svg {...p}><rect x="3.5" y="4.5" width="13" height="12" rx="1.5" /><path d="M3.5 8.5h13M7 2.5v3M13 2.5v3M7 12h6" /></Svg>
+);
+export const IconCheckCircle = (p: IconProps) => (
+  <Svg {...p}><circle cx="10" cy="10" r="7.5" /><path d="M6.5 10.2l2.4 2.4 4.6-5" /></Svg>
+);
+export const IconDumbbell = (p: IconProps) => (
+  <Svg {...p}><path d="M2.5 8v4M5 6v8M15 6v8M17.5 8v4M5 10h10" /></Svg>
+);
+export const IconList = (p: IconProps) => (
+  <Svg {...p}><path d="M4 5.5h.01M4 10h.01M4 14.5h.01M7.5 5.5h9M7.5 10h9M7.5 14.5h9" /></Svg>
+);
+export const IconInbox = (p: IconProps) => (
+  <Svg {...p}><path d="M3.5 11.5l2-7h9l2 7v4h-13zM3.5 11.5H7l1 2h4l1-2h3.5" /></Svg>
 );
 export const IconArrowUp = (p: IconProps) => (
   <Svg {...p}><path d="M10 16V4M5.5 8.5L10 4l4.5 4.5" /></Svg>

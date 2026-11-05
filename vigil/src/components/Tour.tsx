@@ -5,6 +5,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from 'react';
 import { createPortal } from 'react-dom';
 import { TOUR_STEPS } from '../lib/tour';
+import type { View } from '../lib/views';
 import './tour.css';
 
 type Box = { top: number; left: number; width: number; height: number };
@@ -43,13 +44,20 @@ function placeCard(spot: Box | null, card: { w: number; h: number }, vw: number,
   return { left: clampX(spot.left), top: clampY(spot.top - GAP - card.h) };
 }
 
-export function Tour({ onClose }: { onClose: () => void }) {
+interface TourProps {
+  onClose: () => void;
+  /** Opens a screen; each step names the one it needs. */
+  go: (v: View) => void;
+}
+
+export function Tour({ onClose, go }: TourProps) {
   const [index, setIndex] = useState(0);
   const [spot, setSpot] = useState<Box | null>(null);
   const [card, setCard] = useState<{ w: number; h: number } | null>(null);
   const [vp, setVp] = useState({ w: window.innerWidth, h: window.innerHeight });
   const [gliding, setGliding] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
+  const goRef = useRef(go);
   const step = TOUR_STEPS[index];
   const last = index === TOUR_STEPS.length - 1;
 
@@ -84,11 +92,23 @@ export function Tour({ onClose }: { onClose: () => void }) {
     };
   }, []);
 
-  // Measure the target now, after scrolling it into view, and whenever the page moves.
+  useEffect(() => {
+    goRef.current = go;
+  });
+
+  // Open the screen this step points at before looking for its element.
+  useEffect(() => {
+    goRef.current(step.view);
+  }, [step.view]);
+
+  // Measure the target once it exists (a screen opened by the step needs a moment), scroll it into view once,
+  // and measure again whenever the page moves.
   useEffect(() => {
     let tries = 0;
     let timer = 0;
     let frame = 0;
+    let scrolled = false;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const measure = () => {
       setVp({ w: window.innerWidth, h: window.innerHeight });
       const el = findTarget(step.target);
@@ -97,6 +117,10 @@ export function Tour({ onClose }: { onClose: () => void }) {
         if (tries++ < RETRIES) timer = window.setTimeout(measure, RETRY_MS);
         return;
       }
+      if (!scrolled) {
+        scrolled = true;
+        el.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+      }
       const r = el.getBoundingClientRect();
       setSpot({ top: r.top - PAD, left: r.left - PAD, width: r.width + PAD * 2, height: r.height + PAD * 2 });
     };
@@ -104,8 +128,6 @@ export function Tour({ onClose }: { onClose: () => void }) {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(measure);
     };
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    findTarget(step.target)?.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
     measure();
     const settle = window.setTimeout(measure, 360);
     window.addEventListener('scroll', onMove, true);

@@ -24,16 +24,23 @@ interface IndicatorTileProps {
   refresh: boolean;
   /** Marks this tile's band as the tutorial's baseline step. */
   tourAnchor: boolean;
+  /** Needs attention tiles are raised, lead with the pill and always show the day strip. */
+  attention: boolean;
+  /** Track spans on the 12-track grid at <1024, 1024-1279 and >=1280. */
+  spans: { sm: number; lg: number; xl: number };
   onOpen: () => void;
 }
 
-/** One reading: label, readout, the baseline band, a 14-day strip and the trend. The whole tile opens its trend. */
-export function IndicatorTile({ def, status, days, trend, order, refresh, tourAnchor, onOpen }: IndicatorTileProps) {
+/**
+ * One reading: label, readout, the baseline band, a 14-day strip and the trend. The whole tile opens its trend.
+ * In range tiles keep the strip hidden until hover, focus or a tap on it, so only flagged tiles carry colour.
+ */
+export function IndicatorTile({ def, status, days, trend, order, refresh, tourAnchor, attention, spans, onOpen }: IndicatorTileProps) {
   const scale = bandScale(status.value, status.baseline, def);
   const TrendIcon = trend ? TREND_ICON[trend] : null;
-  const style = { '--i': order } as CSSProperties;
+  const style = { '--i': order, '--span-sm': spans.sm, '--span-lg': spans.lg, '--span-xl': spans.xl } as CSSProperties;
   return (
-    <article className={`ind-tile${refresh ? ' refresh' : ''}`} style={style}>
+    <article className={`ind-tile ${attention ? 'attention' : 'range'}${refresh ? ' refresh' : ''}`} style={style}>
       <button
         type="button"
         className="ind-open"
@@ -41,7 +48,7 @@ export function IndicatorTile({ def, status, days, trend, order, refresh, tourAn
         aria-label={`${def.label}: ${fmt(def.id, status.value)} ${def.unit}, ${LEVEL_LABEL[status.level]}${trend ? `, ${TREND_WORD[trend]}` : ''}. Open trend`}
       />
       <div className="ind-head">
-        <span className="ind-label">{def.label}</span>
+        <span className="ind-label">{def.shortLabel ?? def.label}</span>
         <Pill level={status.level} />
       </div>
       <div className="ind-readout">

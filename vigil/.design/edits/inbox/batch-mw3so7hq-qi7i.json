@@ -1,0 +1,34 @@
+{
+  "id": "batch-mw3so7hq-qi7i",
+  "kind": "batch",
+  "sentAt": "2026-11-05T17:03:22.094Z",
+  "page": "http://127.0.0.1:3016/",
+  "items": [
+    {
+      "n": 1,
+      "action": "comment",
+      "note": "this type of button is horrible",
+      "component": null,
+      "target": {
+        "selector": "#root > div > main > div > div:nth-of-type(4) > div:nth-of-type(1) > article:nth-of-type(3)",
+        "label": "article \"Watch Commander: Mood below your usual f…\"",
+        "tag": "article",
+        "text": "Watch Commander: Mood below your usual for several days Why Mood 2/5 today and at least 1.5 points below your baseline of 4/5 for 6 days. Isolation and confinem",
+        "classes": "alert amber finding",
+        "section": "main \"Ground view · day 30\"",
+        "html": "<article class=\"alert amber finding\"><header class=\"finding-head\"><span class=\"pill amber\"><span class=\"dot amber\"></span>Watch</span><h3>Commander: Mood below your usual for several days</h3></header><div class=\"finding-block\"><h4 class=\"finding-label\">Why</h4><p class=\"finding-text\">Mood 2/5 today and at least 1.5 points below your baseline of 4/5 for 6 days. Isolation and confinement are a known spaceflight hazard.</p></div><div class=\"finding-block\"><h4 class=\"finding-label\">Crew action</h4><p class=\"finding-text\">Book a private family conference or behavioral health call; protect sleep and exercise; tell the crew medical officer if you want tasks rebalanced.</p></div></article>",
+        "rect": {
+          "x": 272,
+          "y": 1773,
+          "w": 623,
+          "h": 224
+        },
+        "viewport": {
+          "w": 1590,
+          "h": 935
+        }
+      },
+      "page": "/"
+    }
+  ]
+}

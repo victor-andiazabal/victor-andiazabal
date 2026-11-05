@@ -5,3 +5,4 @@ Goals: glanceable, few taps, first-run tutorial explaining how it works and wher
 
 | Round | Reviewer | User | Cap | Top fixes |
 |---|---|---|---|---|
+| 1 | 79 | - | none | group tiles by status; mute nominal day bars + shape; 48px control family + native widgets; patch icons; one tabbed comm panel |

@@ -25,6 +25,8 @@ interface NumberFieldProps {
   prefill?: Prefill | null;
   baseline?: Baseline | null;
   def: IndicatorDef;
+  /** Marks this field as the one the first-run tutorial points at (the field and its baseline band). */
+  tourAnchor?: boolean;
   /** Status line under the band (level preview), supplied by the form. */
   children?: ReactNode;
 }
@@ -57,7 +59,7 @@ function PlusGlyph() {
   );
 }
 
-export function NumberField({ id, label, value, onChange, min, max, step, decimals, unit, prefill = null, baseline = null, def, children }: NumberFieldProps) {
+export function NumberField({ id, label, value, onChange, min, max, step, decimals, unit, prefill = null, baseline = null, def, tourAnchor = false, children }: NumberFieldProps) {
   const [text, setText] = useState(() => format(value, decimals));
   const [seen, setSeen] = useState(value);
   // Follow outside changes (stepper, camera pulse, confirm) without clobbering what the person is typing.
@@ -125,12 +127,12 @@ export function NumberField({ id, label, value, onChange, min, max, step, decima
   const hintId = `${id}-hint`;
 
   return (
-    <div className="nf" data-field={def.id}>
+    <div className="nf" data-field={def.id} data-tour={tourAnchor ? 'field' : undefined}>
       <div className="nf-head">
         <label htmlFor={id} className="nf-label">
           {label}
         </label>
-        {prefill && <span className="nf-chip">{PREFILL_LABEL[prefill]}</span>}
+        {prefill && prefill !== 'simulated' && <span className="nf-chip">{PREFILL_LABEL[prefill]}</span>}
       </div>
       <div className={`nf-row${invalid || outOfRange ? ' is-invalid' : ''}`}>
         <button
@@ -180,7 +182,9 @@ export function NumberField({ id, label, value, onChange, min, max, step, decima
           <PlusGlyph />
         </button>
       </div>
-      <BaselineBand value={typeof typed === 'number' && !outOfRange ? typed : null} baseline={baseline} min={scale.min} max={scale.max} />
+      <div data-tour={tourAnchor ? 'band' : undefined}>
+        <BaselineBand value={typeof typed === 'number' && !outOfRange ? typed : null} baseline={baseline} min={scale.min} max={scale.max} />
+      </div>
       {(invalid || outOfRange) && (
         <p id={msgId} className="nf-msg">
           {invalid ? 'Not a number: check the entry. It will not be saved.' : `Outside ${min}-${max} ${unit}: check the entry. It will not be saved.`}

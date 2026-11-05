@@ -11,7 +11,7 @@ Source of truth for CSS variable names. Defined in `src/styles.css` on `:root` (
 | --surface-3 | #1f2a36 | #e3e9ee |
 | --text | #e8eef4 | #0e141b |
 | --text-2 | #a9b6c3 | #3d4a57 |
-| --text-muted | #7c8a98 | #5b6876 |
+| --text-muted | #85939f (4.6:1 on --surface-3, 5.6:1 on --surface-1) | #5b6876 |
 | --line | rgba(232,238,244,0.08) | rgba(14,20,27,0.10) |
 | --line-strong | rgba(232,238,244,0.16) | rgba(14,20,27,0.18) |
 | --brand | #4fd1c5 | #0e8a80 |

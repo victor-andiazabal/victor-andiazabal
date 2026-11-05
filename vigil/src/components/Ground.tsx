@@ -4,7 +4,9 @@ import { fmt, LEVEL_LABEL } from '../lib/format';
 import { evaluate } from '../lib/rules';
 import type { View } from '../lib/views';
 import { useStore } from '../state/store';
+import { useComm } from '../lib/comm';
 import { CommLink } from './CommLink';
+import { useCommSender } from './commSender';
 import { Pill } from './ui';
 import './screens.css';
 import './alerts.css';
@@ -16,6 +18,8 @@ import './ground.css';
  */
 export function Ground({ go }: { go: (v: View) => void }) {
   const { crew, settings, dispatch, surgeonNotes, acknowledged } = useStore();
+  const comm = useComm();
+  const sendDraft = useCommSender(comm);
   const env = ENVIRONMENTS[settings.environment];
   const evals = useMemo(() => crew.map((c) => ({ crew: c, ev: evaluate(c, settings) })), [crew, settings]);
   const queue = evals.flatMap(({ crew: c, ev }) => ev.findings.filter((f) => f.notifySurgeon).map((f) => ({ crew: c, f })));
@@ -29,10 +33,6 @@ export function Ground({ go }: { go: (v: View) => void }) {
           <p>What the flight surgeon receives at the downlink. One-way delay {env.commDelay}; every item here was raised by the crew's own device.</p>
         </div>
         <Pill level={queue.length ? 'red' : watch.length ? 'amber' : 'green'}>{queue.length ? `${queue.length} for the surgeon` : watch.length ? `${watch.length} to watch` : 'Crew nominal'}</Pill>
-      </div>
-
-      <div className="ground-section">
-        <CommLink side="ground" />
       </div>
 
       <div className="panel ground-section">
@@ -76,6 +76,10 @@ export function Ground({ go }: { go: (v: View) => void }) {
           </table>
         </div>
         <p className="small-note">Each dot is the rule result for that indicator today (green Nominal, amber Watch, red Act now). Hover or focus a cell for the value and baseline.</p>
+      </div>
+
+      <div className="ground-section">
+        <CommLink side="ground" comm={comm} sendDraft={sendDraft} />
       </div>
 
       <div className="split split-even">

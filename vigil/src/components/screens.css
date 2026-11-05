@@ -11,7 +11,7 @@
 
 .panel > h2:first-child, .panel > h3:first-child { margin-bottom: var(--s-3); }
 .panel-lead { color: var(--text-2); margin: 0 0 var(--s-4); max-width: 72ch; }
-.small-note { font-size: 13px; line-height: 1.45; color: var(--text-muted); margin: var(--s-2) 0 0; }
+.small-note { font-size: 14px; line-height: 1.45; color: var(--text-2); margin: var(--s-2) 0 0; }
 .table-wrap { position: relative; overflow-x: auto; }
 
 /* Inputs: 48px, Surface 2 fill, 1px strong hairline, 8px radius. */
@@ -21,12 +21,12 @@
   border: 1px solid var(--line-strong); border-radius: var(--r-control);
   font: inherit; line-height: 1.5;
 }
-textarea.input { resize: vertical; }
+textarea.input { resize: vertical; min-height: var(--hit); }
 .input::placeholder { color: var(--text-muted); }
 .input.mono { font-family: var(--mono); font-size: 13px; line-height: 1.5; }
 .field-label { display: block; font-size: 13px; font-weight: 500; color: var(--text-2); margin-bottom: var(--s-2); }
 
-/* Checkbox and radio: one 24px box, Text fill when on, 48px row around it. */
+/* Checkbox and radio: a 24px box (8px radius, 1px strong hairline) that sits inside a 48px row; the tick is drawn in the action colour. */
 .check {
   appearance: none; -webkit-appearance: none; flex: none; margin: 0;
   width: 24px; height: 24px; display: inline-grid; place-content: center;
@@ -35,18 +35,21 @@ textarea.input { resize: vertical; }
   transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
 }
 .check::after {
-  content: ''; width: 16px; height: 16px; background: var(--bg); opacity: 0;
+  content: ''; width: 16px; height: 16px; background: var(--action); opacity: 0; transform: scale(0.8);
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3.2L13 4.8' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  transition: opacity var(--t-fast) var(--ease), transform var(--t-fast) var(--ease);
 }
-.check:checked { background: var(--text); border-color: var(--text); }
-.check:checked::after { opacity: 1; }
+.check:hover { border-color: var(--text-muted); }
+.check:checked { background: var(--surface-3); border-color: var(--action); }
+.check:checked::after { opacity: 1; transform: none; }
 .check[type='radio'] { border-radius: 50%; }
 .check[type='radio']::after { width: 10px; height: 10px; border-radius: 50%; -webkit-mask: none; mask: none; }
 .check:disabled { opacity: 0.4; cursor: default; }
 .check-row {
   display: flex; align-items: center; gap: var(--s-3); min-height: var(--hit); cursor: pointer;
 }
+.check-row:hover .check:not(:checked):not(:disabled) { border-color: var(--text-muted); }
 .check-row.top { align-items: flex-start; padding: 12px 0; }
 .check-row.top .check { margin-top: 2px; }
 

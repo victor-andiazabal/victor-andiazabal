@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react';
 import { COUNTERMEASURES } from '../data/countermeasures';
 import { ENVIRONMENTS } from '../data/indicators';
-import { buildReport } from '../lib/comm';
+import { buildReport, useComm } from '../lib/comm';
 import { evaluate } from '../lib/rules';
 import type { Finding } from '../lib/types';
 import { useStore } from '../state/store';
 import { CommLink } from './CommLink';
+import { useCommSender } from './commSender';
 import { Pill, SourceLinks } from './ui';
 import './screens.css';
 import './alerts.css';
@@ -21,8 +22,17 @@ export function Alerts() {
   const [open, setOpen] = useState<string | null>(null);
   const [ticked, setTicked] = useState<Record<string, boolean>>({});
   const [copied, setCopied] = useState(false);
+  const comm = useComm();
+  const sendDraft = useCommSender(comm);
+  const [sentAt, setSentAt] = useState<number | null>(null);
 
-  const message = useMemo(() => buildReport(selected, ev, settings).body, [ev, selected, settings]);
+  const report = useMemo(() => buildReport(selected, ev, settings), [ev, selected, settings]);
+  const message = report.body;
+
+  const sendReport = () => {
+    const sent = sendDraft({ from: 'crew', crewId: selected.id, kind: 'report', ...report });
+    setSentAt(sent.arrivesAt);
+  };
 
   const copy = async () => {
     try {
@@ -43,8 +53,16 @@ export function Alerts() {
           <h1>Alerts · {selected.callsign}</h1>
           <p>Every alert says which rule fired, with the numbers, and what to do. Acknowledge the ones you have handled.</p>
         </div>
-        <Pill level={ev.overall} />
+        <div className="alerts-actions">
+          <Pill level={ev.overall} />
+          <button type="button" className="btn-primary" onClick={sendReport}>Send today's report</button>
+        </div>
       </div>
+      {sentAt !== null && (
+        <p className="alerts-sent" role="status">
+          Report sent to the flight surgeon. It arrives {comm.now >= sentAt ? 'now' : `in ${Math.max(0, Math.ceil((sentAt - comm.now) / 1000))} s`}; follow it under In transit below.
+        </p>
+      )}
       <div className="split">
         <div className="stack-sm">
           {ev.findings.length === 0 && (
@@ -130,6 +148,7 @@ export function Alerts() {
             <h2>Message to the flight surgeon</h2>
             <p className="small-note" style={{ marginTop: 0 }}>
               Ground reply will take at least {env.commDelay} each way. The message bundles today's values and every flag so one exchange is enough.
+              If the link is down, copy it and relay it by any other channel.
             </p>
             <label className="sr-only" htmlFor="surgeon-message">Message to the flight surgeon</label>
             <textarea id="surgeon-message" className="input mono" readOnly rows={12} value={message} />
@@ -137,13 +156,9 @@ export function Alerts() {
           </div>
         </div>
       </div>
-      <section className="alerts-ground">
-        <h2>Send to the ground</h2>
-        <p className="panel-lead">
-          Sends today's report over the delayed link. If the link is down, copy the message above and relay it by any other channel.
-        </p>
-        <CommLink side="crew" />
-      </section>
+      <div className="alerts-link">
+        <CommLink side="crew" comm={comm} sendDraft={sendDraft} />
+      </div>
     </>
   );
 }

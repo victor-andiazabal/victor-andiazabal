@@ -63,6 +63,7 @@ export default function App() {
   const endTour = () => {
     markTourSeen();
     setTourOpen(false);
+    go('today');
   };
 
   const ev = useMemo(() => evaluate(selected, settings), [selected, settings]);
@@ -98,7 +99,7 @@ export default function App() {
       </main>
 
       <BottomBar {...nav} />
-      {tourOpen && <Tour onClose={endTour} />}
+      {tourOpen && <Tour onClose={endTour} go={go} />}
     </div>
   );
 }

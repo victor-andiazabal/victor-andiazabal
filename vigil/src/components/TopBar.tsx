@@ -1,6 +1,7 @@
 import { useStore } from '../state/store';
 import { Segmented } from './controls/Segmented';
 import { IconHelp, Logo } from './icons';
+import { Select } from './ui';
 
 export type Theme = 'dark' | 'light';
 
@@ -26,11 +27,11 @@ export function TopBar({ theme, setTheme, onHelp }: TopBarProps) {
       </div>
       <div className="topbar-spacer" />
       <label className="sr-only" htmlFor="crew-select">Crew member</label>
-      <select id="crew-select" className="crew-select" value={selected.id} onChange={(e) => dispatch({ type: 'select', crewId: e.target.value })}>
+      <Select id="crew-select" className="crew-select" value={selected.id} onChange={(e) => dispatch({ type: 'select', crewId: e.target.value })}>
         {crew.map((c) => (
           <option key={c.id} value={c.id}>{c.callsign}</option>
         ))}
-      </select>
+      </Select>
       <span className="pill neutral day-pill mono" title="Mission day">
         <span className="sr-only">Mission </span>Day {settings.currentDay}
       </span>

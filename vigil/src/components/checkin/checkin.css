@@ -12,7 +12,7 @@
 
 /* Rail (C2): 32px square markers inside 44px buttons, 2px rail that fills as steps complete. */
 .ci-rail { display: flex; align-items: center; gap: var(--s-6); }
-.ci-rail-meta { display: flex; gap: var(--s-2); margin: 0; flex: 0 0 auto; font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+.ci-rail-meta { display: flex; gap: var(--s-2); margin: 0; flex: 0 0 auto; font-size: 14px; color: var(--text-2); white-space: nowrap; }
 .ci-rail-list { flex: 1 1 auto; display: flex; align-items: center; gap: 0; margin: 0; padding: 0; list-style: none; min-width: 0; }
 .ci-rail-item { display: flex; align-items: center; flex: 1 1 0; min-width: 0; }
 .ci-rail-item:last-child { flex: 0 0 auto; }
@@ -50,13 +50,14 @@ button.ci-rail-btn:hover .ci-marker:not(.is-here) { background: var(--surface-3)
 .ci-step-head h2:focus { outline: none; }
 .ci-step-head h2:focus-visible { outline: 2px solid var(--action); outline-offset: 4px; }
 .ci-step-head p { margin: 0; }
+.ci-step-head .ci-sim { margin-top: var(--s-1); font-size: 14px; color: var(--text-2); }
 
 .ci-body { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--s-8); align-items: start; }
 .ci-body.is-wide { grid-template-columns: minmax(0, 1fr); }
 .ci-main { display: flex; flex-direction: column; gap: var(--s-6); min-width: 0; }
 .ci-fields { display: flex; flex-direction: column; gap: var(--s-6); min-width: 0; }
 .ci-field { display: flex; flex-direction: column; gap: var(--s-3); }
-.ci-status { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 13px; color: var(--text-2); }
+.ci-status { display: inline-flex; align-items: center; gap: 6px; margin: 0; font-size: 14px; color: var(--text-2); }
 .ci-optional { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; }
 .btn-ghost.ci-optional-btn {
   align-self: flex-start; padding-left: 0; padding-right: 0; color: var(--text-2);
@@ -81,7 +82,7 @@ button.ci-rail-btn:hover .ci-marker:not(.is-here) { background: var(--surface-3)
 .ci-scale-opt:hover { color: var(--text); background: var(--surface-3); }
 .ci-scale-opt[aria-checked='true'] { background: var(--surface-3); border-color: var(--line-strong); color: var(--text); }
 .ci-scale-opt:focus-visible { outline-offset: -2px; }
-.ci-scale-hint { margin: 0; min-height: 1.45em; font-size: 13px; color: var(--text-2); }
+.ci-scale-hint { margin: 0; min-height: 1.45em; font-size: 14px; color: var(--text-2); }
 
 /* Reaction test values disclosure */
 .ci-pvt { display: flex; flex-direction: column; gap: var(--s-4); padding-top: var(--s-6); border-top: 1px solid var(--line); }
@@ -96,6 +97,7 @@ button.ci-rail-btn:hover .ci-marker:not(.is-here) { background: var(--surface-3)
 [aria-expanded='true'] > .ci-cue-chev { transform: rotate(180deg); }
 
 /* Confirm all */
+.ci-confirm-note { font-size: 14px; color: var(--text-2); }
 .ci-confirm { display: flex; align-items: center; gap: var(--s-3); flex-wrap: wrap; padding-top: var(--s-6); border-top: 1px solid var(--line); }
 
 /* Cue card */
@@ -134,7 +136,8 @@ button.ci-rail-btn:hover .ci-marker:not(.is-here) { background: var(--surface-3)
 /* Review */
 .ci-review { display: flex; flex-direction: column; gap: var(--s-6); }
 .ci-rv-warn { margin: 0; color: var(--red); }
-.ci-rv-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
+.ci-rv-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); align-items: start; }
+.ci-rv-groups > * { align-self: start; }
 .ci-rv-group { padding: var(--s-4); border: 1px solid var(--line); border-radius: var(--r-card); background: var(--surface-2); min-width: 0; }
 .ci-rv-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); margin-bottom: var(--s-2); }
 .ci-rv-head h3 { margin: 0; }
@@ -152,7 +155,8 @@ button.ci-rail-btn:hover .ci-marker:not(.is-here) { background: var(--surface-3)
 
 /* Footer */
 .ci-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding-top: var(--s-6); border-top: 1px solid var(--line); }
-.ci-foot-keys { text-align: center; }
+.ci-foot-start { display: flex; align-items: center; gap: var(--s-4); min-width: 0; }
+.ci-foot-keys { font-size: 14px; color: var(--text-2); }
 
 /* Two fields per row once each field box still fits a four-digit reading with its unit. */
 @media (min-width: 1360px) {
@@ -189,6 +193,9 @@ button.ci-rail-btn:hover .ci-marker:not(.is-here) { background: var(--surface-3)
   .ci-rail-line { margin: 0 2px; }
   .ci-scale-9 { --n: 5; }
   .ci-step-head { margin-bottom: var(--s-4); }
+  .ci-foot { gap: 0; }
+  .ci-foot-start { flex: 0 0 auto; }
+  .ci-foot-start .btn { margin-right: var(--s-3); }
   .ci-foot .btn-primary { flex: 1 1 auto; }
   .ci-sym-grid { grid-template-columns: minmax(0, 1fr); }
   .ci-confirm .btn { width: 100%; }

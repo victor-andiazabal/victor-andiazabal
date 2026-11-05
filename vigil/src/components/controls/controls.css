@@ -55,12 +55,18 @@
   position: relative; display: flex; align-items: center; min-height: var(--hit-min);
   border-radius: var(--r-control); touch-action: pan-y; cursor: pointer; outline-offset: 0;
 }
-.strip-bars { display: flex; gap: 2px; height: 16px; }
-.strip-bar { width: 4px; height: 100%; border-radius: 1px; background: var(--line-strong); transition: opacity var(--t-fast) var(--ease); }
-.strip-bar.green { background: var(--green); }
+/* Bars stand on one baseline. Nominal: 16px at 45% green. Watch / Act now: full colour, 4px taller, a dot 2px above. */
+.strip-bars { display: flex; align-items: flex-end; gap: 2px; height: 26px; }
+.strip-bar { position: relative; width: 4px; height: 16px; border-radius: 1px; background: var(--line-strong); transition: opacity var(--t-fast) var(--ease); }
+.strip-bar.green { background: color-mix(in srgb, var(--green) 45%, transparent); }
+.strip-bar.green.is-active { background: var(--green); }
+.strip-bar.amber, .strip-bar.red { height: 20px; }
 .strip-bar.amber { background: var(--amber); }
 .strip-bar.red { background: var(--red); }
-.strip-bar.none { height: 4px; align-self: center; }
+.strip-bar.amber::before, .strip-bar.red::before {
+  content: ''; position: absolute; left: 0; bottom: calc(100% + 2px); width: 4px; height: 4px; border-radius: 50%; background: inherit;
+}
+.strip-bar.none { height: 4px; margin-bottom: 6px; }
 .strip:hover .strip-bar:not(.is-active), .strip:focus-visible .strip-bar:not(.is-active) { opacity: 0.55; }
 .strip-tip {
   position: absolute; left: 0; right: 0; bottom: calc(100% + 4px); z-index: 3;
@@ -73,7 +79,7 @@
 /* Number field (C3): label row, 56px field between two 48px square steppers, band, messages. */
 .nf { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
 .nf-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-2); flex-wrap: wrap; }
-.nf-label { font-size: 13px; font-weight: 500; color: var(--text-2); }
+.nf-label { font-size: 14px; font-weight: 500; color: var(--text-2); }
 .nf-chip {
   display: inline-flex; align-items: center; min-height: 22px; padding: 1px 8px;
   border: 1px solid var(--line); border-radius: var(--r-control); background: var(--surface-2);
@@ -107,7 +113,7 @@
 .nf-input::placeholder { color: var(--text-muted); }
 .nf-unit { flex: 0 0 auto; font-size: 13px; color: var(--text-muted); }
 .nf-msg { margin: 0; font-size: 13px; color: var(--red); }
-.nf-hint { margin: 0; font-size: 13px; line-height: 1.45; color: var(--text-muted); }
+.nf-hint { margin: 0; font-size: 14px; line-height: 1.45; color: var(--text-2); }
 @media (max-width: 1023px) {
   .nf-input { font-size: 36px; }
 }

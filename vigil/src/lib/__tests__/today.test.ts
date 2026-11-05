@@ -3,8 +3,9 @@ import { CREW } from '../../data/crew';
 import { PVT_TASK_ID } from '../../data/routine';
 import { baselineOf } from '../analytics';
 import { simulateMember } from '../simulate';
-import { bandScale, buildStatusHistory, nextAction, reasonLine, STRIP_DAYS } from '../today';
-import type { DayRecord, Finding, MissionSettings } from '../types';
+import { bandScale, buildStatusHistory, GRID_TRACKS, groupTiles, nextAction, reasonLine, STRIP_DAYS, tileSpans } from '../today';
+import type { DayRecord, Finding, IndicatorId, Level, MissionSettings } from '../types';
+import { INDICATORS } from '../../data/indicators';
 
 const base: MissionSettings = { environment: 'transit', scenario: 'nominal', currentDay: 30, baselineDays: 14, seed: 20261114 };
 const rec = (day: number): DayRecord => ({ day, values: {}, symptoms: [], source: 'manual' });
@@ -92,5 +93,65 @@ describe('bandScale', () => {
 
   it('falls back to the indicator limits without a baseline', () => {
     expect(bandScale(70, null, { min: 30, max: 200 })).toEqual({ min: 30, max: 200 });
+  });
+});
+
+describe('groupTiles', () => {
+  const by = (over: Partial<Record<IndicatorId, { level: Level; value: number | null }>>) =>
+    Object.fromEntries(INDICATORS.map((d) => [d.id, over[d.id] ?? { level: 'green' as Level, value: 1 }])) as Record<
+      IndicatorId,
+      { level: Level; value: number | null }
+    >;
+
+  it('puts Act now first, then Watch, keeping reading order inside each level', () => {
+    const g = groupTiles(INDICATORS, by({ sleep: { level: 'amber', value: 4 }, hr: { level: 'amber', value: 90 }, pvtRt: { level: 'red', value: 400 } }));
+    expect(g.attention.map((d) => d.id)).toEqual(['pvtRt', 'hr', 'sleep']);
+    expect(g.inRange).toHaveLength(INDICATORS.length - 3);
+    expect(g.inRange.some((d) => d.id === 'hr')).toBe(false);
+  });
+
+  it('keeps tiles without a reading out of "In range" unless they carry a flag', () => {
+    const g = groupTiles(INDICATORS, by({ weight: { level: 'green', value: null }, bpDia: { level: 'red', value: null } }));
+    expect(g.unmeasured.map((d) => d.id)).toEqual(['weight']);
+    expect(g.attention.map((d) => d.id)).toEqual(['bpDia']);
+    expect(g.attention.length + g.inRange.length + g.unmeasured.length).toBe(INDICATORS.length);
+  });
+});
+
+describe('tileSpans', () => {
+  const rows = (spans: number[]) => {
+    const out: number[] = [];
+    let acc = 0;
+    for (const s of spans) {
+      acc += s;
+      if (acc >= GRID_TRACKS) {
+        out.push(acc);
+        acc = 0;
+      }
+    }
+    if (acc) out.push(acc);
+    return out;
+  };
+
+  it('uses one column fewer when that divides the count', () => {
+    expect(tileSpans(9, 4)).toEqual(Array(9).fill(4));
+    expect(tileSpans(6, 4)).toEqual(Array(6).fill(4));
+    expect(tileSpans(8, 4)).toEqual(Array(8).fill(3));
+  });
+
+  it('never leaves a part-filled row once there is more than one row', () => {
+    for (const max of [2, 3, 4]) {
+      for (let n = max + 1; n <= 15; n++) expect(rows(tileSpans(n, max)).every((r) => r === GRID_TRACKS)).toBe(true);
+    }
+    expect(tileSpans(7, 4).slice(-3)).toEqual([4, 4, 4]);
+    expect(tileSpans(9, 2).at(-1)).toBe(12);
+  });
+
+  it('keeps a short single row at the standard width', () => {
+    expect(tileSpans(0, 4)).toEqual([]);
+    expect(tileSpans(1, 4)).toEqual([3]);
+    expect(tileSpans(2, 4)).toEqual([3, 3]);
+    expect(tileSpans(3, 4)).toEqual([4, 4, 4]);
+    expect(tileSpans(1, 2)).toEqual([6]);
   });
 });

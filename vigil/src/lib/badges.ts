@@ -2,10 +2,13 @@ import { INDICATORS } from '../data/indicators';
 import { PVT_TASK_ID, routineFor } from '../data/routine';
 import type { CrewMember, DayRecord, IndicatorId, MissionSettings } from './types';
 
+/** Key into the line-icon set in components/Badges.tsx. */
+export type BadgeIcon = 'clipboard' | 'flame' | 'calendar' | 'check' | 'timer' | 'dumbbell' | 'list';
+
 export interface Badge {
   id: string;
   label: string;
-  icon: string;
+  icon: BadgeIcon;
   /** What to do to earn it. */
   how: string;
   /** One line tying the behaviour to the health countermeasure. */
@@ -34,13 +37,13 @@ const WEEK = 7;
  * value is "good" or whether symptoms were reported, so there is no reward for under-reporting.
  */
 export const BADGES: Badge[] = [
-  { id: 'first-checkin', label: 'First check-in', icon: '1', how: 'Save your first check-in or tick a routine task on a flight day.', why: 'Your own entries build the personal baseline every alert is compared against.' },
-  { id: 'streak-7', label: '7-day streak', icon: '7', how: `Log an entry on ${STREAK_SHORT} flight days in a row.`, why: 'Readings taken every day are comparable; gaps hide slow drifts.' },
-  { id: 'streak-14', label: '14-day streak', icon: '14', how: `Log an entry on ${STREAK_LONG} flight days in a row.`, why: 'Two weeks of steady data is enough to see your own trend, not just single readings.' },
-  { id: 'full-routine', label: 'Full routine day', icon: '✓', how: 'Tick every routine task on a single day.', why: 'The routine mirrors what crews already do: measure, exercise, rest and stay connected.', sources: ['hfbp'] },
-  { id: 'pvt-week', label: 'Steady reflexes', icon: 'RT', how: `Run the reaction self-test on ${PVT_TESTS_PER_WEEK} days within one week.`, why: 'Repeated reaction tests catch sleep loss before it shows in how you feel. The speed of the result does not matter.', sources: ['reaction-self-test'] },
-  { id: 'exercise-met', label: 'Countermeasure met', icon: 'EX', how: `Log at least ${EXERCISE_ASSIGNED_MIN} min of exercise on ${EXERCISE_DAYS_RUNNING} days in a row.`, why: 'Exercise is the main countermeasure for bone and muscle loss; ISS crews are assigned about 147 min/day.', sources: ['iss-exercise'] },
-  { id: 'complete-record', label: 'Complete record', icon: '▦', how: 'Log every hand-entered indicator on a single day.', why: 'A full set of readings shows the whole picture, including values you expect to be unremarkable.' },
+  { id: 'first-checkin', label: 'First check-in', icon: 'clipboard', how: 'Save your first check-in or tick a routine task on a flight day.', why: 'Your own entries build the personal baseline every alert is compared against.' },
+  { id: 'streak-7', label: '7-day streak', icon: 'flame', how: `Log an entry on ${STREAK_SHORT} flight days in a row.`, why: 'Readings taken every day are comparable; gaps hide slow drifts.' },
+  { id: 'streak-14', label: '14-day streak', icon: 'calendar', how: `Log an entry on ${STREAK_LONG} flight days in a row.`, why: 'Two weeks of steady data is enough to see your own trend, not just single readings.' },
+  { id: 'full-routine', label: 'Full routine day', icon: 'check', how: 'Tick every routine task on a single day.', why: 'The routine mirrors what crews already do: measure, exercise, rest and stay connected.', sources: ['hfbp'] },
+  { id: 'pvt-week', label: 'Steady reflexes', icon: 'timer', how: `Run the reaction self-test on ${PVT_TESTS_PER_WEEK} days within one week.`, why: 'Repeated reaction tests catch sleep loss before it shows in how you feel. The speed of the result does not matter.', sources: ['reaction-self-test'] },
+  { id: 'exercise-met', label: 'Countermeasure met', icon: 'dumbbell', how: `Log at least ${EXERCISE_ASSIGNED_MIN} min of exercise on ${EXERCISE_DAYS_RUNNING} days in a row.`, why: 'Exercise is the main countermeasure for bone and muscle loss; ISS crews are assigned about 147 min/day.', sources: ['iss-exercise'] },
+  { id: 'complete-record', label: 'Complete record', icon: 'list', how: 'Log every hand-entered indicator on a single day.', why: 'A full set of readings shows the whole picture, including values you expect to be unremarkable.' },
 ];
 
 const badgeById = (id: string): Badge => BADGES.find((b) => b.id === id)!;

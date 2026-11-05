@@ -39,7 +39,7 @@ export function StepFields({ step, draft, focus, onActive, go }: StepFieldsProps
   const [pvtOpen, setPvtOpen] = useState(() => focus !== undefined && PVT_FIELDS.has(focus));
   const [cameraOpen, setCameraOpen] = useState(false);
 
-  const field = (def: IndicatorDef) => {
+  const field = (def: IndicatorDef, tourAnchor = false) => {
     const status = <FieldStatus draft={draft} id={def.id} />;
     if (SCALE_FIELDS.has(def.id)) {
       return (
@@ -62,6 +62,7 @@ export function StepFields({ step, draft, focus, onActive, go }: StepFieldsProps
         prefill={draft.prefillOf(def.id)}
         baseline={draft.preview.byIndicator[def.id].baseline}
         def={def}
+        tourAnchor={tourAnchor}
       >
         {status}
       </NumberField>
@@ -93,7 +94,7 @@ export function StepFields({ step, draft, focus, onActive, go }: StepFieldsProps
             onFocus={() => onActive(id)}
             onPointerDown={() => onActive(id)}
           >
-            {field(def)}
+            {field(def, step.id === 'vitals' && id === 'hr')}
             {id === 'hr' && (
               <div className="ci-camera">
                 <button type="button" className="btn-ghost ci-optional-btn" aria-expanded={cameraOpen} onClick={() => setCameraOpen((o) => !o)}>

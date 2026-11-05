@@ -1,8 +1,8 @@
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
-import { ENVIRONMENTS, INDICATORS } from '../data/indicators';
+import { ENVIRONMENTS, INDICATORS, type IndicatorDef } from '../data/indicators';
 import { routineFor } from '../data/routine';
 import { evaluate, trendOf } from '../lib/rules';
-import { buildStatusHistory, nextAction } from '../lib/today';
+import { buildStatusHistory, groupTiles, nextAction, tileSpans } from '../lib/today';
 import type { DayRecord, IndicatorId } from '../lib/types';
 import type { View } from '../lib/views';
 import { useStore } from '../state/store';
@@ -39,6 +39,32 @@ function useSaveSweep(crewId: string, day: number, record: DayRecord | null): nu
   return s.key === key && s.sig === sig ? s.n : 0;
 }
 
+interface TileGroup {
+  id: 'attention' | 'range' | 'unmeasured';
+  title: string;
+  defs: IndicatorDef[];
+  /** Index of the group's first tile in reading order, for the refresh stagger. */
+  offset: number;
+  spans: { sm: number[]; lg: number[]; xl: number[] };
+}
+
+/** Needs attention first, then In range, then anything without a reading; empty groups are left out. */
+function tileGroups(byIndicator: Parameters<typeof groupTiles>[1]): TileGroup[] {
+  const g = groupTiles(INDICATORS, byIndicator);
+  const parts = [
+    { id: 'attention' as const, title: 'Needs attention', defs: g.attention },
+    { id: 'range' as const, title: 'In range', defs: g.inRange },
+    { id: 'unmeasured' as const, title: 'No reading today', defs: g.unmeasured },
+  ].filter((p) => p.defs.length);
+  let offset = 0;
+  return parts.map((p) => {
+    const n = p.defs.length;
+    const group = { ...p, offset, spans: { sm: tileSpans(n, 2), lg: tileSpans(n, 3), xl: tileSpans(n, 4) } };
+    offset += n;
+    return group;
+  });
+}
+
 export function Today({ go }: { go: Go }) {
   const { crew, selected, settings, manual, routineDone, dispatch } = useStore();
   const evals = useMemo(() => crew.map((c) => ({ crew: c, ev: evaluate(c, settings) })), [crew, settings]);
@@ -57,6 +83,7 @@ export function Today({ go }: { go: Go }) {
   const meta = `Mission day ${settings.currentDay} · ${selected.callsign}, ${selected.role} · ${env.label}`;
   const surgeonNote = ev.notifySurgeon ? `The flight surgeon should hear about this. One-way delay to the ground: ${env.commDelay}.` : null;
   const others = evals.filter((e) => e.crew.id !== selected.id);
+  const groups = useMemo(() => tileGroups(ev.byIndicator), [ev.byIndicator]);
 
   return (
     <>
@@ -70,26 +97,37 @@ export function Today({ go }: { go: Go }) {
         </section>
       </div>
 
-      <section className="today-section" aria-labelledby="today-ind-title">
-        <div className="section-head">
-          <h2 id="today-ind-title">Indicators</h2>
-          <span className="muted small">Tap a tile for its trend; tap the day bars for the last 14 days</span>
-        </div>
-        <div className="ind-grid">
-          {INDICATORS.map((def, i) => (
-            <IndicatorTile
-              key={sweep ? `${def.id}:${sweep}` : def.id}
-              def={def}
-              status={ev.byIndicator[def.id]}
-              days={history[def.id]}
-              trend={trends[def.id]}
-              order={i}
-              refresh={sweep > 0}
-              tourAnchor={i === 0}
-              onOpen={() => go('trends', def.id)}
-            />
-          ))}
-        </div>
+      <section className="today-section" aria-label="Indicators">
+        {groups.map((g, gi) => (
+          <div key={g.id} className="ind-group" role="group" aria-labelledby={`today-${g.id}-title`}>
+            <div className="section-head">
+              <h2 id={`today-${g.id}-title`}>
+                {g.title} <span className="ind-count mono">{g.defs.length}</span>
+              </h2>
+              {gi === 0 && <span className="muted small">Tap a tile for its trend; tap the day bars for the last 14 days</span>}
+            </div>
+            <div className="ind-grid">
+              {g.defs.map((def, i) => {
+                const order = g.offset + i;
+                return (
+                  <IndicatorTile
+                    key={sweep ? `${def.id}:${sweep}` : def.id}
+                    def={def}
+                    status={ev.byIndicator[def.id]}
+                    days={history[def.id]}
+                    trend={trends[def.id]}
+                    order={order}
+                    refresh={sweep > 0}
+                    tourAnchor={order === 0}
+                    attention={g.id === 'attention'}
+                    spans={{ sm: g.spans.sm[i], lg: g.spans.lg[i], xl: g.spans.xl[i] }}
+                    onOpen={() => go('trends', def.id)}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ))}
       </section>
 
       <div className="today-bottom">

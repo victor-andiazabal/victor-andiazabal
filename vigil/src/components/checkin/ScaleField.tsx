@@ -55,7 +55,7 @@ export function ScaleField({ def, value, onChange, prefill, children }: ScaleFie
         <span id={labelId} className="nf-label">
           {def.label}
         </span>
-        {prefill && <span className="nf-chip">{PREFILL_LABEL[prefill]}</span>}
+        {prefill && prefill !== 'simulated' && <span className="nf-chip">{PREFILL_LABEL[prefill]}</span>}
       </div>
       <div role="radiogroup" aria-labelledby={labelId} className={`ci-scale ci-scale-${options.length}`}>
         {options.map((n, i) => (

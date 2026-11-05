@@ -1,35 +1,59 @@
 import type { CSSProperties } from 'react';
+import { INDICATORS } from '../data/indicators';
 import { sourceById } from '../data/sources';
 import { LEVEL_LABEL } from '../lib/format';
 import type { Evaluation } from '../lib/rules';
-import { inRangeShare, reasonLine, type NextAction } from '../lib/today';
+import { groupTiles, inRangeShare, reasonLine, type NextAction } from '../lib/today';
 import type { IndicatorId } from '../lib/types';
 import type { View } from '../lib/views';
 
-const R = 72;
-const C = 2 * Math.PI * R;
 const REMEASURE_SOURCE = 'russell-2023';
 
-/** Status ring: the arc is the share of today's readings inside range; it sweeps from 0 once after a save. */
+/* Ring geometry in the 160 x 160 box: segments run from the inner radius out; flagged ones reach 4px further. */
+const CX = 80;
+const R_IN = 69;
+const R_OUT = 75;
+const R_OUT_FLAGGED = 79;
+/** 2px gap between segments, measured at the middle of the band. */
+const GAP = 2 / ((R_IN + R_OUT) / 2);
+
+function point(r: number, a: number): string {
+  return `${(CX + r * Math.cos(a)).toFixed(2)} ${(CX + r * Math.sin(a)).toFixed(2)}`;
+}
+
+/** Annular sector from angle a0 to a1 (radians, 0 = 3 o'clock, clockwise). */
+function sector(a0: number, a1: number, rOut: number): string {
+  const large = a1 - a0 > Math.PI ? 1 : 0;
+  return `M${point(rOut, a0)}A${rOut} ${rOut} 0 ${large} 1 ${point(rOut, a1)}L${point(R_IN, a1)}A${R_IN} ${R_IN} 0 ${large} 0 ${point(R_IN, a0)}Z`;
+}
+
+/**
+ * Status ring: one segment per indicator, in the same order as the tiles (flagged first), coloured by its status.
+ * Watch and Act now segments are longer, so the ring carries status by shape as well as colour.
+ * After a save the segments sweep in clockwise, staggered across 700ms.
+ */
 function Ring({ ev, sweep }: { ev: Evaluation; sweep: number }) {
   const { inRange, measured } = inRangeShare(ev.byIndicator);
-  const share = measured ? inRange / measured : 0;
-  const offset = C * (1 - share);
+  const g = groupTiles(INDICATORS, ev.byIndicator);
+  const ordered = [...g.attention, ...g.inRange, ...g.unmeasured];
+  const step = (2 * Math.PI) / ordered.length;
   return (
     <div className={`ring ${ev.overall}`}>
-      <svg viewBox="0 0 160 160" aria-hidden="true">
-        <circle className="ring-track" cx="80" cy="80" r={R} />
-        <circle
-          key={sweep}
-          className={`ring-arc${sweep ? ' sweep' : ''}`}
-          cx="80"
-          cy="80"
-          r={R}
-          strokeDasharray={C}
-          strokeDashoffset={offset}
-          style={{ '--c': C } as CSSProperties}
-          transform="rotate(-90 80 80)"
-        />
+      <svg viewBox="0 0 160 160" aria-hidden="true" key={sweep} className={sweep ? 'sweep' : undefined}>
+        {ordered.map((def, i) => {
+          const st = ev.byIndicator[def.id];
+          const tone = st.value === null && st.level === 'green' ? 'none' : st.level;
+          const a0 = -Math.PI / 2 + i * step + GAP / 2;
+          const a1 = a0 + step - GAP;
+          return (
+            <path
+              key={def.id}
+              className={`ring-seg ${tone}`}
+              d={sector(a0, a1, tone === 'amber' || tone === 'red' ? R_OUT_FLAGGED : R_OUT)}
+              style={{ '--n': i } as CSSProperties}
+            />
+          );
+        })}
       </svg>
       <span className="ring-text">
         <span className="ring-count mono">{inRange}/{measured}</span>

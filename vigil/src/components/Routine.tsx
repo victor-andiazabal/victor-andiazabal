@@ -75,7 +75,8 @@ export function Routine({ go }: { go: (v: View) => void }) {
           <p>Prompts for the day. Tick them off; VIGIL keeps the streak and nudges what is missing.</p>
         </div>
       </div>
-      <div className="split">
+      <div className="split routine-split">
+        <div className="stack">
         <div className="panel">
           <div className="routine-head">
             <h2>Today</h2>
@@ -117,19 +118,6 @@ export function Routine({ go }: { go: (v: View) => void }) {
             })}
           </ol>
         </div>
-        <div className="stack">
-          <div className="panel">
-            <h2>Streak</h2>
-            <div className="streak">
-              <div className="num mono">{streak}</div>
-              <div>
-                <div>day{streak === 1 ? '' : 's'} in a row with your own entry</div>
-                <small>{streak === 0 ? 'Save a check-in or tick a task to start the streak.' : ev.missedCheckins === 0 ? 'No missed days this mission.' : `${ev.missedCheckins} missed day${ev.missedCheckins > 1 ? 's' : ''} this mission.`}</small>
-              </div>
-            </div>
-            <p className="small-note">{totalDone} routine tasks completed in this session.</p>
-          </div>
-          <Badges />
           <div className="panel">
             <h2>Why a routine</h2>
             <p>
@@ -138,6 +126,18 @@ export function Routine({ go }: { go: (v: View) => void }) {
             </p>
             <SourceLinks ids={['reaction-self-test', 'iss-exercise', 'hfbp']} />
           </div>
+        </div>
+        <div className="stack">
+          <div className="panel">
+            <h2>Streak</h2>
+            <p className="streak-count mono">
+              <span className="num">{streak}</span>
+              <span className="unit">day{streak === 1 ? '' : 's'}</span>
+            </p>
+            <p className="streak-text">In a row with your own entry.</p>
+            <p className="small-note">{streak === 0 ? 'Save a check-in or tick a task to start the streak.' : ev.missedCheckins === 0 ? 'No missed days this mission.' : `${ev.missedCheckins} missed day${ev.missedCheckins > 1 ? 's' : ''} this mission.`} {totalDone} routine tasks completed in this session.</p>
+          </div>
+          <Badges />
         </div>
       </div>
     </>

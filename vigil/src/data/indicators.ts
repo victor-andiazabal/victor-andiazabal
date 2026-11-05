@@ -3,6 +3,8 @@ import type { IndicatorId } from '../lib/types';
 export interface IndicatorDef {
   id: IndicatorId;
   label: string;
+  /** Tile label: one line at 13px beside the status pill, down to a 390px phone (about 76px). Falls back to label. */
+  shortLabel?: string;
   short: string;
   unit: string;
   decimals: number;
@@ -27,6 +29,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'hr',
     label: 'Resting heart rate',
+    shortLabel: 'Resting HR',
     short: 'HR',
     unit: 'bpm',
     decimals: 0,
@@ -44,6 +47,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'bpSys',
     label: 'Blood pressure, systolic',
+    shortLabel: 'Systolic BP',
     short: 'SYS',
     unit: 'mmHg',
     decimals: 0,
@@ -61,6 +65,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'bpDia',
     label: 'Blood pressure, diastolic',
+    shortLabel: 'Diastolic BP',
     short: 'DIA',
     unit: 'mmHg',
     decimals: 0,
@@ -78,6 +83,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'spo2',
     label: 'Blood oxygen (SpO2)',
+    shortLabel: 'SpO2',
     short: 'SpO2',
     unit: '%',
     decimals: 0,
@@ -95,6 +101,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'temp',
     label: 'Body temperature',
+    shortLabel: 'Body temp',
     short: 'Temp',
     unit: '°C',
     decimals: 1,
@@ -112,6 +119,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'glucose',
     label: 'Fasting blood glucose',
+    shortLabel: 'Glucose',
     short: 'Glucose',
     unit: 'mg/dL',
     decimals: 0,
@@ -146,6 +154,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'sleep',
     label: 'Sleep duration',
+    shortLabel: 'Sleep',
     short: 'Sleep',
     unit: 'h',
     decimals: 1,
@@ -163,6 +172,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'exercise',
     label: 'Exercise time',
+    shortLabel: 'Exercise',
     short: 'Exercise',
     unit: 'min',
     decimals: 0,
@@ -214,6 +224,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'kss',
     label: 'Sleepiness (Karolinska scale)',
+    shortLabel: 'Sleepiness',
     short: 'KSS',
     unit: '/9',
     decimals: 0,
@@ -231,6 +242,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'pvtRt',
     label: 'Reaction test, mean response time',
+    shortLabel: 'Reaction',
     short: 'PVT RT',
     unit: 'ms',
     decimals: 0,
@@ -248,6 +260,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'pvtLapses',
     label: 'Reaction test, lapses',
+    shortLabel: 'Lapses',
     short: 'Lapses',
     unit: '',
     decimals: 0,
@@ -265,6 +278,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'radDose',
     label: 'Radiation dose today',
+    shortLabel: 'Radiation',
     short: 'Dose',
     unit: 'mSv',
     decimals: 2,

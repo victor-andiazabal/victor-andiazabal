@@ -17,7 +17,7 @@
 .brand { display: flex; align-items: center; gap: var(--s-3); }
 .brand-name { font-size: 16px; font-weight: 600; letter-spacing: 0.02em; }
 .topbar-spacer { flex: 1; }
-.crew-select { width: auto; max-width: 200px; min-height: var(--hit); }
+.topbar .select { flex: 0 0 auto; width: 184px; }
 .day-pill { min-height: 32px; padding: 4px 12px; font-size: 13px; }
 
 .rail {
@@ -98,7 +98,7 @@
 @media (max-width: 639px) {
   .main { padding: var(--s-4) var(--s-4) calc(var(--bottombar) + var(--s-6) + env(safe-area-inset-bottom)); }
   .brand-name, .topbar-theme { display: none; }
-  .crew-select { max-width: 150px; }
+  .topbar .select { width: 148px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

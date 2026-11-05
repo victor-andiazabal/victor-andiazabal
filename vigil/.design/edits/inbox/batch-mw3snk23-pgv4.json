@@ -1,0 +1,34 @@
+{
+  "id": "batch-mw3snk23-pgv4",
+  "kind": "batch",
+  "sentAt": "2026-11-05T17:02:51.723Z",
+  "page": "http://127.0.0.1:3016/",
+  "items": [
+    {
+      "n": 1,
+      "action": "comment",
+      "note": "dont put this edge anywhere it is horrible the little highlighted thing is horrible",
+      "component": null,
+      "target": {
+        "selector": "#root > div > main > div > div > section > div:nth-of-type(1) > div:nth-of-type(2) > div > div > section > div:nth-of-type(1)",
+        "label": "div \"Act now Severe short sleep notify flight…\"",
+        "tag": "div",
+        "text": "Act now Severe short sleep notify flight surgeon Why 4.6 h last night, and under 5 h for 3 nights in a row. Adults need 7 h or more; ISS crews already average o",
+        "classes": "alert red",
+        "section": "section \"What this entry triggers\nAct now\"",
+        "html": "<div class=\"alert red\"><div class=\"head\"><span class=\"pill red\"><span class=\"dot red\"></span>Act now</span><h3>Severe short sleep</h3><span class=\"pill neutral\">notify flight surgeon</span></div><div class=\"why\"><b>Why</b> 4.6 h last night, and under 5 h for 3 nights in a row. Adults need 7 h or more; ISS crews already average only about 6 h.</div><div class=\"why\"><b>Do now</b> Protect the full sleep period tonight, run the reaction test before any critical task, and ask the flight surgeon to review the schedule.</div><div class=\"foot\"><span class=\"muted\" style=\"font-size: 13px;\">Sources: <span><a href=\"https://doi.org/10.5665/sleep.4716\" target=\"_blank\" rel=\"noreferrer\">American Academy of ",
+        "rect": {
+          "x": 297,
+          "y": 1066,
+          "w": 1221,
+          "h": 153
+        },
+        "viewport": {
+          "w": 1590,
+          "h": 935
+        }
+      },
+      "page": "/"
+    }
+  ]
+}

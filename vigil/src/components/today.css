@@ -14,10 +14,17 @@
 .ring.amber { --lvl: var(--amber); }
 .ring.red { --lvl: var(--red); }
 .ring svg { display: block; width: 100%; height: 100%; }
-.ring-track { fill: none; stroke: var(--line-strong); stroke-width: 6; }
-.ring-arc { fill: none; stroke: var(--lvl); stroke-width: 6; stroke-linecap: butt; }
-.ring-arc.sweep { animation: ring-sweep var(--t-sweep) var(--ease) both; }
-@keyframes ring-sweep { from { stroke-dashoffset: var(--c); } }
+/* One segment per indicator: Nominal, Watch, Act now, or a hairline when there is no reading today. */
+.ring-seg { fill: var(--line-strong); }
+.ring-seg.green { fill: var(--green); }
+.ring-seg.amber { fill: var(--amber); }
+.ring-seg.red { fill: var(--red); }
+/* 15 segments x 32ms stagger + 220ms each = the 700ms sweep. */
+.ring svg.sweep .ring-seg { animation: ring-seg-in 220ms var(--ease) both; animation-delay: calc(var(--n) * 32ms); }
+@keyframes ring-seg-in { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .ring svg.sweep .ring-seg, .status-word.sweep { animation: none; }
+}
 .ring-text { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; gap: 2px; }
 .ring-count { font-size: 24px; font-weight: 500; line-height: 1; }
 .ring-cap { font-size: 13px; color: var(--text-muted); }
@@ -31,26 +38,34 @@
 @keyframes status-in { from { opacity: 0; } }
 .status-reason { font-size: 16px; color: var(--text); margin: 0 0 var(--s-2); }
 .status-meta { font-size: 13px; color: var(--text-muted); margin: 0; }
-.status-surgeon { font-size: 13px; color: var(--text-2); margin: var(--s-2) 0 0; }
+.status-surgeon { font-size: 14px; line-height: 1.45; color: var(--text-2); margin: var(--s-2) 0 0; }
 
 .status-actions { grid-column: 2; display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-2); max-width: 360px; }
 .next-action { width: 100%; }
-.remeasure-note { font-size: 13px; color: var(--text-2); margin: var(--s-1) 0 0; }
+.remeasure-note { font-size: 14px; line-height: 1.45; color: var(--text-2); margin: var(--s-1) 0 0; }
 
 .today-body { display: flex; flex-direction: column; }
 .today-body h2 { margin-bottom: var(--s-4); }
 /* Holds the loaded figure's height so the page below does not jump when the lazy chunk arrives. */
 .bm-fallback { min-height: 320px; margin: 0; }
 
-/* Indicator tiles: 2 / 3 / 4 per row. */
-.ind-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
+/*
+ * Indicator tiles in two groups: Needs attention first, then In range. Each grid has 12 tracks and every tile spans
+ * 12 / columns (2 / 3 / 4 per row), set per tile from tileSpans() so no group ends in a part-filled row.
+ */
+.ind-group + .ind-group { margin-top: var(--s-8); }
+.ind-count { font-size: 16px; font-weight: 500; color: var(--text-muted); margin-left: var(--s-1); }
+.ind-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: var(--s-4); }
 .ind-tile {
-  position: relative; display: flex; flex-direction: column; gap: var(--s-2); min-width: 0;
+  grid-column: span var(--span-sm, 6);
+  position: relative; display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; min-height: 162px;
   padding: var(--s-4); border-radius: var(--r-card);
   background: var(--surface-1); border: 1px solid var(--line); box-shadow: var(--shadow-panel);
   transition: background-color var(--t-fast) var(--ease);
 }
 .ind-tile:hover { background: var(--surface-2); }
+.ind-tile.attention { background: var(--surface-2); border-color: var(--line-strong); }
+.ind-tile.attention:hover { background: var(--surface-3); }
 .ind-tile:has(.ind-open:active) { transform: translateY(1px); }
 .ind-tile.refresh { animation: tile-in var(--t-step) var(--ease) both; animation-delay: calc(var(--i) * 40ms); }
 @keyframes tile-in { from { opacity: 0; transform: translateY(4px); } }
@@ -60,14 +75,21 @@
 }
 /* The head grows, so readouts, bands and strips line up across a row even when a label wraps. */
 .ind-head { flex: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-2); }
-.ind-label { font-size: 13px; color: var(--text-muted); min-width: 0; }
-.ind-head .pill { padding: 2px 8px; }
+.ind-label { flex: 1 1 auto; min-width: 0; font-size: 13px; line-height: 24px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ind-head .pill { flex: 0 0 auto; padding: 2px 8px; }
+/* Flagged tiles lead with the status word. */
+.ind-tile.attention .ind-head { justify-content: flex-start; }
+.ind-tile.attention .ind-head .pill { order: -1; }
+.ind-tile.attention .ind-label { color: var(--text-2); }
 .ind-readout { display: flex; align-items: baseline; gap: 6px; margin: var(--s-1) 0; }
 .ind-value { font-size: 32px; font-weight: 500; line-height: 1; letter-spacing: -0.01em; }
 .ind-unit { font-size: 13px; color: var(--text-muted); }
 .ind-trend { margin-left: auto; color: var(--text-2); align-self: center; display: inline-flex; }
 .ind-band { padding: 2px 0; }
-.ind-strip { position: relative; z-index: 2; margin: -8px 0 -12px; }
+.ind-strip { position: relative; z-index: 2; margin: -8px 0 -14px; }
+/* In range: the day strip stays out of sight until the tile is hovered or focused, or the strip is tapped. It keeps its space. */
+.ind-tile.range .ind-strip { opacity: 0; transition: opacity var(--t-fast) var(--ease); }
+.ind-tile.range:hover .ind-strip, .ind-tile.range:focus-within .ind-strip { opacity: 1; }
 
 /* Crew and mission */
 .today-bottom { display: grid; grid-template-columns: 1.6fr 1fr; gap: var(--s-6); }
@@ -89,10 +111,10 @@
 .mission-row:hover svg { color: var(--text); }
 
 @media (min-width: 1024px) {
-  .ind-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ind-tile { grid-column: span var(--span-lg, 4); }
 }
 @media (min-width: 1280px) {
-  .ind-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .ind-tile { grid-column: span var(--span-xl, 3); }
 }
 
 @media (max-width: 1023px) {
@@ -110,9 +132,13 @@
   .crew-chip { flex: 0 0 auto; }
 }
 
-/* Two narrow tiles per row on phones: the status pill goes under the label. */
+/* Two narrow tiles per row on phones: same geometry as desktop, the label clamps to one line beside the pill. */
 @media (max-width: 639px) {
-  .ind-head { flex-direction: column; gap: var(--s-1); }
+  .ind-grid { gap: var(--s-2); }
+  .ind-tile { padding: var(--s-3) 10px; }
+  .ind-head { gap: var(--s-1); }
+  .ind-head .pill { gap: 3px; padding: 2px 6px; border-width: 0; }
+  .ind-head .pill .dot { width: 6px; height: 6px; }
 }
 
 /* 1024-1279: the status column is narrow, so the ring shrinks to keep the status word on one line. */

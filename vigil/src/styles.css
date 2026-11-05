@@ -8,7 +8,7 @@
   --surface-3: #1f2a36;
   --text: #e8eef4;
   --text-2: #a9b6c3;
-  --text-muted: #7c8a98;
+  --text-muted: #85939f;
   --line: rgba(232, 238, 244, 0.08);
   --line-strong: rgba(232, 238, 244, 0.16);
   --brand: #4fd1c5;
@@ -212,7 +212,7 @@ small, .muted { color: var(--text-muted); }
 .form { display: grid; gap: var(--s-4); }
 .field { display: flex; flex-direction: column; gap: var(--s-2); }
 .field label { font-size: 13px; font-weight: 500; color: var(--text-2); }
-.field .hint { font-size: 13px; color: var(--text-muted); }
+.field .hint, .hint, .field-help { font-size: 14px; line-height: 1.45; color: var(--text-2); }
 .field input[type='number'], .field input[type='text'], .field textarea, select, input[type='date'] {
   min-height: var(--hit); width: 100%;
   background: var(--surface-2); color: var(--text);
@@ -220,6 +220,27 @@ small, .muted { color: var(--text-muted); }
   padding: 10px 12px; font: inherit;
 }
 .field input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+
+/* Select: one 48px control. Native element underneath, native chevron removed, the 1px line chevron from icons.tsx on top. */
+.select { position: relative; display: block; min-width: 0; }
+select, .select-input {
+  appearance: none; -webkit-appearance: none; cursor: pointer;
+  text-overflow: ellipsis;
+  transition: border-color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+}
+.select .select-input { display: block; width: 100%; min-height: var(--hit); padding-right: 44px; }
+select:hover { border-color: var(--text-muted); }
+.select-chev { position: absolute; right: 12px; top: 50%; width: 20px; height: 20px; margin-top: -10px; color: var(--text-2); pointer-events: none; }
+select:disabled { opacity: 0.4; cursor: default; }
+select option { background: var(--surface-2); color: var(--text); }
+
+/* Textarea: same 48px-minimum control as the inputs; vertical resize only, with a drawn 1px grip instead of the OS one. */
+textarea { resize: vertical; min-height: var(--hit); line-height: 1.5; }
+textarea::-webkit-resizer {
+  border-bottom-right-radius: var(--r-control);
+  background:
+    linear-gradient(135deg, transparent 0 55%, var(--text-muted) 55% calc(55% + 1px), transparent calc(55% + 1px) 70%, var(--text-muted) 70% calc(70% + 1px), transparent calc(70% + 1px));
+}
 .field .row { display: flex; gap: var(--s-2); align-items: center; }
 .field .row input { flex: 1; }
 .field .unit { color: var(--text-muted); font-size: 13px; font-family: var(--mono); min-width: 42px; }

@@ -1,6 +1,18 @@
 import { sourceById } from '../data/sources';
+import type { SelectHTMLAttributes } from 'react';
 import { LEVEL_LABEL } from '../lib/format';
 import type { Level } from '../lib/types';
+import { IconChevronDown } from './icons';
+
+/** The one select: a native control (keyboard and mobile pickers keep working) with the line chevron drawn on top. */
+export function Select({ className = '', children, ...rest }: SelectHTMLAttributes<HTMLSelectElement>) {
+  return (
+    <span className="select">
+      <select className={`select-input ${className}`.trim()} {...rest}>{children}</select>
+      <IconChevronDown className="select-chev" />
+    </span>
+  );
+}
 
 export function Pill({ level, children }: { level: Level | 'neutral'; children?: React.ReactNode }) {
   return (

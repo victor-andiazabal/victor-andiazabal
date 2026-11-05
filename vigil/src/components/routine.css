@@ -31,7 +31,7 @@
 .tl-time { flex: none; width: 52px; font-size: 13px; line-height: 24px; color: var(--text-2); }
 .tl-text { display: grid; gap: 2px; min-width: 0; }
 .tl-label { line-height: 24px; }
-.tl-why { color: var(--text-muted); }
+.tl-why { color: var(--text-2); }
 .tl-item.done .tl-label { color: var(--text-muted); text-decoration: line-through; text-decoration-color: var(--text-muted); }
 .tl-open { flex: none; }
 
@@ -52,9 +52,11 @@
 @keyframes tl-draw { from { transform: scaleY(0); } }
 @keyframes tl-pop { from { opacity: 0; transform: scale(0.6); } }
 
-/* Streak */
-.streak { display: flex; gap: var(--s-4); align-items: center; }
-.streak .num { font-size: 32px; font-weight: 500; line-height: 1; letter-spacing: -0.01em; }
+/* Streak: the count and its unit are one mono line, the sentence sits under it. */
+.streak-count { display: flex; align-items: baseline; gap: var(--s-2); margin: 0 0 var(--s-1); }
+.streak-count .num { font-size: 32px; font-weight: 500; line-height: 1; letter-spacing: -0.01em; }
+.streak-count .unit { font-size: 16px; color: var(--text-2); }
+.streak-text { margin: 0; color: var(--text); }
 
 @media (max-width: 639px) {
   .tl-row { flex-wrap: wrap; gap: 0; }
@@ -66,4 +68,11 @@
   .tl-time { grid-area: time; width: auto; }
   .tl-text { grid-area: text; }
   .tl-open { margin: 0 0 var(--s-2) 36px; }
+}
+
+/* 3fr / 2fr so the timeline column and the patches column end together. */
+@media (min-width: 1024px) {
+  .routine-split { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+  .routine-split .patch-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-2); }
+  .routine-split .patch { padding: var(--s-4) var(--s-2); }
 }

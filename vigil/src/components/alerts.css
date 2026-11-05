@@ -21,8 +21,9 @@
 .step-no { display: inline-block; min-width: 24px; color: var(--text-muted); font-size: 13px; }
 
 .alert-copy { margin-top: var(--s-3); }
-.alerts-ground { margin-top: var(--s-8); }
-.alerts-ground > h2 { margin-bottom: var(--s-2); }
+.alerts-actions { display: flex; align-items: center; gap: var(--s-4); flex-wrap: wrap; }
+.alerts-sent { margin: calc(-1 * var(--s-2)) 0 var(--s-6); color: var(--text-2); }
+.alerts-link { margin-top: var(--s-6); }
 
 @media (max-width: 639px) {
   .finding-foot .muted { margin-left: 0; flex-basis: 100%; }

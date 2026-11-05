@@ -1,0 +1,12 @@
+{
+  "batch-mw3slp23-f053": {
+    "state": "working",
+    "note": "Choosing a new button style for every button and tab; crew selector becoming a segmented control",
+    "at": "2026-11-05T17:01:47.533Z"
+  },
+  "batch-mw3snk23-pgv4": {
+    "state": "working",
+    "note": "Removing the coloured left edge from every alert card",
+    "at": "2026-11-05T17:05:58.313Z"
+  }
+}

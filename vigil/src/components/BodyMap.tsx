@@ -138,7 +138,7 @@ function IndicatorRows({ sys, ev, go }: { sys: BodySystem; ev: Evaluation; go: G
             <span className={`dot ${s.level}`} aria-hidden="true" />
             <span className="bm-row-label">{def.label}</span>
             <span className="mono">{fmt(id, s.value)} <small>{def.unit}</small></span>
-            <button type="button" className="btn sm" onClick={() => go('trends', id)} aria-label={`Open ${def.label} trend`}>
+            <button type="button" className="btn" onClick={() => go('trends', id)} aria-label={`Open ${def.label} trend`}>
               Trend
             </button>
           </li>
@@ -166,7 +166,7 @@ function SystemDetail({ sys, st, ev, go }: { sys: BodySystem; st: SystemStatus; 
         </div>
       ))}
       {st.findings.length > 0 && (
-        <button type="button" className="btn sm" onClick={() => go('alerts')}>Open alerts for actions</button>
+        <button type="button" className="btn" onClick={() => go('alerts')}>Open alerts for actions</button>
       )}
 
       <h3>Linked indicators</h3>

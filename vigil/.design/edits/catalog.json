@@ -1,0 +1,253 @@
+{
+ "categories": [
+  {
+   "name": "Tutorial",
+   "items": [
+    {
+     "id": 26918,
+     "name": "Product Tour",
+     "author": "laziekiki",
+     "previewUrl": "https://cdn.21st.dev/user_3J39TADh2eUXcUqIKX6ozU6RE62/product-tour/default/preview.1789035375065.webp",
+     "videoUrl": "https://cdn.21st.dev/user_3J39TADh2eUXcUqIKX6ozU6RE62/product-tour/default/video.1789035359923.mp4",
+     "url": "https://21st.dev/@laziekiki/components/product-tour",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/laziekiki/product-tour?api_key=$API_KEY_21ST\""
+    },
+    {
+     "id": 5587,
+     "name": "Onboarding Checklist",
+     "author": "chowlol202",
+     "previewUrl": "https://cdn.21st.dev/user_2uI4jcWkLCShhQZpb7z39hnaByr/onboarding-checklist/default/preview.1787178260438.webp",
+     "videoUrl": "https://cdn.21st.dev/user_2uI4jcWkLCShhQZpb7z39hnaByr/onboarding-checklist/default/video.1785519707450.mp4",
+     "url": "https://21st.dev/@chowlol202/components/onboarding-checklist",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/chowlol202/onboarding-checklist?api_key=$API_KEY_21ST\""
+    },
+    {
+     "id": 29891,
+     "name": "Product Tour Popover",
+     "author": "shadcnspace",
+     "previewUrl": "https://cdn.21st.dev/user_38qAOtph5HovpSn2yjNYXjbTOm2/product-tour-popover/default/preview.1790152371510.webp",
+     "videoUrl": "https://cdn.21st.dev/user_38qAOtph5HovpSn2yjNYXjbTOm2/product-tour-popover/default/video.1790152360798.mp4",
+     "url": "https://21st.dev/@shadcnspace/components/product-tour-popover",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/shadcnspace/product-tour-popover?api_key=$API_KEY_21ST\""
+    },
+    {
+     "id": 29526,
+     "name": "Step Onboarding Wizard",
+     "author": "ziegfiroyt",
+     "previewUrl": "https://cdn.21st.dev/ziegfiroyt/onboarding9/default/preview.1790087072613-3599e25e-3014-41fb-b679-21c39786bbd0.png",
+     "videoUrl": "https://cdn.21st.dev/ziegfiroyt/onboarding9/default/video.1790087072613-3599e25e-3014-41fb-b679-21c39786bbd0.mp4",
+     "url": "https://21st.dev/@ziegfiroyt/components/onboarding9",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/ziegfiroyt/onboarding9?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Numbers",
+   "items": [
+    {
+     "id": 29887,
+     "name": "Segmented LCD Number Ticker",
+     "author": "shadcnspace",
+     "previewUrl": "https://cdn.21st.dev/user_38qAOtph5HovpSn2yjNYXjbTOm2/number-ticker-08/default/preview.1790152587557.webp",
+     "videoUrl": "https://cdn.21st.dev/user_38qAOtph5HovpSn2yjNYXjbTOm2/number-ticker-08/default/video.1790152585034.mp4",
+     "url": "https://21st.dev/@shadcnspace/components/number-ticker-08",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/shadcnspace/number-ticker-08?api_key=$API_KEY_21ST\""
+    },
+    {
+     "id": 20071,
+     "name": "Animate Digits",
+     "author": "unlumen",
+     "previewUrl": "https://cdn.21st.dev/unlumen/animate-digits/default/preview.1784317870310.png",
+     "videoUrl": "https://cdn.21st.dev/unlumen/animate-digits/default/video.1784284788831-76432d1d-ea59-401e-bbe8-11849a9b44cb.mp4",
+     "url": "https://21st.dev/@unlumen/components/animate-digits",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/unlumen/animate-digits?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Input",
+   "items": [
+    {
+     "id": 28180,
+     "name": "Number Field",
+     "author": "coss.com",
+     "previewUrl": "https://cdn.21st.dev/coss.com/number-field/default/preview.1789956912343-241eb51d-2fba-4942-9103-647ff724278a.png",
+     "videoUrl": "https://cdn.21st.dev/coss.com/number-field/default/video.1789956912343-241eb51d-2fba-4942-9103-647ff724278a.mp4",
+     "url": "https://21st.dev/@coss.com/components/number-field",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/coss.com/number-field?api_key=$API_KEY_21ST\""
+    },
+    {
+     "id": 29208,
+     "name": "Increment Slider",
+     "author": "coss.com",
+     "previewUrl": "https://cdn.21st.dev/user_cosscom/p-slider-14/default/preview.1790098592835.png",
+     "videoUrl": "https://cdn.21st.dev/user_cosscom/p-slider-14/default/video.1790098615729.mp4",
+     "url": "https://21st.dev/@coss.com/components/p-slider-14",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/coss.com/p-slider-14?api_key=$API_KEY_21ST\""
+    },
+    {
+     "id": 29940,
+     "name": "Quantity Stepper",
+     "author": "arihantcodes",
+     "previewUrl": "https://cdn.21st.dev/arihantcodes_1f7b8c4d/quantity-stepper/default/preview.1790143727039-972a67ec-3190-46f9-8a22-faa114441bb0.png",
+     "videoUrl": "https://cdn.21st.dev/arihantcodes_1f7b8c4d/quantity-stepper/default/video.1790143727039-972a67ec-3190-46f9-8a22-faa114441bb0.mp4",
+     "url": "https://21st.dev/@arihantcodes_1f7b8c4d/components/quantity-stepper",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/arihantcodes_1f7b8c4d/quantity-stepper?api_key=$API_KEY_21ST\""
+    },
+    {
+     "id": 35040,
+     "name": "Slider (rolling value)",
+     "author": "kuratlielia",
+     "previewUrl": "https://cdn.21st.dev/user_registry_kuratlielia_1790903117010/slider/default/preview.1790978106946.webp",
+     "videoUrl": "https://cdn.21st.dev/kuratlielia/slider/default/video.1790978103786.mp4",
+     "url": "https://21st.dev/@kuratlielia/components/slider",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/kuratlielia/slider?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Status history",
+   "items": [
+    {
+     "id": 39964,
+     "name": "Uptime Card",
+     "author": "kokonutd",
+     "previewUrl": "https://cdn.21st.dev/user_2rQ1QHrJyxpmWMHhqhANzWMc64n/uptime-card/default/preview.1792518256805.webp",
+     "videoUrl": "https://cdn.21st.dev/user_2rQ1QHrJyxpmWMHhqhANzWMc64n/uptime-card/default/video.1792518166638.mp4",
+     "url": "https://21st.dev/@kokonutd/components/uptime-card",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/kokonutd/uptime-card?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Interactive",
+   "items": [
+    {
+     "id": 23552,
+     "name": "Segmented Control",
+     "author": "ddoemonn",
+     "previewUrl": "https://cdn.21st.dev/user_2y2pjLtk7oS33zts6BqhEIOHrAj/segmented-control/default/preview.1787348037234.png",
+     "videoUrl": "https://cdn.21st.dev/user_2y2pjLtk7oS33zts6BqhEIOHrAj/segmented-control/default/video.1787348050040.mp4",
+     "url": "https://21st.dev/@ddoemonn/components/segmented-control",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/ddoemonn/segmented-control?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Background",
+   "items": [
+    {
+     "id": 34704,
+     "name": "Dot Grid",
+     "author": "halaska-studio",
+     "previewUrl": "https://cdn.21st.dev/halaska-studio/dot-grid/tight-spacing/preview.1790829636514-2f73a648-9c33-478d-a444-cc1abb42efd9.png",
+     "videoUrl": null,
+     "url": "https://21st.dev/@halaska-studio/components/dot-grid",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/halaska-studio/dot-grid?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Check-in flow",
+   "items": [
+    {
+     "id": 23576,
+     "name": "Wizard Steps",
+     "author": "ddoemonn",
+     "previewUrl": "https://cdn.21st.dev/ddoemonn/wizard-steps/default/preview.1785481100595-bd34f56b-c117-4c3f-850c-17f9fe106632.png",
+     "videoUrl": "https://cdn.21st.dev/ddoemonn/wizard-steps/default/video.1785481100595-bd34f56b-c117-4c3f-850c-17f9fe106632.mp4",
+     "url": "https://21st.dev/@ddoemonn/components/wizard-steps",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/ddoemonn/wizard-steps?api_key=$API_KEY_21ST\""
+    },
+    {
+     "id": 28546,
+     "name": "Stepper with Square Badges",
+     "author": "shadcnspace",
+     "previewUrl": "https://cdn.21st.dev/shadcnspace/stepper-01/default/preview.1789986786825-6fc7c015-c74b-4e1a-b38a-085d3cdd6380.png",
+     "videoUrl": "https://cdn.21st.dev/shadcnspace/stepper-01/default/video.1789986786825-6fc7c015-c74b-4e1a-b38a-085d3cdd6380.mp4",
+     "url": "https://21st.dev/@shadcnspace/components/stepper-01",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/shadcnspace/stepper-01?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Routine",
+   "items": [
+    {
+     "id": 35051,
+     "name": "Timeline",
+     "author": "kuratlielia",
+     "previewUrl": "https://cdn.21st.dev/user_registry_kuratlielia_1790903117010/timeline/default/preview.1790977806085.webp",
+     "videoUrl": "https://cdn.21st.dev/user_registry_kuratlielia_1790903117010/timeline/default/video.1790977802337.mp4",
+     "url": "https://21st.dev/@kuratlielia/components/timeline",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/kuratlielia/timeline?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Alerts",
+   "items": [
+    {
+     "id": 19366,
+     "name": "Notice Alert",
+     "author": "corr",
+     "previewUrl": "https://cdn.21st.dev/corr/notice-alert/default/preview.1784723104620-22d682d0-eefc-4af7-8ae9-1855c45c3304.png",
+     "videoUrl": "https://cdn.21st.dev/corr/notice-alert/default/video.1784723104620-22d682d0-eefc-4af7-8ae9-1855c45c3304.mp4",
+     "url": "https://21st.dev/@corr/components/notice-alert",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/corr/notice-alert?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Progress",
+   "items": [
+    {
+     "id": 38114,
+     "name": "Meter",
+     "author": "redrob-labs",
+     "previewUrl": "https://cdn.21st.dev/redrob-labs/meter/default/preview.1791974783279-4e3739d1-d873-41ca-92f4-b58bada26214.png",
+     "videoUrl": null,
+     "url": "https://21st.dev/@redrob-labs/components/meter",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/redrob-labs/meter?api_key=$API_KEY_21ST\""
+    },
+    {
+     "id": 22095,
+     "name": "Circular Progress",
+     "author": "shadcnui-blocks",
+     "previewUrl": "https://cdn.21st.dev/user_registry_shadcnui-blocks_1783488755809/progress-10/default/preview.1788202482883.png",
+     "videoUrl": "https://cdn.21st.dev/user_registry_shadcnui-blocks_1783488755809/progress-10/default/video.1788202495648.mp4",
+     "url": "https://21st.dev/@shadcnui-blocks/components/progress-10",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/shadcnui-blocks/progress-10?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Navigation",
+   "items": [
+    {
+     "id": 29334,
+     "name": "Animated Sidebar",
+     "author": "starc007",
+     "previewUrl": "https://cdn.21st.dev/starc007/animated-sidebar/default/preview.1790065868192-e608260d-b9c7-49c1-94e7-1915131dba73.png",
+     "videoUrl": "https://cdn.21st.dev/starc007/animated-sidebar/default/video.1790065868192-e608260d-b9c7-49c1-94e7-1915131dba73.mp4",
+     "url": "https://21st.dev/@starc007/components/animated-sidebar",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/starc007/animated-sidebar?api_key=$API_KEY_21ST\""
+    }
+   ]
+  },
+  {
+   "name": "Cards",
+   "items": [
+    {
+     "id": 1375,
+     "name": "Activity Card (rings)",
+     "author": "kokonutd",
+     "previewUrl": "https://cdn.21st.dev/user_2rQ1QHrJyxpmWMHhqhANzWMc64n/activity-card/default/preview.png",
+     "videoUrl": "https://cdn.21st.dev/user_2rQ1QHrJyxpmWMHhqhANzWMc64n/activity-card/default/video.mp4",
+     "url": "https://21st.dev/@kokonutd/components/activity-card",
+     "installCommand": "npx shadcn@latest add \"https://21st.dev/r/kokonutd/activity-card?api_key=$API_KEY_21ST\""
+    }
+   ]
+  }
+ ]
+}

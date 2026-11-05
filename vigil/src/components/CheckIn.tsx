@@ -91,6 +91,7 @@ export function CheckIn({ go, focus }: CheckInProps) {
   const activeDef = active ? indicatorById(active) : null;
   const cue: Cue | null = step.id === 'symptoms' ? SYMPTOM_CUE : activeDef ? { title: activeDef.label, what: activeDef.what, how: activeDef.how, whySpace: activeDef.whySpace, sources: activeDef.sources } : null;
   const flags = draft.preview.findings.length;
+  const hasSimulated = index !== REVIEW_STEP && fields.some((id) => draft.prefillOf(id) === 'simulated');
 
   return (
     <div className="ci" ref={rootRef}>
@@ -123,6 +124,7 @@ export function CheckIn({ go, focus }: CheckInProps) {
               {step.label}
             </h2>
             <p className="text-2">{step.blurb}</p>
+            {hasSimulated && <p className="ci-sim">Values are simulated in this prototype.</p>}
           </div>
 
           <div className={`ci-body${cue && index !== REVIEW_STEP ? '' : ' is-wide'}`}>
@@ -135,7 +137,7 @@ export function CheckIn({ go, focus }: CheckInProps) {
                   <button type="button" className="btn" onClick={next}>
                     Confirm all on this step
                   </button>
-                  <span className="muted small">Every value here is prefilled; confirm to keep them and move on</span>
+                  <span className="ci-confirm-note">Every value here is prefilled; confirm to keep them and move on</span>
                 </div>
               )}
             </div>
@@ -144,14 +146,14 @@ export function CheckIn({ go, focus }: CheckInProps) {
         </div>
 
         <div className="ci-foot">
-          {index > 0 ? (
-            <button type="button" className="btn" onClick={back}>
-              Back
-            </button>
-          ) : (
-            <span />
-          )}
-          <span className="ci-foot-keys muted small">Enter for next, Shift+Enter for back</span>
+          <div className="ci-foot-start">
+            {index > 0 && (
+              <button type="button" className="btn" onClick={back}>
+                Back
+              </button>
+            )}
+            <span className="ci-foot-keys">Enter for next, Shift+Enter for back</span>
+          </div>
           {index < REVIEW_STEP ? (
             <button type="button" className="btn-primary" onClick={next}>
               Next

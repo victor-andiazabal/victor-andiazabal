@@ -2,12 +2,12 @@
  * Segmented control: an accessible radio group with a sliding thumb.
  * Mechanism ported from "Segmented Control" by ddoemonn (21st.dev id 23552); rebuilt in plain React + CSS.
  */
-import { useRef, useState, type CSSProperties, type KeyboardEvent } from 'react';
+import { useRef, useState, type CSSProperties, type KeyboardEvent, type ReactNode } from 'react';
 import './controls.css';
 
 export interface SegmentedOption {
   value: string;
-  label: string;
+  label: ReactNode;
   /** Short explanation, shown under the control for the focused/hovered option, else the selected one. */
   hint?: string;
 }

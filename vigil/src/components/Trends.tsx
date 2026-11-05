@@ -7,7 +7,7 @@ import { evaluate } from '../lib/rules';
 import { scenarioById } from '../lib/simulate';
 import type { IndicatorId } from '../lib/types';
 import { useStore } from '../state/store';
-import { Pill, SourceLinks } from './ui';
+import { Pill, Select, SourceLinks } from './ui';
 import './screens.css';
 import './trends.css';
 
@@ -95,11 +95,11 @@ export function Trends({ initial }: { initial?: IndicatorId }) {
 
       <div className="trend-picker">
         <label className="field-label" htmlFor="trend-indicator">Indicator</label>
-        <select id="trend-indicator" className="input trend-select" value={id} onChange={(e) => setId(e.target.value as IndicatorId)}>
+        <Select id="trend-indicator" className="input trend-select" value={id} onChange={(e) => setId(e.target.value as IndicatorId)}>
           {INDICATORS.map((i) => (
             <option key={i.id} value={i.id}>{i.label}: {LEVEL_LABEL[ev.byIndicator[i.id].level]}</option>
           ))}
-        </select>
+        </Select>
       </div>
 
       <div className="split">

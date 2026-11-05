@@ -102,3 +102,45 @@ export function inRangeShare(byIndicator: Record<IndicatorId, { level: Level; va
   const measured = INDICATORS.filter((d) => byIndicator[d.id].value !== null);
   return { inRange: measured.filter((d) => byIndicator[d.id].level === 'green').length, measured: measured.length };
 }
+
+export interface TileGroups<T> {
+  /** Watch and Act now, Act now first; reading order kept inside each level. */
+  attention: T[];
+  /** Nominal with a reading today. */
+  inRange: T[];
+  /** No reading today. */
+  unmeasured: T[];
+}
+
+/** Splits the Today tiles so everything that is not Nominal comes first. */
+export function groupTiles<T extends { id: IndicatorId }>(
+  defs: readonly T[],
+  byIndicator: Record<IndicatorId, { level: Level; value: number | null }>,
+): TileGroups<T> {
+  const level = (d: T) => byIndicator[d.id].level;
+  const measured = (d: T) => byIndicator[d.id].value !== null;
+  return {
+    attention: [...defs.filter((d) => level(d) === 'red'), ...defs.filter((d) => level(d) === 'amber')],
+    inRange: defs.filter((d) => level(d) === 'green' && measured(d)),
+    unmeasured: defs.filter((d) => level(d) === 'green' && !measured(d)),
+  };
+}
+
+/** Tile grids are laid on 12 tracks so a row of 1 to 4 tiles always divides evenly. */
+export const GRID_TRACKS = 12;
+
+/**
+ * Track span for each of `n` tiles in a grid of at most `maxCols` columns, with no part-filled last row.
+ * Uses one column fewer when that divides the count; otherwise the tiles of the last row share it equally.
+ * A single row narrower than `maxCols` keeps the standard width unless it is one tile short of full.
+ */
+export function tileSpans(n: number, maxCols: number): number[] {
+  if (n <= 0) return [];
+  const full = GRID_TRACKS / maxCols;
+  if (n <= maxCols) return Array<number>(n).fill(n >= 2 && n === maxCols - 1 ? GRID_TRACKS / n : full);
+  const options = [maxCols, maxCols - 1].filter((c) => c >= 2 && GRID_TRACKS % c === 0);
+  const fill = (c: number) => (n % c === 0 ? 1 : (n % c) / c);
+  const cols = options.reduce((best, c) => (fill(c) > fill(best) ? c : best));
+  const rem = n % cols;
+  return Array.from({ length: n }, (_, i) => (rem && i >= n - rem ? GRID_TRACKS / rem : GRID_TRACKS / cols));
+}
