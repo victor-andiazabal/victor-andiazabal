@@ -29,4 +29,5 @@
 }
 
 .alerts-crew th, .alerts-crew td { padding: 0 8px; white-space: nowrap; }
+.alerts-crew td.num, .alerts-crew th.num { white-space: normal; min-width: 64px; }
 .alerts-crew .link-btn { padding: 0; font-size: 13px; color: var(--text); }

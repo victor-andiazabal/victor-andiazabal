@@ -101,7 +101,7 @@ export const INDICATORS: IndicatorDef[] = [
     min: 33,
     max: 42,
     step: 0.1,
-    what: 'Core body temperature. A rise can be the first sign of infection, which matters a lot in a closed cabin.',
+    what: 'Core body temperature. A rise can be the first sign of infection, which matters in a closed cabin.',
     how: 'Oral or forehead thermometer, at the same time each day, not right after exercise or a hot drink.',
     reference: 'Fever is 38.0 °C (100.4 °F) or higher (CDC).',
     whySpace: 'Infection spreads easily in a closed cabin, so a fever is reported early to protect the whole crew.',

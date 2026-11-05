@@ -19,15 +19,14 @@ Source of truth for CSS variable names. Defined in `src/styles.css` on `:root` (
 | --action-hover | #7aa2ff | #2550c4 |
 | --action-press | #4a78e6 | #1f45aa |
 | --on-action | #0b0f14 | #ffffff |
-| --green | #3ddc84 | #1d7f46 |
-| --amber | #ffb020 | #9a5b00 |
-| --red | #ff5d5d | #c42b2b |
+| --green | #3ddc84 | #17703c |
+| --amber | #ffb020 | #8f5300 |
+| --red | #ff5d5d | #bd2828 |
 | --green-bg / --amber-bg / --red-bg | status at 12% alpha | status at 10% alpha |
 | --scrim | rgba(0,0,0,0.6) | rgba(14,20,27,0.45) |
 | --shadow-panel | none | 0 1px 2px rgba(14,20,27,0.06), 0 8px 24px rgba(14,20,27,0.06) |
 | --shadow-overlay | none | 0 16px 48px rgba(14,20,27,0.16) |
 
-Back-compat aliases kept for existing component CSS during the migration: --panel → --surface-1, --panel-2 → --surface-2, --muted → --text-muted, --accent → --action. Remove once every file is migrated.
 
 ## Type
 --font: 'Space Grotesk', system-ui, sans-serif (400/500/600)

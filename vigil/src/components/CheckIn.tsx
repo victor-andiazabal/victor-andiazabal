@@ -99,7 +99,7 @@ export function CheckIn({ go, focus }: CheckInProps) {
           <h1>Daily check-in</h1>
           <p>
             Day <span className="mono">{draft.day}</span> · {draft.selected.callsign}.{' '}
-            {draft.isManual ? 'You already saved an entry today; editing it.' : 'Wearable values are pre-filled; correct anything that looks wrong.'}
+            {draft.isManual ? 'You already saved an entry today; editing it.' : 'Wearable values are prefilled; correct anything that looks wrong.'}
           </p>
         </div>
         <Pill level={draft.preview.overall}>{flags ? `${flags} flag${flags > 1 ? 's' : ''}` : 'No flags'}</Pill>

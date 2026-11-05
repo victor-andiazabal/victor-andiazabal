@@ -42,9 +42,9 @@ Dark ("Hull") is the default; light ("Daylight") is designed with the same roles
 | Hairline strong | rgba(232,238,244,0.16) | rgba(14,20,27,0.18) | input borders, focus-adjacent |
 | Action (primary button, focus ring) | #5b8cff | #2f5fe0 | the only saturated fill on any screen |
 | Text on action | #0b0f14 | #ffffff | dark ≈ 6:1, light ≈ 5.6:1 |
-| Status Nominal | #3ddc84 | #1d7f46 | meaning only |
-| Status Watch | #ffb020 | #9a5b00 | meaning only |
-| Status Act now | #ff5d5d | #c42b2b | meaning only |
+| Status Nominal | #3ddc84 | #17703c | meaning only |
+| Status Watch | #ffb020 | #8f5300 | meaning only |
+| Status Act now | #ff5d5d | #bd2828 | meaning only |
 | Status tint (bg) | status at 12% | status at 10% | finding cards, pills |
 
 Rules: status is always word + shape + colour (pill text, ring arc, dot), never colour alone. Cyan never fills a control. Only one action-blue filled button per view.

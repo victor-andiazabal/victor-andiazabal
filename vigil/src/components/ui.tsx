@@ -15,13 +15,15 @@ export function SourceLinks({ ids, compact = false }: { ids: string[]; compact?:
   const srcs = ids.map(sourceById).filter(Boolean);
   if (!srcs.length) return null;
   if (compact) {
+    // Two documents from one body would read as a repeated name, so those are labelled by title.
+    const orgCount = (org: string) => srcs.filter((o) => o!.org === org).length;
     return (
-      <span className="muted" style={{ fontSize: 12 }}>
+      <span className="muted" style={{ fontSize: 13 }}>
         Sources:{' '}
         {srcs.map((s, i) => (
           <span key={s!.id}>
             <a href={s!.url} target="_blank" rel="noreferrer">
-              {s!.org}
+              {orgCount(s!.org) > 1 ? s!.title : s!.org}
             </a>
             {i < srcs.length - 1 ? '; ' : ''}
           </span>

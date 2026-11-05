@@ -79,7 +79,7 @@ export const COUNTERMEASURES: Record<string, { title: string; steps: string[]; s
     title: 'Behavioral health check',
     steps: [
       'Schedule a private family conference or a call with the behavioral health team.',
-      'Protect sleep and exercise time, the two strongest levers you control.',
+      'Protect sleep and exercise time; both are in your control.',
       'Use the crew journal; write what changed over the last few days.',
       'Tell the commander or crew medical officer if you would like tasks rebalanced.',
     ],
@@ -91,7 +91,7 @@ export const COUNTERMEASURES: Record<string, { title: string; steps: string[]; s
       'Move to the designated storm shelter or most shielded location.',
       'Postpone EVA and other outside activity until the event is over.',
       'Confirm dosimeter reading with the vehicle monitor; log cumulative dose.',
-      'Report to mission control; ground teams track the solar event and will clear the all-clear.',
+      'Report to mission control; ground teams track the solar event and will call the all-clear.',
     ],
     sources: ['ochmo-radiation', 'hrp-hazards'],
   },

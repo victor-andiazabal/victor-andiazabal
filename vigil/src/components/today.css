@@ -39,6 +39,8 @@
 
 .today-body { display: flex; flex-direction: column; }
 .today-body h2 { margin-bottom: var(--s-4); }
+/* Holds the loaded figure's height so the page below does not jump when the lazy chunk arrives. */
+.bm-fallback { min-height: 320px; margin: 0; }
 
 /* Indicator tiles: 2 / 3 / 4 per row. */
 .ind-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-4); }
@@ -59,7 +61,7 @@
 /* The head grows, so readouts, bands and strips line up across a row even when a label wraps. */
 .ind-head { flex: 1; display: flex; align-items: flex-start; justify-content: space-between; gap: var(--s-2); }
 .ind-label { font-size: 13px; color: var(--text-muted); min-width: 0; }
-.ind-head .pill { font-size: 12px; min-height: 22px; padding: 1px 8px; }
+.ind-head .pill { padding: 2px 8px; }
 .ind-readout { display: flex; align-items: baseline; gap: 6px; margin: var(--s-1) 0; }
 .ind-value { font-size: 32px; font-weight: 500; line-height: 1; letter-spacing: -0.01em; }
 .ind-unit { font-size: 13px; color: var(--text-muted); }

@@ -64,7 +64,7 @@ export function Today({ go }: { go: Go }) {
         <StatusPanel ev={ev} action={action} sweep={sweep} meta={meta} surgeonNote={surgeonNote} go={go} />
         <section className="panel today-body" data-tour="bodymap" aria-labelledby="today-body-title">
           <h2 id="today-body-title">Body map</h2>
-          <Suspense fallback={<p className="muted">Loading body map…</p>}>
+          <Suspense fallback={<p className="muted bm-fallback">Loading body map…</p>}>
             <BodyMap go={go} compact />
           </Suspense>
         </section>
