@@ -12,11 +12,13 @@ import type { IndicatorId } from './lib/types';
 import { useStore } from './state/store';
 
 const Trends = lazy(() => import('./components/Trends').then((m) => ({ default: m.Trends })));
+const BodyMap = lazy(() => import('./components/BodyMap').then((m) => ({ default: m.BodyMap })));
 
-export type View = 'dashboard' | 'checkin' | 'pvt' | 'trends' | 'alerts' | 'routine' | 'ground' | 'learn' | 'settings';
+export type View = 'dashboard' | 'body' | 'checkin' | 'pvt' | 'trends' | 'alerts' | 'routine' | 'ground' | 'learn' | 'settings';
 
 const NAV: { id: View; label: string; icon: string }[] = [
   { id: 'dashboard', label: 'Dashboard', icon: '◉' },
+  { id: 'body', label: 'Body map', icon: '♥' },
   { id: 'checkin', label: 'Check-in', icon: '✎' },
   { id: 'pvt', label: 'Reaction test', icon: '⚡' },
   { id: 'trends', label: 'Trends', icon: '📈' },
@@ -26,6 +28,12 @@ const NAV: { id: View; label: string; icon: string }[] = [
   { id: 'learn', label: 'Learn', icon: '📖' },
   { id: 'settings', label: 'Settings', icon: '⚙' },
 ];
+
+/** `?view=ground` opens the ground console directly (used by the crew-side link to a second window). */
+function initialView(): View {
+  const wanted = new URLSearchParams(window.location.search).get('view');
+  return NAV.find((n) => n.id === wanted)?.id ?? 'dashboard';
+}
 
 function useTheme() {
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
@@ -44,7 +52,7 @@ function useTheme() {
 
 export default function App() {
   const { crew, selected, settings, dispatch, acknowledged } = useStore();
-  const [view, setView] = useState<View>('dashboard');
+  const [view, setView] = useState<View>(initialView);
   const [trendIndicator, setTrendIndicator] = useState<IndicatorId | undefined>();
   const [theme, setTheme] = useTheme();
 
@@ -101,6 +109,11 @@ export default function App() {
 
       <main>
         {view === 'dashboard' && <Dashboard go={go} />}
+        {view === 'body' && (
+          <Suspense fallback={<p className="muted">Loading body map…</p>}>
+            <BodyMap go={go} />
+          </Suspense>
+        )}
         {view === 'checkin' && <CheckIn key={`${selected.id}:${settings.currentDay}`} go={go} />}
         {view === 'pvt' && <ReactionTest go={go} />}
         {view === 'trends' && (
@@ -111,7 +124,7 @@ export default function App() {
         {view === 'alerts' && <Alerts />}
         {view === 'routine' && <Routine go={go} />}
         {view === 'ground' && <Ground go={go} />}
-        {view === 'learn' && <Learn />}
+        {view === 'learn' && <Learn go={go} />}
         {view === 'settings' && <Settings theme={theme} setTheme={setTheme} />}
       </main>
     </div>

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { routineFor } from '../../components/Routine';
 import { CREW } from '../../data/crew';
 import { INDICATORS } from '../../data/indicators';
+import { PVT_TASK_ID, routineFor } from '../../data/routine';
 import { badgeProgress, earnedBadges, EXERCISE_ASSIGNED_MIN } from '../badges';
 import { simulateMember } from '../simulate';
 import type { CrewMember, DayRecord, IndicatorId, MissionSettings } from '../types';
@@ -87,10 +87,19 @@ describe('badges', () => {
   });
 
   it('reaction badge needs 3 tested days inside one week', () => {
+    const m = member();
+    const tested = (days: number[]) => Object.assign({}, ...days.map((d) => doneKeys(m, d, [PVT_TASK_ID])));
+    expect(ids(m, tested([5, 7, 9]))).toContain('pvt-week');
+    expect(ids(m, tested([5, 7, 13]))).not.toContain('pvt-week');
+    expect(prog(m, 'pvt-week', tested([5, 7, 13])).current).toBe(2);
+  });
+
+  it('a hand-entered reaction time without the reaction-test routine tick does not count', () => {
+    // CheckIn prefills pvtRt from the simulated wearable, so the value alone proves nothing.
     const rt = { pvtRt: 280, pvtLapses: 0 };
-    expect(ids(withManualDays(member(), [5, 7, 9], rt))).toContain('pvt-week');
-    expect(ids(withManualDays(member(), [5, 7, 13], rt))).not.toContain('pvt-week');
-    expect(prog(withManualDays(member(), [5, 7, 13], rt), 'pvt-week').current).toBe(2);
+    const m = withManualDays(member(), [5, 7, 9], rt);
+    expect(ids(m)).not.toContain('pvt-week');
+    expect(prog(m, 'pvt-week').current).toBe(0);
   });
 
   it('complete record needs every daily hand-entered indicator', () => {

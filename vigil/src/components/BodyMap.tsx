@@ -3,18 +3,16 @@ import type { View } from '../App';
 import { BODY_SYSTEMS, HAZARDS, bodySystemById, type BodySystem, type BodySystemId } from '../data/bodySystems';
 import { COUNTERMEASURES } from '../data/countermeasures';
 import { indicatorById, symptomById } from '../data/indicators';
+import { fmt, LEVEL_LABEL } from '../lib/format';
 import { systemStatus, worstSystem, type SystemStatus } from '../lib/bodymap';
 import { evaluate, type Evaluation } from '../lib/rules';
 import type { IndicatorId, Level } from '../lib/types';
 import { useStore } from '../state/store';
-import { fmt, LEVEL_LABEL, Pill, SourceLinks } from './ui';
+import { Pill, SourceLinks } from './ui';
 import './bodymap.css';
 
 type Go = (v: View, indicator?: IndicatorId) => void;
 type StatusMap = Record<BodySystemId, SystemStatus>;
-
-// 'body' is added to the View union in App.tsx by the integrator; widening through string keeps this compiling either way.
-const BODY_VIEW = 'body' as string as View;
 
 /* Figure geometry, front view, viewBox 0 0 200 440. Shared by the regions and the radiation halo. */
 const CHEST = 'M70 90 Q100 82 130 90 Q138 94 138 106 Q138 138 132 164 L68 164 Q62 138 62 106 Q62 94 70 90 Z';
@@ -214,7 +212,7 @@ export function BodyMap({ go, compact = false }: { go: Go; compact?: boolean }) 
   if (compact) {
     const summary = summaryOf(status);
     return (
-      <button type="button" className="bm-compact" onClick={() => go(BODY_VIEW)} aria-label={`Open body map. ${summary}.`}>
+      <button type="button" className="bm-compact" onClick={() => go('body')} aria-label={`Open body map. ${summary}.`}>
         <Figure status={status} active={null} />
         <span className="bm-compact-text">
           <b>Body map</b>

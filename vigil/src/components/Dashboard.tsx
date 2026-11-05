@@ -1,12 +1,15 @@
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { ENVIRONMENTS, INDICATORS } from '../data/indicators';
+import { fmt, LEVEL_LABEL } from '../lib/format';
 import { evaluate, trendOf } from '../lib/rules';
 import { scenarioById } from '../lib/simulate';
 import type { IndicatorId } from '../lib/types';
 import { useStore } from '../state/store';
-import { routineFor } from './Routine';
-import { Disclaimer, fmt, LEVEL_LABEL, Pill, Trend } from './ui';
+import { routineFor } from '../data/routine';
+import { Disclaimer, Pill, Trend } from './ui';
 import type { View } from '../App';
+
+const BodyMap = lazy(() => import('./BodyMap').then((m) => ({ default: m.BodyMap })));
 
 function readTour(): boolean {
   try { return localStorage.getItem('vigil:tour') !== 'done'; } catch { return true; }
@@ -83,25 +86,32 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
             )}
           </div>
         </div>
-        <div className="panel">
-          <h3>Crew status</h3>
-          {evals.map(({ crew: c, ev: e }) => {
-            return (
-              <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0' }}>
-                <span className={`dot ${e.overall}`} />
-                <button
-                  className="btn sm"
-                  style={{ border: 0, background: c.id === selected.id ? 'var(--panel-2)' : 'transparent', padding: '4px 8px' }}
-                  onClick={() => dispatch({ type: 'select', crewId: c.id })}
-                >
-                  {c.callsign}
-                </button>
-                <span className="muted" style={{ marginLeft: 'auto', fontSize: 12 }}>
-                  {e.findings.length ? `${e.findings.length} flag${e.findings.length > 1 ? 's' : ''}` : 'clear'}
-                </span>
-              </div>
-            );
-          })}
+        <div style={{ display: 'grid', gap: 14, alignContent: 'start' }}>
+          <div className="panel">
+            <h3>Crew status</h3>
+            {evals.map(({ crew: c, ev: e }) => {
+              return (
+                <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '5px 0' }}>
+                  <span className={`dot ${e.overall}`} />
+                  <button
+                    className="btn sm"
+                    style={{ border: 0, background: c.id === selected.id ? 'var(--panel-2)' : 'transparent', padding: '4px 8px' }}
+                    onClick={() => dispatch({ type: 'select', crewId: c.id })}
+                  >
+                    {c.callsign}
+                  </button>
+                  <span className="muted" style={{ marginLeft: 'auto', fontSize: 12 }}>
+                    {e.findings.length ? `${e.findings.length} flag${e.findings.length > 1 ? 's' : ''}` : 'clear'}
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="panel">
+            <Suspense fallback={<p className="muted">Loading body map…</p>}>
+              <BodyMap go={go} compact />
+            </Suspense>
+          </div>
         </div>
       </div>
 

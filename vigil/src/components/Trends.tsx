@@ -2,11 +2,12 @@ import { useMemo, useState } from 'react';
 import { CartesianGrid, Line, LineChart, ReferenceArea, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { INDICATORS, indicatorById } from '../data/indicators';
 import { baselineOf, seriesFor } from '../lib/analytics';
+import { fmt } from '../lib/format';
 import { evaluate } from '../lib/rules';
 import { scenarioById } from '../lib/simulate';
 import type { IndicatorId } from '../lib/types';
 import { useStore } from '../state/store';
-import { fmt, Pill, SourceLinks } from './ui';
+import { Pill, SourceLinks } from './ui';
 
 /** Published cut-offs drawn as horizontal lines on the chart. */
 const REF_LINES: Partial<Record<IndicatorId, { y: number; label: string }[]>> = {

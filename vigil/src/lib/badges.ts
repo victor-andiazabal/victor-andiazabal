@@ -1,5 +1,5 @@
-import { routineFor } from '../components/Routine';
 import { INDICATORS } from '../data/indicators';
+import { PVT_TASK_ID, routineFor } from '../data/routine';
 import type { CrewMember, DayRecord, IndicatorId, MissionSettings } from './types';
 
 export interface Badge {
@@ -85,7 +85,7 @@ function bestWeekOfTests(days: number[], tested: (d: number) => boolean): number
 
 /**
  * Same "entered" rule as the streak in components/Routine.tsx: a day counts when the person saved a manual entry or
- * ticked any routine task. Duplicated here because that logic is not exported; the integrator can dedupe later.
+ * ticked any routine task.
  * (Routine.tsx counts back from today; badges use the longest run so an earned patch is never lost.)
  */
 export function badgeProgress(crew: CrewMember, routineDone: Record<string, boolean>, settings: MissionSettings): BadgeProgress[] {
@@ -98,7 +98,9 @@ export function badgeProgress(crew: CrewMember, routineDone: Record<string, bool
   const enteredDays = days.filter(entered).length;
   const run = longestRun(days, entered);
   const bestRoutine = Math.max(0, ...days.map((d) => doneCount(crew, routineDone, d, tasks)));
-  const pvtWeek = bestWeekOfTests(days, (d) => finite(d, 'pvtRt'));
+  // Counts the routine tick that ReactionTest sets on save. The check-in prefills pvtRt from the simulated wearable,
+  // so a finite pvtRt alone does not prove the test was run.
+  const pvtWeek = bestWeekOfTests(days, (d) => Boolean(routineDone[`${crew.id}:${d}:${PVT_TASK_ID}`]));
   const exRun = longestRun(days, (d) => (own.get(d)?.values.exercise ?? 0) >= EXERCISE_ASSIGNED_MIN);
   const bestRecord = Math.max(0, ...days.map((d) => MANUAL_DAILY.filter((id) => finite(d, id)).length));
 

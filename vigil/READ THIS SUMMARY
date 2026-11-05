@@ -10,11 +10,11 @@ How it decides. Two comparisons run on every value. First, published ranges: blo
 
 What the crew sees. Three levels: Nominal, Watch, Act now. Every alert has four parts: why it fired with the actual numbers, what to do, the source it comes from, and a checklist. If the ground needs to know, the app drafts one message with the whole day's values and flags so a single exchange across the delay is enough.
 
-The screens. Dashboard with the status ring and 14 tiles. Daily check-in. Reaction test. Trend charts with the baseline band and the published cut-offs drawn on them. Alerts with checklists and the surgeon message. A daily routine with timed prompts and a streak. A ground view showing what the flight surgeon receives. A learn section explaining every indicator and every source. Settings for the environment (station, transit, rover, base), the demo scenario, and the mission day.
+The screens. Dashboard with the status ring and 14 tiles. Daily check-in. Reaction test. Trend charts with the baseline band and the published cut-offs drawn on them. A body map that colours seven body systems from the same rule results and shows which hazards affect each one. Alerts with checklists and the surgeon message, plus a crew-to-ground link that delivers the report after the real light-time delay (with a demo mode that plays 1 minute as 1 second) when the ground console is open in a second window. A daily routine with timed prompts, a streak, and mission patches for habits such as steady daily measurement. A ground view showing what the flight surgeon receives. A learn section explaining every indicator and every source. Settings for the environment (station, transit, rover, base), the demo scenario, and the mission day.
 
 The demo. The crew is simulated and labelled as such everywhere. Four scenarios make the rules visibly fire: a quiet nominal mission, a solar storm that turns the whole crew red, a week of sleep debt that slows the Commander's reactions, and an early infection that flags Flight Engineer 1 with a fever.
 
-What makes it credible. Every threshold is cited inside the alert and listed in the app. No real astronaut records are used. It runs offline, installs like an app on a phone or tablet, keeps data on the device, and has 32 automated tests covering every rule at its cited cut-off.
+What makes it credible. Every threshold is cited inside the alert and listed in the app. No real astronaut records are used. It runs offline, installs like an app on a phone or tablet, keeps data on the device, and has 70 automated tests covering every rule at its cited cut-off.
 
 What it is not. Not a medical device. It never diagnoses. It supports the crew's decision and points to the flight surgeon when a rule says so.
 

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { defaultPreset, type LinkPresetId } from '../data/comm';
 import { ENVIRONMENTS, indicatorById } from '../data/indicators';
-import { fmt } from '../components/ui';
+import { fmt } from './format';
 import { useStore } from '../state/store';
 import type { Evaluation } from './rules';
 import type { CrewMember, IndicatorId, MissionSettings } from './types';
