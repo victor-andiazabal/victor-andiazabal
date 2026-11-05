@@ -1,8 +1,6 @@
-import { indicatorById } from '../data/indicators';
 import { sourceById } from '../data/sources';
-import type { IndicatorId, Level } from '../lib/types';
-
-export const LEVEL_LABEL: Record<Level, string> = { green: 'Nominal', amber: 'Watch', red: 'Act now' };
+import { LEVEL_LABEL } from '../lib/format';
+import type { Level } from '../lib/types';
 
 export function Pill({ level, children }: { level: Level | 'neutral'; children?: React.ReactNode }) {
   return (
@@ -11,11 +9,6 @@ export function Pill({ level, children }: { level: Level | 'neutral'; children?:
       {children ?? (level !== 'neutral' ? LEVEL_LABEL[level] : '')}
     </span>
   );
-}
-
-export function fmt(id: IndicatorId, v: number | null | undefined): string {
-  if (v === null || v === undefined || !Number.isFinite(v)) return '--';
-  return v.toFixed(indicatorById(id).decimals);
 }
 
 export function SourceLinks({ ids, compact = false }: { ids: string[]; compact?: boolean }) {

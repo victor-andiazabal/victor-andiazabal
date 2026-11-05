@@ -1,5 +1,6 @@
 import { INDICATORS } from '../data/indicators';
 import { SOURCES } from '../data/sources';
+import type { View } from '../App';
 import { Disclaimer, SourceLinks } from './ui';
 
 const HAZARDS = [
@@ -10,7 +11,7 @@ const HAZARDS = [
   { t: 'Hostile and closed environments', d: 'A sealed cabin concentrates germs, CO2 and noise. Fever, SpO2 and symptom clusters are watched because infection spreads to the whole crew.' },
 ];
 
-export function Learn() {
+export function Learn({ go }: { go: (v: View) => void }) {
   return (
     <>
       <div className="page-head">
@@ -21,7 +22,7 @@ export function Learn() {
       </div>
 
       <h2>The five hazards of human spaceflight</h2>
-      <div className="grid cols-3" style={{ marginBottom: 18 }}>
+      <div className="grid cols-3" style={{ marginBottom: 10 }}>
         {HAZARDS.map((h) => (
           <div key={h.t} className="panel learn-card">
             <h3>{h.t}</h3>
@@ -33,6 +34,11 @@ export function Learn() {
           <SourceLinks ids={['hrp-hazards', 'hfbp', 'twins']} />
         </div>
       </div>
+
+      <p className="muted" style={{ fontSize: 14, marginTop: 0, marginBottom: 18 }}>
+        The Body map shows which body systems each hazard affects and how yours are doing today.{' '}
+        <button className="btn sm" onClick={() => go('body')}>Open body map</button>
+      </p>
 
       <h2>How VIGIL decides</h2>
       <div className="grid cols-2" style={{ marginBottom: 18 }}>

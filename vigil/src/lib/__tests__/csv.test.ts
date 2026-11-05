@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { csvCell, parseCsv, splitCsvLine } from '../../components/Settings';
+import { csvCell, parseCsv, splitCsvLine } from '../csv';
 
 describe('CSV import', () => {
   it('round-trips the export layout', () => {

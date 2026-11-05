@@ -1,8 +1,10 @@
 import { useMemo } from 'react';
 import { ENVIRONMENTS, INDICATORS } from '../data/indicators';
+import { fmt } from '../lib/format';
 import { evaluate } from '../lib/rules';
 import { useStore } from '../state/store';
-import { fmt, Pill } from './ui';
+import { CommLink } from './CommLink';
+import { Pill } from './ui';
 import type { View } from '../App';
 
 /**
@@ -24,6 +26,10 @@ export function Ground({ go }: { go: (v: View) => void }) {
           <p>What the flight surgeon receives at the downlink. One-way delay {env.commDelay}; every item here was raised by the crew's own device.</p>
         </div>
         <Pill level={queue.length ? 'red' : watch.length ? 'amber' : 'green'}>{queue.length ? `${queue.length} for the surgeon` : watch.length ? `${watch.length} to watch` : 'crew nominal'}</Pill>
+      </div>
+
+      <div style={{ marginBottom: 14 }}>
+        <CommLink side="ground" />
       </div>
 
       <div className="panel" style={{ marginBottom: 14, overflowX: 'auto' }}>

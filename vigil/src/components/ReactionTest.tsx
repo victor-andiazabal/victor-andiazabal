@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { PVT_TASK_ID } from '../data/routine';
 import { evaluate } from '../lib/rules';
 import { useStore } from '../state/store';
 import { SourceLinks } from './ui';
@@ -114,6 +115,8 @@ export function ReactionTest({ go }: { go: (v: View) => void }) {
         source: 'manual',
       },
     });
+    // The check-in prefills pvtRt from the simulated wearable, so the badge counts this tick instead of the value.
+    dispatch({ type: 'routine', key: `${selected.id}:${settings.currentDay}:${PVT_TASK_ID}`, done: true });
     setSaved(true);
   };
 

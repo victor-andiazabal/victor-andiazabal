@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from 'react';
+import { createContext, useContext, useEffect, useMemo, useReducer, useRef, type ReactNode } from 'react';
 import { simulateCrew } from '../lib/simulate';
-import { DEFAULT_SETTINGS, loadState, saveState, clearState, type Persisted } from '../lib/storage';
+import { DEFAULT_SETTINGS, STATE_KEY, loadState, saveState, clearState, serializeState, type Persisted } from '../lib/storage';
 import type { CrewMember, DayRecord, MissionSettings } from '../lib/types';
 
 type Action =
@@ -11,6 +11,7 @@ type Action =
   | { type: 'routine'; key: string; done: boolean }
   | { type: 'manualMany'; records: { crewId: string; record: DayRecord }[] }
   | { type: 'surgeonNote'; crewId: string; text: string }
+  | { type: 'hydrate'; state: Persisted }
   | { type: 'reset' };
 
 function reducer(s: Persisted, a: Action): Persisted {
@@ -32,6 +33,8 @@ function reducer(s: Persisted, a: Action): Persisted {
     }
     case 'surgeonNote':
       return { ...s, surgeonNotes: { ...s.surgeonNotes, [a.crewId]: a.text } };
+    case 'hydrate':
+      return a.state;
     case 'reset':
       return initial();
   }
@@ -52,7 +55,32 @@ const Ctx = createContext<Store | null>(null);
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, undefined, () => loadState() ?? initial());
 
-  useEffect(() => saveState(state), [state]);
+  // Several windows can be open at once (crew tablet and the ?view=ground console), and every change saves the
+  // whole blob, so without syncing each window would overwrite the other's edits. Another window's write arrives
+  // as a 'storage' event; we adopt it. `lastSerialized` is the last value we saved or adopted: a state that
+  // serializes to it is not written again, which stops a hydrate from echoing back and ping-ponging between windows.
+  const lastSerialized = useRef<string | null>(null);
+
+  useEffect(() => {
+    const json = serializeState(state);
+    if (json === lastSerialized.current) return;
+    lastSerialized.current = json;
+    saveState(state);
+  }, [state]);
+
+  useEffect(() => {
+    const onStorage = (e: StorageEvent) => {
+      if (e.key !== STATE_KEY) return;
+      const incoming = loadState();
+      if (!incoming) return; // key removed (reset in the other window) or unreadable; that window re-saves its fresh state
+      const json = serializeState(incoming);
+      if (json === lastSerialized.current) return;
+      lastSerialized.current = json;
+      dispatch({ type: 'hydrate', state: incoming });
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   const crew = useMemo(() => {
     const sim = simulateCrew(state.settings);
@@ -75,7 +103,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       crew,
       selected,
       dispatch: (a) => {
-        if (a.type === 'reset') clearState();
+        if (a.type === 'reset') {
+          clearState();
+          lastSerialized.current = null; // force the fresh state to be written so other windows pick it up
+        }
         dispatch(a);
       },
     }),
@@ -85,6 +116,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
+// The hook lives beside its provider on purpose; splitting them would only move the context to a third file.
+// oxlint-disable-next-line react/only-export-components
 export function useStore(): Store {
   const s = useContext(Ctx);
   if (!s) throw new Error('useStore outside StoreProvider');
