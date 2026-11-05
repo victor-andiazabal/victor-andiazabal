@@ -3,7 +3,7 @@ import type { Environment } from '../lib/types';
 /**
  * One-way signal delay presets for the crew <-> ground comm link.
  * Lunar and Mars figures are the ones quoted by the `comm-delay` source
- * ("Roughly 3-10 s one-way on the lunar surface and 4-24 min one-way for Mars").
+ * (Moon: about 1.3 s light time, 3-10 s end to end with relays and processing; Mars: 4-24 min one-way).
  */
 export type LinkPresetId = 'leo' | 'moon' | 'marsNear' | 'marsFar';
 
@@ -22,9 +22,9 @@ export const LINK_PRESETS: Record<LinkPresetId, LinkPreset> = {
     sources: [],
   },
   moon: {
-    label: 'Moon (3-10 s)',
+    label: 'Moon (up to 10 s with relays)',
     oneWaySeconds: 10,
-    note: 'Upper end of the "roughly 3-10 s one-way on the lunar surface" quoted by NASA Ames.',
+    note: 'Light time is about 1.3 s; NASA Ames quotes 3-10 s end to end once relays and ground processing are included. Upper end used.',
     sources: ['comm-delay'],
   },
   marsNear: {

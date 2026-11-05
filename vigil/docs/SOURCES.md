@@ -18,7 +18,7 @@ papers only. The same list is in `src/data/sources.ts` and in the app under Lear
 - **NASA NTRS, ISS exercise countermeasures: assigned versus loaded time.** https://ntrs.nasa.gov/citations/20110015001
   About 146.8 min/day of exercise assigned on ISS schedules.
 - **NASA Ames (NTRS), communication delays for lunar and Mars missions.** https://ntrs.nasa.gov/citations/20240006867
-  Roughly 3-10 s one way on the lunar surface; 4-24 min one way for Mars.
+  Moon: about 1.3 s light time, roughly 3-10 s end to end with relays and processing. Mars: 4-24 min one way.
 - **NASA Open Science Data Repository.** https://osdr.nasa.gov/
   Open biomedical spaceflight datasets, including the Inspiration4 human datasets (OSD-569, 570, 571, 575).
 - **NASA Space Apps Challenge 2026, Create Health Monitoring Software for Astronauts on Space Missions.**

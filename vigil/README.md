@@ -35,7 +35,7 @@ beats per minute at rest. Crews need a tool that notices those shifts for them a
   system to see which indicators feed it, which of the five hazards affect it, and what to do.
 - **Crew and ground link with light-time delay**: the crew tablet sends the day's report to the ground console
   (open `?view=ground` in a second window) and the message arrives only after the one-way delay of the chosen
-  link (Moon 3-10 s, Mars 4-24 min). Demo time compresses 1 minute of delay into 1 second so it plays live.
+  link (Moon 3-10 s end to end with relays, Mars 4-24 min). Demo time compresses 1 minute of delay into 1 second so it plays live.
   The ground replies the same way. Messages are stored and forwarded; nothing needs a server.
 - **Mission patches**: badges for habits, not readings: first check-in, 7- and 14-day streaks, a full routine
   day, reaction tests on 3 days in a week, 147 min of exercise on 5 days in a row, a complete record. Patches
@@ -71,7 +71,7 @@ Highlights:
 | Radiation | 600 mSv career limit, 250 mSv per solar particle event | NASA OCHMO, NASA-STD-3001 |
 | Daily dose | 1.84 mSv/day in transit, 0.64 mSv/day on Mars, 0.2-0.5 mSv/day on ISS | MSL/RAD (Zeitlin 2013, Hassler 2014); Shavers 2024 |
 | Exercise | about 147 min/day assigned on ISS | NASA NTRS |
-| Comm delay | 3-10 s Moon, 4-24 min Mars | NASA Ames |
+| Comm delay | Moon about 1.3 s light time, 3-10 s with relays; Mars 4-24 min | NASA Ames |
 
 All crew data in the demo is simulated and labelled as such. No real astronaut records are used.
 

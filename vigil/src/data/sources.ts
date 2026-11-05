@@ -121,7 +121,7 @@ export const SOURCES: Source[] = [
     org: 'NASA Ames (NTRS)',
     title: 'Communication delays for lunar and Mars missions',
     url: 'https://ntrs.nasa.gov/citations/20240006867',
-    note: 'Roughly 3-10 s one-way on the lunar surface and 4-24 min one-way for Mars.',
+    note: 'Moon: about 1.3 s light time, roughly 3-10 s end to end with relays and processing. Mars: 4-24 min one-way.',
   },
   {
     id: 'twins',

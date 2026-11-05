@@ -294,7 +294,7 @@ export const ENVIRONMENTS: Record<
   rover: {
     label: 'Pressurized rover (surface)',
     blurb: 'Small crew away from the base for days, limited medical kit.',
-    commDelay: '3-10 s (Moon) to 4-24 min (Mars)',
+    commDelay: '3-10 s with relays (Moon) to 4-24 min (Mars)',
     dailyDoseMsv: 0.64,
     doseNote: 'Mars surface about 0.64 mSv/day; the Moon has no atmosphere and no magnetic field either.',
     gravity: 'partial gravity',
@@ -302,7 +302,7 @@ export const ENVIRONMENTS: Record<
   base: {
     label: 'Planetary base',
     blurb: 'Long stay in partial gravity with better shielding and a larger medical kit.',
-    commDelay: '3-10 s (Moon) to 4-24 min (Mars)',
+    commDelay: '3-10 s with relays (Moon) to 4-24 min (Mars)',
     dailyDoseMsv: 0.5,
     doseNote: 'Below the open-surface rate thanks to regolith shielding; exact value depends on the habitat.',
     gravity: 'partial gravity',
