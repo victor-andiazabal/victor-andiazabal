@@ -18,8 +18,12 @@ beats per minute at rest. Crews need a tool that notices those shifts for them a
 
 ## What VIGIL does
 
-- **Daily check-in** for blood pressure, heart rate, SpO2, temperature, fasting glucose, body mass, sleep,
-  exercise, mood, stress, symptoms and radiation dose. Keyboard, touch, or values pre-filled from a wearable.
+- **Daily check-in** for blood pressure, heart rate, heart rate variability, breathing rate, SpO2, temperature,
+  fasting glucose, body mass, sleep, exercise, mood, stress, symptoms and radiation dose. Keyboard, touch, or
+  values pre-filled from a wearable.
+- **Built around a real wearable.** The intended live source is the Bio-Monitor (Hexoskin Astroskin) shirt that
+  has flown on the ISS since 2019: ECG, HRV, breathing, SpO2, skin temperature, activity and sleep from one
+  garment over Bluetooth. The Learn page shows the data path from shirt to flight surgeon.
 - **Camera pulse**: 20 seconds of video from the phone or laptop camera, fingertip or face, turned into a heart-rate
   estimate on the device (photoplethysmography, Verkruysse 2008). Labelled experimental; fills the heart-rate field.
 - **Reaction self-test**: a 60-second psychomotor vigilance test, the same family of test ISS crews run as the
@@ -62,6 +66,9 @@ Highlights:
 | Daily dose | 1.84 mSv/day in transit, 0.64 mSv/day on Mars, 0.2-0.5 mSv/day on ISS | MSL/RAD (Zeitlin 2013, Hassler 2014); Shavers 2024 |
 | Exercise | about 147 min/day assigned on ISS | NASA NTRS |
 | Comm delay | 3-10 s Moon, 4-24 min Mars | NASA Ames |
+| Breathing rate | 12-20 per minute typical | Cleveland Clinic |
+| Heart rate variability | personal baseline only | Shaffer and Ginsberg 2017 |
+| Wearable source | Bio-Monitor / Astroskin on ISS since 2019 | CSA; NASA NTRS 20190000238 |
 
 All crew data in the demo is simulated and labelled as such. No real astronaut records are used.
 
@@ -90,7 +97,7 @@ vigil/
   src/lib/         simulator, baseline statistics, rule engine, pulse estimation, storage
   src/components/  dashboard, check-in, reaction test, trends, alerts, routine, learn, settings
   src/lib/__tests__ unit tests for the statistics, simulator and rules
-  docs/            sources, demo deck (pptx), slide outline, video script, submission draft
+  docs/            sources, design process, demo deck (pptx), slide outline, video script, video, submission draft, pitch notes
 ```
 
 ## Limits

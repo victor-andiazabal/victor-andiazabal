@@ -51,6 +51,16 @@ against the 3-minute version is on the roadmap.
 Each environment carries its one-way delay (NASA Ames figures). The surgeon message bundles the day's values
 and every flag so one exchange is enough, and the ground view shows what the surgeon receives.
 
+**Where would the data come from on a real mission?**
+Mostly one garment. The Bio-Monitor, Hexoskin's Astroskin shirt, has flown on the ISS since 2019 and gives
+ECG, heart rate variability, breathing rate, SpO2, skin temperature, activity and sleep over Bluetooth. CSA is
+adapting it for Gateway. VIGIL's tiles are shaped around that feed, plus a cuff, a glucose meter and the
+dosimeter.
+
+**How did you design it?**
+Design thinking. We started from three users, not from the data: the astronaut, the crew medical officer and
+the flight surgeon. The problem statement and the 30-second success criterion came before any screen.
+
 **What would you build next?**
 Bluetooth cuff and wearable input, baselines informed by NASA OSDR human datasets, sync between crew tablets
 and the ground, and validation of the short reaction test.

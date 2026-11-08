@@ -14,6 +14,7 @@ const REF_LINES: Partial<Record<IndicatorId, { y: number; label: string }[]>> = 
   bpSys: [{ y: 130, label: 'stage 1' }, { y: 140, label: 'stage 2' }, { y: 180, label: 'crisis' }],
   bpDia: [{ y: 80, label: 'stage 1' }, { y: 90, label: 'stage 2' }],
   spo2: [{ y: 95, label: '95%' }, { y: 90, label: '90%' }],
+  resp: [{ y: 20, label: '20 /min' }, { y: 12, label: '12 /min' }],
   temp: [{ y: 38, label: 'fever 38 °C' }],
   glucose: [{ y: 70, label: '70 hypo' }, { y: 100, label: '100' }, { y: 126, label: '126' }],
   sleep: [{ y: 7, label: '7 h (AASM)' }, { y: 8.5, label: '8.5 h scheduled' }],
