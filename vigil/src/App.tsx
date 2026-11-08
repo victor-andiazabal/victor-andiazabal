@@ -87,7 +87,8 @@ export default function App() {
           </button>
         ))}
         <div className="foot">
-          NASA Space Apps 2026<br />Les Tigres de Bethesda
+          NASA Space Apps 2026<br />Les Tigres de Bethesda<br />
+          <span style={{ opacity: 0.7 }}>Backdrop: NASA, ISS074-E-521637</span>
         </div>
       </nav>
 
