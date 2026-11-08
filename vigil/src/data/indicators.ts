@@ -159,7 +159,7 @@ export const INDICATORS: IndicatorDef[] = [
     min: 30,
     max: 200,
     step: 0.1,
-    what: 'Body mass. Crews tend to lose mass in flight through fluid shifts, muscle loss and under-eating.',
+    what: 'Your weight, measured about once a week. Crews tend to lose mass in flight through fluid shifts, muscle loss and under-eating.',
     how: 'Use the on-board mass measurement device weekly, or a scale on a planetary surface.',
     reference: 'No published cut-off is used; VIGIL compares with your own pre-flight baseline.',
     sources: ['hrp-hazards'],
