@@ -73,7 +73,7 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
           <div>
             <h1>{selected.name}</h1>
             <p>
-              {selected.role} · {selected.agency} · {selected.callsign}
+              {selected.role} · {selected.agency}
             </p>
             <p className="days">
               <b>{settings.currentDay}</b> day{settings.currentDay === 1 ? '' : 's'} in space · mission day {settings.currentDay} of {MAX_MISSION_DAY}
