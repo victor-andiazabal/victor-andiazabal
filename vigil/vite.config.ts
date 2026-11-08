@@ -10,8 +10,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'VIGIL crew health self-assessment',
-        short_name: 'VIGIL',
+        name: 'Space Vigil, crew health self-assessed',
+        short_name: 'Space Vigil',
         description: 'Astronaut health self-assessment and decision support for long-duration missions.',
         theme_color: '#0b1020',
         background_color: '#0b1020',

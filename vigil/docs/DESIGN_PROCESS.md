@@ -1,4 +1,4 @@
-# How VIGIL was designed
+# How Space Vigil was designed
 
 We used the five stages of design thinking: empathize, define, ideate, prototype, test. It was not a straight
 line. Testing sent us back to the copy and the tile layout more than once.
@@ -64,7 +64,7 @@ sleep from one garment over Bluetooth. Cuff, glucose meter and dosimeter reading
 ## Where the data flows
 
 Shirt and headband (ECG, breathing, SpO2, skin temperature, movement) → recorder clipped to the shirt →
-Bluetooth to the tablet, where VIGIL adds cuff, meter and dosimeter entries and the daily check-in →
+Bluetooth to the tablet, where Space Vigil adds cuff, meter and dosimeter entries and the daily check-in →
 baseline and rules run on the device → alert and checklist for the crew first, one packaged message to the
 flight surgeon second.
 

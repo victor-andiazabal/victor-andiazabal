@@ -6,8 +6,8 @@
   --line: #2a3558;
   --text: #e8ecf8;
   --muted: #9aa6c8;
-  --accent: #6ea8ff;
-  --accent-2: #9ad0ff;
+  --accent: #8f84ff;
+  --accent-2: #b3aaff;
   --green: #34c38f;
   --amber: #f3b23c;
   --red: #f0536a;
@@ -28,8 +28,8 @@
   --line: #d7ddee;
   --text: #121a30;
   --muted: #5a6689;
-  --accent: #2b6cde;
-  --accent-2: #1d4fa8;
+  --accent: #5b55e0;
+  --accent-2: #4238b8;
   --green-bg: rgba(52, 195, 143, 0.18);
   --amber-bg: rgba(243, 178, 60, 0.22);
   --red-bg: rgba(240, 83, 106, 0.18);
@@ -75,7 +75,9 @@ small, .muted { color: var(--muted); }
   z-index: 5;
 }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.04em; }
-.brand .logo { width: 30px; height: 30px; }
+.brand .logo { width: 34px; height: 34px; }
+.brand .wordmark { letter-spacing: 0.14em; font-weight: 800; }
+.brand .wordmark .light { font-weight: 300; }
 .brand small { font-weight: 500; letter-spacing: 0; }
 .topbar .spacer { flex: 1; }
 .topbar select, .topbar button { height: 34px; }

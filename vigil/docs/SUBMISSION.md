@@ -6,13 +6,13 @@ The "Use of Artificial Intelligence" field is left for the team to answer.
 
 ## Project name
 
-VIGIL
+Space Vigil
 
 ## High-level project summary
 
-VIGIL is a browser-based health self-assessment tool for astronauts on long-duration missions. Each crew
+Space Vigil is a browser-based health self-assessment tool for astronauts on long-duration missions. Each crew
 member logs daily indicators named in the challenge (blood pressure, heart rate, glucose, temperature,
-sleep, mood) plus SpO2, body mass, exercise, stress, a 60-second reaction test and radiation dose. VIGIL
+sleep, mood) plus SpO2, body mass, exercise, stress, a 60-second reaction test and radiation dose. Space Vigil
 compares every value with the person's own 14-day pre-flight baseline and with published cut-offs from
 NASA-STD-3001, the ACC/AHA, CDC and ADA, then shows a colour-coded status and plain-language alerts. Every
 alert states the rule that fired, the numbers, the source, a countermeasure checklist, and whether the
@@ -46,7 +46,7 @@ TypeScript functions, each tied to a source id, so judges and flight surgeons ca
 consistent self-measurement through routine prompts; a single packaged message for the ground; a learning
 layer so crew without medical training understand what each number means.
 
-**Data source.** VIGIL is designed around the Bio-Monitor (Hexoskin Astroskin) smart shirt that has flown on
+**Data source.** Space Vigil is designed around the Bio-Monitor (Hexoskin Astroskin) smart shirt that has flown on
 the ISS since 2019 and is being adapted for Gateway: ECG and heart rate, heart rate variability, breathing
 rate, SpO2, skin temperature, activity and sleep from one garment over Bluetooth to the crew tablet. Cuff,
 glucose meter and dosimeter readings are typed or imported. The prototype uses simulated values in that shape.
