@@ -6,6 +6,7 @@ import { MAX_MISSION_DAY, scenarioById } from '../lib/simulate';
 import type { IndicatorId, Level } from '../lib/types';
 import { useStore } from '../state/store';
 import { routineFor } from './Routine';
+import { Avatar } from './Avatar';
 import { Sparkline } from './Sparkline';
 import { Disclaimer, fmt, LEVEL_LABEL, Pill } from './ui';
 import type { View } from '../App';
@@ -67,9 +68,17 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
   return (
     <>
       <div className="page-head">
-        <div>
-          <h1>Day {settings.currentDay}, {selected.callsign}</h1>
-          <p>Here is how you look today. {selected.role}.</p>
+        <div className="profile">
+          <Avatar crew={selected} size={64} />
+          <div>
+            <h1>{selected.name}</h1>
+            <p>
+              {selected.role} · {selected.agency}
+            </p>
+            <p className="days">
+              <b>{settings.currentDay}</b> day{settings.currentDay === 1 ? '' : 's'} in space · mission day {settings.currentDay} of {MAX_MISSION_DAY}
+            </p>
+          </div>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn" onClick={() => go('checkin')}>Daily check-in</button>
@@ -113,7 +122,7 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
               {ev.overall === 'amber' && `A few things to keep an eye on, nothing urgent`}
               {ev.overall === 'red' && 'Something needs your attention now'}
             </span>
-            <p className="summary">{summarySentence(selected.callsign, ev.overall, reds, ambers, ev.notifySurgeon, env.commDelay)}</p>
+            <p className="summary">{summarySentence(selected.name.split(' ')[0], ev.overall, reds, ambers, ev.notifySurgeon, env.commDelay)}</p>
             <div className="count-row" aria-label="Indicator counts">
               <span><span className="dot green" />{counts.green} normal for you</span>
               <span><span className="dot amber" />{counts.amber} to watch</span>
@@ -138,9 +147,10 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
               className={`crew-row ${c.id === selected.id ? 'on' : ''}`}
               onClick={() => dispatch({ type: 'select', crewId: c.id })}
             >
+              <Avatar crew={c} size={32} />
               <span className={`dot ${e.overall}`} />
-              <span className="name">{c.callsign}</span>
-              <span className="muted sub">{c.role}</span>
+              <span className="name">{c.name}</span>
+              <span className="muted sub">{c.callsign}</span>
               <span className={`pill ${e.overall}`} style={{ marginLeft: 'auto' }}>{e.findings.length ? `${e.findings.length} flag${e.findings.length > 1 ? 's' : ''}` : 'clear'}</span>
             </button>
           ))}

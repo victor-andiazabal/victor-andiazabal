@@ -517,3 +517,12 @@ main { background: none; }
   .learn-body { padding: 20px 18px; font-size: 15.5px; }
   .ind summary { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* Profile header */
+.profile { display: flex; align-items: center; gap: 16px; }
+.profile .avatar { flex: 0 0 auto; box-shadow: 0 0 0 3px rgba(255,255,255,0.08); border-radius: 50%; }
+.profile h1 { margin-bottom: 2px; }
+.profile p { margin: 0; }
+.profile .days { color: var(--text); font-size: 14px; margin-top: 2px; }
+.profile .days b { font-size: 18px; color: var(--accent-2); }
+.crew-row .avatar { flex: 0 0 auto; }

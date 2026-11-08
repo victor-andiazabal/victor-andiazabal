@@ -70,7 +70,7 @@ export default function App() {
         <label className="muted" style={{ fontSize: 13 }} htmlFor="crew-select">Crew member</label>
         <select id="crew-select" value={selected.id} onChange={(e) => dispatch({ type: 'select', crewId: e.target.value })}>
           {crew.map((c) => (
-            <option key={c.id} value={c.id}>{c.callsign}</option>
+            <option key={c.id} value={c.id}>{c.name} · {c.callsign}</option>
           ))}
         </select>
         <span className={`pill ${ev.overall}`}><span className={`dot ${ev.overall}`} />day {settings.currentDay}</span>

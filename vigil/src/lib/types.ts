@@ -34,7 +34,13 @@ export interface DayRecord {
 export interface CrewMember {
   id: string;
   callsign: string;
+  /** Fictional name for the simulated crew member. */
+  name: string;
   role: string;
+  /** Space agency, for the profile card. Fictional assignment. */
+  agency: string;
+  /** Hue (0-360) used to tint the generated avatar. */
+  hue: number;
   /** Personal resting set-points used by the simulator (simulated person, not a real astronaut). */
   setpoints: Record<IndicatorId, number>;
   records: DayRecord[];
