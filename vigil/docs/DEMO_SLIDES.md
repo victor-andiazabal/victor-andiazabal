@@ -1,6 +1,7 @@
 # Space Vigil demo, 7 slides
 
-Space Apps accepts a project demo of up to 7 slides or a 30-second video. The finished deck is
+Space Apps accepts a project demo of up to 7 slides or a 30-second video. The deck has 8 slides; drop slide 6
+("Built for the whole mission") if the 7-slide limit applies to your submission. The finished deck is
 `VIGIL-demo.pptx` in this folder, with a PDF export beside it. The design follows the Slidesgo "Earth's
 Atmosphere Class" look: dark sky, atmosphere layers, orbit rings, condensed caps headings. Fonts are Bebas Neue
 (headings) and Barlow (body), both free on Google Fonts; install them before opening the .pptx in PowerPoint, or
