@@ -1,4 +1,6 @@
-# VIGIL
+# Space Vigil
+
+<img src="docs/logo-icon.svg" alt="Space Vigil logo" width="96" align="right">
 
 Crew health self-assessment and decision support for long-duration space missions.
 
@@ -16,7 +18,7 @@ isolation and confinement, distance from Earth, altered gravity, and a hostile c
 shows up first as a small shift in an everyday number: a slower reaction time, a shorter night, a few extra
 beats per minute at rest. Crews need a tool that notices those shifts for them and tells them what to do.
 
-## What VIGIL does
+## What Space Vigil does
 
 - **Daily check-in** for blood pressure, heart rate, heart rate variability, breathing rate, SpO2, temperature,
   fasting glucose, body mass, sleep, exercise, mood, stress, symptoms and radiation dose. Keyboard, touch, or
@@ -102,6 +104,6 @@ vigil/
 
 ## Limits
 
-VIGIL is a decision-support prototype, not a medical device. It does not diagnose. The published ranges are
+Space Vigil is a decision-support prototype, not a medical device. It does not diagnose. The published ranges are
 general adult references; operational limits on a real mission are set by the flight surgeon. The 60-second
 reaction test is a shortened form of the validated 3-minute PVT-B.

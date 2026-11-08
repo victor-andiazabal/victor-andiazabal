@@ -6,7 +6,7 @@ const SECTIONS = [
   ['why', 'Why this exists'],
   ['hazards', 'What space does to a body'],
   ['data', 'Where the numbers come from'],
-  ['decide', 'How VIGIL makes up its mind'],
+  ['decide', 'How Space Vigil makes up its mind'],
   ['colours', 'What the colours mean'],
   ['indicators', 'The 16 things it tracks'],
   ['process', 'How we built it'],
@@ -41,7 +41,7 @@ export function Learn() {
       </nav>
 
       <article className="learn-body">
-        <h1>How VIGIL works, in plain words</h1>
+        <h1>How Space Vigil works, in plain words</h1>
         <p className="lead">
           Ten minutes of reading. By the end you will know what the app measures, why it flags what it flags, and where every number
           comes from.
@@ -56,7 +56,7 @@ export function Learn() {
           </p>
           <p>
             So the crew has to be able to look at their own numbers, understand them, and know what to do next, on their own, with the
-            ground confirming later. VIGIL is that first look. It is not a doctor and it does not pretend to be one. It is the thing
+            ground confirming later. Space Vigil is that first look. It is not a doctor and it does not pretend to be one. It is the thing
             that says "this is normal for you", or "this is not, and here is what to do about it".
           </p>
         </section>
@@ -66,7 +66,7 @@ export function Learn() {
           <p>NASA's Human Research Program boils it down to five hazards. Each one leaves a fingerprint in ordinary daily numbers, which is why those numbers are worth watching.</p>
           <dl className="plain-list">
             <dt>Radiation</dt>
-            <dd>No atmosphere, no magnetic field, so cosmic rays and solar storms hit harder. The dosimeter on your belt counts it. VIGIL compares each day with what is normal for where you are, and keeps a running total against the career limit.</dd>
+            <dd>No atmosphere, no magnetic field, so cosmic rays and solar storms hit harder. The dosimeter on your belt counts it. Space Vigil compares each day with what is normal for where you are, and keeps a running total against the career limit.</dd>
             <dt>Isolation and confinement</dt>
             <dd>Months in a small cabin with the same few people. This shows up as shorter sleep, flatter mood, slower reactions. Those are the things the morning check-in asks about.</dd>
             <dt>Distance from Earth</dt>
@@ -93,25 +93,25 @@ export function Learn() {
             <li><b>You wear the shirt.</b> It records all day into a module clipped to the fabric.</li>
             <li><b>The tablet picks it up over Bluetooth.</b> Heart rate, heart rate variability, breathing, oxygen, skin temperature, movement, sleep.</li>
             <li><b>You add the rest in the check-in.</b> Blood pressure from the cuff, glucose from the finger-stick meter, the dosimeter reading, how you slept, how you feel, any symptoms. Two minutes.</li>
-            <li><b>VIGIL does the thinking on the tablet.</b> No connection to Earth needed. It compares today with your own history and with published limits.</li>
+            <li><b>Space Vigil does the thinking on the tablet.</b> No connection to Earth needed. It compares today with your own history and with published limits.</li>
             <li><b>You act first, the ground second.</b> You get a colour, a reason and a checklist. If something needs the flight surgeon, one message with the whole day goes down on the next pass.</li>
           </ol>
           <p className="small">In this prototype the shirt data is simulated, and labelled as such. The shape is the same. Source: <Ref ids={['bio-monitor-csa', 'bio-monitor-ntrs', 'hexoskin-gateway']} /></p>
         </section>
 
         <section id="decide">
-          <h2>How VIGIL makes up its mind</h2>
+          <h2>How Space Vigil makes up its mind</h2>
           <p>Two questions, asked of every number, every day.</p>
           <h3>1. Is this outside a published limit?</h3>
           <p>
             Doctors already agree on a lot. A temperature of 38.0 °C is a fever. Blood pressure of 140 over 90 is stage 2
             hypertension. Blood oxygen under 90% is low. NASA sets 600 millisieverts as the radiation ceiling for a whole career. Where a
-            rule like that exists, VIGIL uses it and names it in the alert.
+            rule like that exists, Space Vigil uses it and names it in the alert.
           </p>
           <h3>2. Is this unusual <i>for you</i>?</h3>
           <p>
             Astronauts are not average people. Say your resting heart rate is 67 this morning. For most adults that is perfectly normal.
-            But if your heart has sat at 58 every morning for the two weeks before launch, 67 is a real change, and VIGIL should say so.
+            But if your heart has sat at 58 every morning for the two weeks before launch, 67 is a real change, and Space Vigil should say so.
           </p>
           <p>
             To do that, it takes your fourteen pre-flight days and works out two things per indicator: your typical value (the median)

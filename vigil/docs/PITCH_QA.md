@@ -6,9 +6,9 @@ say in one breath.
 ## 60-second pitch
 
 On the way to Mars a question to the flight surgeon takes up to 48 minutes round trip, so the crew has to
-assess first and the ground confirms later. VIGIL is the tool for that first step. Every day an astronaut
+assess first and the ground confirms later. Space Vigil is the tool for that first step. Every day an astronaut
 logs vitals, sleep, mood and symptoms, runs a one-minute reaction test, or lets the phone camera read their
-pulse. VIGIL compares each number with that person's own pre-flight baseline and with published limits from
+pulse. Space Vigil compares each number with that person's own pre-flight baseline and with published limits from
 NASA and clinical bodies, and shows one colour-coded answer. Every alert says which rule fired, the numbers,
 the source and what to do, and one click packages the day for the flight surgeon. It runs offline on a
 tablet and switches between station, transit, rover and base.
@@ -54,7 +54,7 @@ and every flag so one exchange is enough, and the ground view shows what the sur
 **Where would the data come from on a real mission?**
 Mostly one garment. The Bio-Monitor, Hexoskin's Astroskin shirt, has flown on the ISS since 2019 and gives
 ECG, heart rate variability, breathing rate, SpO2, skin temperature, activity and sleep over Bluetooth. CSA is
-adapting it for Gateway. VIGIL's tiles are shaped around that feed, plus a cuff, a glucose meter and the
+adapting it for Gateway. Space Vigil's tiles are shaped around that feed, plus a cuff, a glucose meter and the
 dosimeter.
 
 **How did you design it?**

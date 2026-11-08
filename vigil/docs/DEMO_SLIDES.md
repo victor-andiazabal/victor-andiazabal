@@ -1,4 +1,4 @@
-# VIGIL demo, 7 slides
+# Space Vigil demo, 7 slides
 
 Space Apps accepts a project demo of up to 7 slides or a 30-second video. The finished deck is
 `VIGIL-demo.pptx` in this folder (export it to PDF for the submission). Below is the outline: each slide has a
@@ -6,7 +6,7 @@ headline, the visual, and two or three lines of speaker text.
 
 ---
 
-## Slide 1. VIGIL
+## Slide 1. Space Vigil
 
 **Visual:** app logo on the dark dashboard, team name, challenge name.
 

@@ -59,7 +59,7 @@ export function Routine({ go }: { go: (v: View) => void }) {
       <div className="page-head">
         <div>
           <h1>Routine · day {settings.currentDay}</h1>
-          <p>Prompts for the day. Tick them off; VIGIL keeps the streak and nudges what is missing.</p>
+          <p>Prompts for the day. Tick them off; Space Vigil keeps the streak and nudges what is missing.</p>
         </div>
       </div>
       <div className="grid cols-3">

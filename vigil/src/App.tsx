@@ -10,6 +10,7 @@ import { Settings } from './components/Settings';
 import { evaluate } from './lib/rules';
 import type { IndicatorId } from './lib/types';
 import { useStore } from './state/store';
+import logoMark from './assets/logo-mark.svg';
 
 const Trends = lazy(() => import('./components/Trends').then((m) => ({ default: m.Trends })));
 
@@ -61,12 +62,9 @@ export default function App() {
     <div className="app">
       <header className="topbar">
         <div className="brand">
-          <svg className="logo" viewBox="0 0 32 32" aria-hidden="true">
-            <circle cx="16" cy="16" r="14" fill="none" stroke="var(--accent)" strokeWidth="2.5" />
-            <path d="M6 17 L11 17 L13 11 L16 23 L19 14 L21 17 L26 17" fill="none" stroke="var(--accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <span>VIGIL</span>
-          <small className="muted">crew health self-assessment</small>
+          <img className="logo" src={logoMark} alt="" width={34} height={34} />
+          <span className="wordmark"><span className="light">SPACE</span> VIGIL</span>
+          <small className="muted">crew health, self-assessed</small>
         </div>
         <div className="spacer" />
         <label className="muted" style={{ fontSize: 13 }} htmlFor="crew-select">Crew member</label>

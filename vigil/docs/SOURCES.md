@@ -1,6 +1,6 @@
 # Sources
 
-Everything VIGIL shows as a number or a claim traces to one of these. Agency documents and peer-reviewed
+Everything Space Vigil shows as a number or a claim traces to one of these. Agency documents and peer-reviewed
 papers only. The same list is in `src/data/sources.ts` and in the app under Learn.
 
 ## NASA
