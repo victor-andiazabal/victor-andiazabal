@@ -24,6 +24,17 @@ papers only. The same list is in `src/data/sources.ts` and in the app under Lear
 - **NASA Space Apps Challenge 2026, Create Health Monitoring Software for Astronauts on Space Missions.**
   https://www.spaceappschallenge.org/2026/challenges/health-monitoring-software/
 
+## Canadian Space Agency and industry
+
+- **Canadian Space Agency, Bio-Monitor: keeping an eye on astronauts' vital signs.**
+  https://www.csa-asc.gc.ca/eng/sciences/astroskin.asp
+  Smart shirt and headband on the ISS since 2019: ECG, breathing, SpO2, skin temperature, activity, blood-pressure estimate.
+- **NASA NTRS 20190000238, Wearable biosensor monitor to support autonomous crew health and performance.**
+  https://ntrs.nasa.gov/api/citations/20190000238/downloads/20190000238.pdf
+  30-day ground evaluation of the Astroskin system: good data quality over 24 h, comfortable, reliable Bluetooth.
+- **Hexoskin, contract to bring Astroskin sensors to the Moon (Gateway), November 2024.**
+  https://hexoskin.com/blogs/news/hexoskin-wins-contract-to-bring-astroskin-sensors-to-the-moon
+
 ## Peer-reviewed
 
 - **Zeitlin et al., Science 340 (2013).** Measurements of energetic particle radiation in transit to Mars on
@@ -44,6 +55,8 @@ papers only. The same list is in `src/data/sources.ts` and in the app under Lear
   340-day mission.
 - **Verkruysse, Svaasand and Nelson, Optics Express 16 (2008).** Remote plethysmographic imaging using ambient
   light. https://doi.org/10.1364/OE.16.021434. Heart rate from the green channel of ordinary video of skin.
+- **Shaffer and Ginsberg, Frontiers in Public Health 5 (2017).** An overview of heart rate variability metrics and
+  norms. https://doi.org/10.3389/fpubh.2017.00258. HRV differs widely between people; compare with the person's own baseline.
 - **Watson et al., Sleep 38 (2015).** Recommended amount of sleep for a healthy adult (AASM and SRS consensus).
   https://doi.org/10.5665/sleep.4716. Seven hours or more per night.
 
@@ -62,6 +75,8 @@ papers only. The same list is in `src/data/sources.ts` and in the app under Lear
 - **CDC, definition of fever.**
   https://www.cdc.gov/quarantine/air/reporting-deaths-illness/definitions-symptoms-reportable-illnesses.html
   Measured temperature of 100.4 °F (38 °C) or higher.
+- **Cleveland Clinic, Vital signs.** https://my.clevelandclinic.org/health/articles/10881-vital-signs
+  Typical adult resting breathing rate 12-20 per minute.
 - **Mayo Clinic, Hypoxemia.** https://www.mayoclinic.org/symptoms/hypoxemia/basics/definition/sym-20050930
   Pulse-oximeter readings of 95-100% typical; below 90% low.
 

@@ -3,6 +3,8 @@ export type IndicatorId =
   | 'bpSys'
   | 'bpDia'
   | 'spo2'
+  | 'resp'
+  | 'hrv'
   | 'temp'
   | 'glucose'
   | 'weight'

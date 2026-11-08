@@ -459,3 +459,15 @@ main { background: none; }
 :root[data-theme='light'] .alert.amber { background: linear-gradient(90deg, var(--amber-bg), rgba(255,255,255,0.85) 45%); }
 .disclaimer, .tour, .legend { backdrop-filter: none; }
 .tour { background: rgba(23,31,56,0.72); }
+
+/* Learn: pipeline and design steps */
+.pipeline { display: flex; align-items: stretch; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+.pipeline .pipe { flex: 1 1 160px; min-width: 0; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; }
+.pipeline .pipe b { font-size: 14px; }
+.pipeline .pipe span { font-size: 12.5px; color: var(--muted); }
+.pipeline .arrow { align-self: center; color: var(--accent); font-size: 20px; }
+.dt-steps { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+.dt-steps > div { background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.dt-steps b { font-size: 14px; color: var(--accent-2); }
+.dt-steps span { font-size: 12.5px; color: var(--muted); }
+@media (max-width: 900px) { .dt-steps { grid-template-columns: 1fr; } .pipeline .arrow { display: none; } }

@@ -167,3 +167,21 @@ describe('scenarios', () => {
     expect(ev.findings.some((f) => f.indicator === 'routine')).toBe(true);
   });
 });
+
+describe('Bio-Monitor derived indicators', () => {
+  it('breathing rate: 21 is amber, 31 is red with surgeon flag', () => {
+    const m = cdr();
+    expect(evaluate(withToday(m, { resp: 16 }), base).byIndicator.resp.level).toBe('green');
+    expect(evaluate(withToday(m, { resp: 21 }), base).byIndicator.resp.level).toBe('amber');
+    const ev = evaluate(withToday(m, { resp: 31 }), base);
+    expect(ev.byIndicator.resp.level).toBe('red');
+    expect(ev.notifySurgeon).toBe(true);
+  });
+
+  it('HRV is judged against the personal baseline only, after three low nights', () => {
+    let m = cdr(); // Commander baseline HRV about 56 ms
+    expect(evaluate(withToday(m, { hrv: 38 }), base).byIndicator.hrv.level).toBe('green');
+    for (const d of [28, 29, 30]) m = withToday(m, { hrv: 36 }, [], d);
+    expect(evaluate(m, base).byIndicator.hrv.level).toBe('amber');
+  });
+});

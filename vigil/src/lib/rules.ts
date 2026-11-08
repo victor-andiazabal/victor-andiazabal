@@ -35,6 +35,7 @@ const CHECKLIST: Record<string, string> = {
   'bp-crisis': 'bp', 'bp-stage2': 'bp', 'bp-stage1': 'bp', 'bp-low': 'bp',
   'hr-high': 'hr', 'hr-above': 'hr', 'hr-baseline': 'hr',
   'spo2-low': 'spo2', 'spo2-border': 'spo2',
+  'resp-red': 'spo2', 'resp-amber': 'spo2', 'hrv-low': 'sleep',
   'temp-high': 'fever', 'temp-fever': 'fever', 'temp-low': 'fever',
   'glu-low2': 'glucoseLow', 'glu-low1': 'glucoseLow', 'glu-high2': 'glucoseHigh', 'glu-high1': 'glucoseHigh', 'glu-pre': 'glucoseHigh',
   'sleep-red': 'sleep', 'sleep-amber': 'sleep',
@@ -167,6 +168,46 @@ function ruleSpO2(ctx: Ctx) {
   }
 }
 
+function ruleResp(ctx: Ctx) {
+  const r = v(ctx, 'resp');
+  if (r === null) return;
+  if (r > 30 || r < 8) {
+    add(ctx, 'resp-red', {
+      indicator: 'resp', level: 'red', basis: 'reference',
+      title: r > 30 ? 'Breathing very fast at rest' : 'Breathing very slow at rest',
+      reason: `${r} breaths per minute at rest. The typical adult range is 12-20.`,
+      action: 'Confirm the shirt is seated properly and you were at rest. Check SpO2, temperature and cabin CO2, then contact the flight surgeon.',
+      notifySurgeon: true, sources: ['resp-range', 'bio-monitor-csa'],
+    });
+  } else if (r > 20) {
+    add(ctx, 'resp-amber', {
+      indicator: 'resp', level: 'amber', basis: 'reference',
+      title: 'Breathing faster than the typical range',
+      reason: `${r} breaths per minute at rest; the typical adult range is 12-20.`,
+      action: 'Sit quietly for five minutes and recheck. Note fever, anxiety, pain or a stuffy cabin.',
+      notifySurgeon: false, sources: ['resp-range'],
+    });
+  }
+}
+
+function ruleHrv(ctx: Ctx) {
+  const h = v(ctx, 'hrv');
+  const b = ctx.baselines.hrv;
+  if (h === null || !b) return;
+  const drop = (b.median - h) / b.median;
+  const series = seriesFor(ctx.flight, 'hrv');
+  const lowDays = consecutive(series, (x) => (b.median - x) / b.median >= 0.25);
+  if (drop >= 0.25 && lowDays >= 3) {
+    add(ctx, 'hrv-low', {
+      indicator: 'hrv', level: 'amber', basis: 'baseline',
+      title: 'Heart rate variability down for several nights',
+      reason: `${Math.round(h)} ms versus your usual ${Math.round(b.median)} ms, down ${Math.round(drop * 100)}% and low for ${lowDays} nights running. HRV falls with fatigue, illness and stress.`,
+      action: 'Treat it as an early warning: protect sleep, ease the training load for a day, and watch temperature and mood.',
+      notifySurgeon: false, sources: ['hrv-norms', 'bio-monitor-csa'],
+    });
+  }
+}
+
 function ruleTemp(ctx: Ctx) {
   const t = v(ctx, 'temp');
   if (t === null) return;
@@ -252,11 +293,11 @@ function ruleSleep(ctx: Ctx) {
   const series = seriesFor(ctx.flight, 'sleep');
   const under6 = consecutive(series, (x) => x < 6);
   const under5 = consecutive(series, (x) => x < 5);
-  if (under5 >= 2 || s < 4) {
+  if (under5 >= 3 || s < 4) {
     add(ctx, 'sleep-red', {
       indicator: 'sleep', level: 'red', basis: 'reference',
       title: 'Severe short sleep',
-      reason: `${s.toFixed(1)} h last night${under5 >= 2 ? `, and under 5 h for ${under5} nights in a row` : ''}. Adults need 7 h or more; ISS crews already average only about 6 h.`,
+      reason: `${s.toFixed(1)} h last night${under5 >= 3 ? `, and under 5 h for ${under5} nights in a row` : ''}. Adults need 7 h or more; ISS crews already average only about 6 h.`,
       action: 'Protect the full sleep period tonight, run the reaction test before any critical task, and ask the flight surgeon to review the schedule.',
       notifySurgeon: true, sources: ['aasm-sleep', 'barger-2014'],
     });
@@ -453,7 +494,7 @@ export function evaluate(crew: CrewMember, settings: MissionSettings): Evaluatio
   const rec = flight[flight.length - 1] ?? null;
 
   const baselines: Partial<Record<IndicatorId, Baseline>> = {};
-  const ids: IndicatorId[] = ['hr', 'bpSys', 'bpDia', 'spo2', 'temp', 'glucose', 'weight', 'sleep', 'exercise', 'mood', 'stress', 'pvtRt', 'pvtLapses', 'radDose'];
+  const ids: IndicatorId[] = ['hr', 'bpSys', 'bpDia', 'spo2', 'resp', 'hrv', 'temp', 'glucose', 'weight', 'sleep', 'exercise', 'mood', 'stress', 'pvtRt', 'pvtLapses', 'radDose'];
   for (const id of ids) {
     const b = baselineOf(pre.map((r) => r.values[id]).filter((x): x is number => Number.isFinite(x)));
     if (b) baselines[id] = b;
@@ -485,6 +526,8 @@ export function evaluate(crew: CrewMember, settings: MissionSettings): Evaluatio
   ruleRadiation(ctx, cumulativeDoseMsv);
   ruleTemp(ctx);
   ruleSpO2(ctx);
+  ruleResp(ctx);
+  ruleHrv(ctx);
   ruleBloodPressure(ctx);
   ruleHeartRate(ctx);
   ruleGlucose(ctx);
