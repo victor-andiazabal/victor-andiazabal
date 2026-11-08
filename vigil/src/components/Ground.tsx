@@ -42,7 +42,7 @@ export function Ground({ go }: { go: (v: View) => void }) {
               <tr key={c.id}>
                 <td>
                   <button className="btn sm" style={{ border: 0, background: 'transparent', padding: '2px 4px' }} onClick={() => { dispatch({ type: 'select', crewId: c.id }); go('dashboard'); }}>
-                    {c.callsign}
+                    {c.name}
                   </button>
                 </td>
                 <td><Pill level={ev.overall} /></td>
@@ -71,7 +71,7 @@ export function Ground({ go }: { go: (v: View) => void }) {
             <div key={f.id} className={`alert ${f.level} ${acknowledged[f.id] ? 'acked' : ''}`}>
               <div className="head">
                 <Pill level={f.level} />
-                <h3>{c.callsign}: {f.title}</h3>
+                <h3>{c.name}: {f.title}</h3>
                 {acknowledged[f.id] && <span className="pill neutral">acknowledged by crew</span>}
               </div>
               <div className="why"><b>Why</b> {f.reason}</div>
@@ -83,7 +83,7 @@ export function Ground({ go }: { go: (v: View) => void }) {
               <h3 style={{ marginTop: 14 }}>Watch items (crew handles these)</h3>
               <ul style={{ margin: 0, paddingLeft: 18 }}>
                 {watch.map(({ crew: c, f }) => (
-                  <li key={f.id} style={{ marginBottom: 4 }}><span className={`dot ${f.level}`} style={{ marginRight: 6 }} />{c.callsign}: {f.title}</li>
+                  <li key={f.id} style={{ marginBottom: 4 }}><span className={`dot ${f.level}`} style={{ marginRight: 6 }} />{c.name}: {f.title}</li>
                 ))}
               </ul>
             </>
@@ -92,7 +92,7 @@ export function Ground({ go }: { go: (v: View) => void }) {
         <div style={{ display: 'grid', gap: 14, alignContent: 'start' }}>
           {crew.map((c) => (
             <div key={c.id} className="panel">
-              <h3>Surgeon notes · {c.callsign}</h3>
+              <h3>Surgeon notes · {c.name}</h3>
               <textarea
                 rows={3}
                 value={surgeonNotes[c.id] ?? ''}

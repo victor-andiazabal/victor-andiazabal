@@ -59,7 +59,7 @@ export function Trends({ initial }: { initial?: IndicatorId }) {
     <>
       <div className="page-head">
         <div>
-          <h1>Trends · {selected.callsign}</h1>
+          <h1>Trends · {selected.name}</h1>
           <p>Pre-flight days (≤ 0) form the personal baseline. The shaded band is the baseline median ± 2 typical deviations.</p>
         </div>
         <label style={{ display: 'flex', gap: 8, alignItems: 'center', fontSize: 13 }}>

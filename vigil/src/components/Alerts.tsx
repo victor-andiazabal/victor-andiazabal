@@ -18,7 +18,7 @@ export function Alerts() {
   const message = useMemo(() => {
     const lines = [
       `PRIVATE MEDICAL CONFERENCE REQUEST`,
-      `From: ${selected.callsign} (${selected.role})`,
+      `From: ${selected.name}, ${selected.callsign} (${selected.role}), ${selected.agency}`,
       `Mission day ${settings.currentDay} · ${env.label} · one-way delay ${env.commDelay}`,
       `Overall status: ${ev.overall.toUpperCase()}`,
       ``,
@@ -53,7 +53,7 @@ export function Alerts() {
     <>
       <div className="page-head">
         <div>
-          <h1>Alerts · {selected.callsign}</h1>
+          <h1>Alerts · {selected.name}</h1>
           <p>Every alert says which rule fired, with the numbers, and what to do. Acknowledge the ones you have handled.</p>
         </div>
         <Pill level={ev.overall} />
