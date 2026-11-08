@@ -15,33 +15,34 @@ function readTour(): boolean {
 }
 
 const GROUPS: { key: IndicatorDef['group']; title: string; blurb: string }[] = [
-  { key: 'vitals', title: 'Vitals', blurb: 'Heart, blood pressure, oxygen and temperature. The fastest signals of infection, dehydration or stress.' },
-  { key: 'metabolic', title: 'Nutrition', blurb: 'Fasting glucose and body mass. Slow signals of how well the crew member is eating and recovering.' },
-  { key: 'behavioral', title: 'Sleep, mood and alertness', blurb: 'Hours slept, exercise, how the person feels, and how fast they react. Isolation and confinement show up here first.' },
-  { key: 'environment', title: 'Radiation', blurb: 'Dose from the personal dosimeter, compared with the usual rate for this environment and the career limit.' },
+  { key: 'vitals', title: 'Your vitals', blurb: 'Heart, blood pressure, oxygen and temperature. These move first when something is brewing.' },
+  { key: 'metabolic', title: 'Eating and weight', blurb: 'Morning glucose and body mass. Slow movers that tell you how well you are fuelling and recovering.' },
+  { key: 'behavioral', title: 'Sleep, mood and sharpness', blurb: 'How much you slept, how much you moved, how you feel, and how fast you react. Months in a small cabin show up here before anywhere else.' },
+  { key: 'environment', title: 'Radiation', blurb: 'What your dosimeter picked up, against what is normal for where you are and the limit for a whole career.' },
 ];
 
 /** One plain sentence describing where today's value sits against the person's own history. */
 function baselineWords(def: IndicatorDef, value: number | null, z: number | null, baseline: { median: number } | null): string {
   if (value === null || !baseline) return 'No baseline yet';
-  if (z === null) return `Baseline ${fmt(def.id, baseline.median)} ${def.unit}`;
+  if (z === null) return `You usually sit around ${fmt(def.id, baseline.median)} ${def.unit}`;
   const abs = Math.abs(z);
   const dir = z > 0 ? 'above' : 'below';
-  if (abs < 1) return `Within your usual range (baseline ${fmt(def.id, baseline.median)})`;
-  if (abs < 2) return `Slightly ${dir} your usual ${fmt(def.id, baseline.median)}`;
-  if (abs < 3) return `Noticeably ${dir} your usual ${fmt(def.id, baseline.median)}`;
-  return `Far ${dir} your usual ${fmt(def.id, baseline.median)}`;
+  const b = fmt(def.id, baseline.median);
+  if (abs < 1) return `About where you usually are (${b})`;
+  if (abs < 2) return `A bit ${dir} your usual ${b}`;
+  if (abs < 3) return `Clearly ${dir} your usual ${b}`;
+  return `Well ${dir} your usual ${b}`;
 }
 
-const TREND_WORDS = { up: 'rising', down: 'falling', flat: 'steady' } as const;
+const TREND_WORDS = { up: 'creeping up this week', down: 'drifting down this week', flat: 'holding steady' } as const;
 
 function summarySentence(name: string, overall: Level, reds: string[], ambers: string[], surgeon: boolean, delay: string): string {
-  if (overall === 'green') return `${name}: everything is inside published ranges and inside your usual spread today. Keep the routine going.`;
+  if (overall === 'green') return `Nothing stands out today, ${name}. Every number is where it normally is for you and inside the published ranges. Keep doing what you're doing.`;
   const parts: string[] = [];
-  if (reds.length) parts.push(`${reds.length === 1 ? 'One item needs' : `${reds.length} items need`} action now: ${reds.join(', ')}.`);
-  if (ambers.length) parts.push(`${ambers.length === 1 ? 'One item' : `${ambers.length} items`} to watch: ${ambers.join(', ')}.`);
-  parts.push(surgeon ? `The flight surgeon should be told; a reply takes ${delay} each way.` : 'Nothing needs the ground today.');
-  return `${name}: ${parts.join(' ')}`;
+  if (reds.length) parts.push(`${reds.length === 1 ? 'One thing needs you right now' : `${reds.length} things need you right now`}: ${reds.join(', ')}.`);
+  if (ambers.length) parts.push(`${ambers.length === 1 ? 'Worth keeping an eye on' : `Also worth keeping an eye on`}: ${ambers.join(', ')}.`);
+  parts.push(surgeon ? `Loop in the flight surgeon; a reply will take ${delay} each way, so send everything in one message.` : 'Nothing here needs the ground yet.');
+  return parts.join(' ');
 }
 
 export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => void }) {
@@ -67,8 +68,8 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
     <>
       <div className="page-head">
         <div>
-          <h1>Mission day {settings.currentDay}</h1>
-          <p>{selected.callsign} · {selected.role}</p>
+          <h1>Day {settings.currentDay}, {selected.callsign}</h1>
+          <p>Here is how you look today. {selected.role}.</p>
         </div>
         <div style={{ display: 'flex', gap: 8 }}>
           <button className="btn" onClick={() => go('checkin')}>Daily check-in</button>
@@ -77,12 +78,12 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
       </div>
 
       <div className="mission-strip" aria-label="Mission context">
-        <span className="chip"><span className="k">Where</span>{env.label}</span>
-        <span className="chip"><span className="k">Gravity</span>{env.gravity}</span>
-        <span className="chip"><span className="k">Signal to Earth</span>{env.commDelay} one way</span>
-        <span className="chip"><span className="k">Mission</span>day {settings.currentDay} of {MAX_MISSION_DAY}</span>
-        <span className="chip"><span className="k">Scenario</span>{scenario.label}</span>
-        <span className="chip muted-chip"><span className="k">Data</span>simulated crew</span>
+        <span className="chip"><span className="k">where</span>{env.label}</span>
+        <span className="chip"><span className="k">gravity</span>{env.gravity}</span>
+        <span className="chip"><span className="k">signal to Earth</span>{env.commDelay} one way</span>
+        <span className="chip"><span className="k">mission</span>day {settings.currentDay} of {MAX_MISSION_DAY}</span>
+        <span className="chip"><span className="k">scenario</span>{scenario.label}</span>
+        <span className="chip muted-chip">simulated crew, not real people</span>
       </div>
 
       {tour && (
@@ -103,34 +104,34 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
       <div className="grid cols-3" style={{ marginBottom: 14 }}>
         <div className={`panel status-hero hero-${ev.overall}`} style={{ gridColumn: 'span 2' }}>
           <div className={`ring ${ev.overall}`}>
-            <span className="ring-word">{LEVEL_LABEL[ev.overall].toUpperCase()}</span>
+            <span className="ring-word">{ev.overall === 'green' ? 'OK' : ev.overall === 'amber' ? 'WATCH' : 'ACT NOW'}</span>
             <span className="ring-sub">{counts.red ? `${counts.red} red` : counts.amber ? `${counts.amber} amber` : 'all green'}</span>
           </div>
           <div className="meta">
             <span className="big">
-              {ev.overall === 'green' && 'All indicators within your usual range'}
-              {ev.overall === 'amber' && `${ambers.length} item${ambers.length === 1 ? '' : 's'} to watch, nothing urgent`}
-              {ev.overall === 'red' && 'Action needed now'}
+              {ev.overall === 'green' && 'You look fine today'}
+              {ev.overall === 'amber' && `A few things to keep an eye on, nothing urgent`}
+              {ev.overall === 'red' && 'Something needs your attention now'}
             </span>
             <p className="summary">{summarySentence(selected.callsign, ev.overall, reds, ambers, ev.notifySurgeon, env.commDelay)}</p>
             <div className="count-row" aria-label="Indicator counts">
-              <span><span className="dot green" />{counts.green} nominal</span>
-              <span><span className="dot amber" />{counts.amber} watch</span>
-              <span><span className="dot red" />{counts.red} act now</span>
+              <span><span className="dot green" />{counts.green} normal for you</span>
+              <span><span className="dot amber" />{counts.amber} to watch</span>
+              <span><span className="dot red" />{counts.red} need action</span>
             </div>
           </div>
           <div className="actions">
             {ev.notifySurgeon ? (
-              <button className="btn danger" onClick={() => go('alerts')}>Prepare surgeon message</button>
+              <button className="btn danger" onClick={() => go('alerts')}>Write to the flight surgeon</button>
             ) : (
-              <button className="btn" onClick={() => go('alerts')}>Open alerts</button>
+              <button className="btn" onClick={() => go('alerts')}>See the details</button>
             )}
-            <button className="btn sm" onClick={() => go('trends')}>See trends</button>
+            <button className="btn sm" onClick={() => go('trends')}>Trends</button>
           </div>
         </div>
         <div className="panel">
-          <h3>Crew status</h3>
-          <p className="muted" style={{ fontSize: 13, marginBottom: 8 }}>Tap a name to switch. Each person is judged against their own baseline.</p>
+          <h3>The rest of the crew</h3>
+          <p className="muted" style={{ fontSize: 13, marginBottom: 8 }}>Tap a name to switch. Everyone is measured against their own normal, not each other's.</p>
           {evals.map(({ crew: c, ev: e }) => (
             <button
               key={c.id}
@@ -146,13 +147,12 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
         </div>
       </div>
 
-      <div className="legend">
-        <b>How to read the tiles</b>
-        <span><span className="dot green" /> Nominal: inside the published range and inside your usual spread</span>
-        <span><span className="dot amber" /> Watch: unusual for you, or near a published limit</span>
-        <span><span className="dot red" /> Act now: outside a published limit or far from your baseline</span>
-        <span className="muted">Small chart = last 14 days; shaded band = your pre-flight baseline. Tap a tile for the full trend, or the ⓘ for what it measures.</span>
-      </div>
+      <p className="legend">
+        <span><span className="dot green" /> green means normal for you</span>
+        <span><span className="dot amber" /> amber means keep an eye on it</span>
+        <span><span className="dot red" /> red means do something now</span>
+        <span className="muted">The little chart is your last two weeks; the shaded band is where you sat before launch. Tap a tile for the full picture, or ⓘ to learn what it measures.</span>
+      </p>
 
       {GROUPS.map((g) => (
         <section key={g.key} className="tile-group">
@@ -172,8 +172,8 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
               const doseWords = (() => {
                 if (s.value === null) return 'No reading today';
                 const r = s.value / env.dailyDoseMsv;
-                if (r < 1.5) return `Near the expected ${env.dailyDoseMsv} mSv/day for this environment`;
-                return `${r.toFixed(1)} times the expected ${env.dailyDoseMsv} mSv/day here`;
+                if (r < 1.5) return `A normal day here (about ${env.dailyDoseMsv} mSv is typical)`;
+                return `${r.toFixed(1)} times a normal day here (${env.dailyDoseMsv} mSv is typical)`;
               })();
               return (
                 <div
@@ -227,10 +227,10 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
       <div className="grid cols-3" style={{ marginTop: 6 }}>
         <div className="panel" style={{ gridColumn: 'span 2' }}>
           <h3>
-            Alerts <Pill level={ev.overall}>{ev.findings.length}</Pill>
+            What to do about it <Pill level={ev.overall}>{ev.findings.length}</Pill>
           </h3>
-          <p className="muted" style={{ fontSize: 13 }}>Each alert says which rule fired, with the numbers, and what to do. Sources are linked on the Alerts page.</p>
-          {top.length === 0 && <p className="muted">Nothing to flag. Keep the routine going.</p>}
+          <p className="muted" style={{ fontSize: 13 }}>Every flag explains itself: what tripped it, the actual numbers, and the next step. The sources are one tap away on the Alerts page.</p>
+          {top.length === 0 && <p className="muted">Nothing to flag today.</p>}
           {top.map((f) => (
             <div key={f.id} className={`alert ${f.level}`}>
               <div className="head">
@@ -244,7 +244,7 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
             </div>
           ))}
           {ev.findings.length > top.length && (
-            <button className="btn sm" onClick={() => go('alerts')}>See all {ev.findings.length} alerts</button>
+            <button className="btn sm" onClick={() => go('alerts')}>See all {ev.findings.length}</button>
           )}
         </div>
         <div style={{ display: 'grid', gap: 14, alignContent: 'start' }}>
@@ -252,17 +252,17 @@ export function Dashboard({ go }: { go: (v: View, indicator?: IndicatorId) => vo
             <h3>Today's routine</h3>
             <div className="progress" style={{ marginBottom: 8 }}><span style={{ width: `${(done / tasks.length) * 100}%` }} /></div>
             <p className="muted" style={{ margin: 0 }}>
-              {done} of {tasks.length} tasks done today.{' '}
-              <a href="#" onClick={(e) => { e.preventDefault(); go('routine'); }}>Open routine</a>
+              {done === 0 ? `Nothing ticked off yet, ${tasks.length} things on the list.` : `${done} of ${tasks.length} done.`}{' '}
+              <a href="#" onClick={(e) => { e.preventDefault(); go('routine'); }}>Open the list</a>
             </p>
           </div>
           <div className="panel">
-            <h3>Radiation this mission</h3>
+            <h3>Dose so far this mission</h3>
             <div className={`progress ${dosePct >= 80 ? 'red' : dosePct >= 50 ? 'amber' : ''}`} style={{ marginBottom: 8 }}>
               <span style={{ width: `${dosePct}%` }} />
             </div>
             <p className="muted" style={{ margin: 0 }}>
-              {ev.cumulativeDoseMsv.toFixed(1)} mSv so far, {dosePct.toFixed(1)}% of NASA's 600 mSv career limit. {env.doseNote}
+              {ev.cumulativeDoseMsv.toFixed(1)} mSv, which is {dosePct.toFixed(1)}% of the 600 mSv NASA allows over a whole career. {env.doseNote}
             </p>
           </div>
         </div>
