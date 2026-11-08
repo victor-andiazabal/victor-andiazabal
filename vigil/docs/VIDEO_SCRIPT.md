@@ -1,8 +1,18 @@
 # 30-second video
 
-The finished video is `VIGIL-30s.mp4` in this folder: 1280 by 720, 29 seconds, on-screen captions, no audio.
-It can be submitted as is. To add a voice-over, read the lines below over it in any video editor; the captions
-already match them.
+The finished video is `VIGIL-30s.mp4` in this folder: 1280 by 720, 29 seconds, on-screen captions and a
+synthetic voice-over. It can be submitted as is. If you would rather use a real voice, record the seven lines
+below over the picture in any video editor and mute the existing track.
+
+Voice-over as recorded:
+
+1. Halfway to Mars, help from Earth is forty-eight minutes away.
+2. VIGIL shows each astronaut what needs attention, in one screen.
+3. Every number is judged against your own baseline and published limits.
+4. Each alert explains itself, cites its source, and says what to do.
+5. A one-minute reaction test catches sleep loss early.
+6. A solar storm turns the whole crew red in one click.
+7. Try it at the link.
 
 Shot list and voice-over lines. Timings in seconds.
 
