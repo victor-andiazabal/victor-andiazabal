@@ -1,7 +1,7 @@
 # 30-second video
 
 The finished video is `VIGIL-30s.mp4` in this folder: 1280 by 720, 29 seconds, on-screen captions and a
-synthetic voice-over. It can be submitted as is. If you would rather use a real voice, record the seven lines
+neural voice-over (Microsoft Andrew voice). It can be submitted as is. If you would rather use a real voice, record the seven lines
 below over the picture in any video editor and mute the existing track.
 
 Voice-over as recorded:

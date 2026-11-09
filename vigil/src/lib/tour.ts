@@ -18,7 +18,7 @@ export interface TourStep {
  * field, and the last one points at the Alerts row, which is in the navigation on every screen.
  */
 export const TOUR_STEPS: TourStep[] = [
-  { target: 'status', view: 'today', title: 'Status readout', body: "This is today's answer: Nominal, Watch or Act now, and the reason." },
+  { target: 'status', view: 'today', title: 'Status readout', body: "This is today's answer in plain words: normal for you, keep an eye on it, or needs action, and the reason." },
   { target: 'next-action', view: 'today', title: 'Next action', body: 'One button always tells you what to do next.' },
   { target: 'bodymap', view: 'today', title: 'Body map', body: 'Open the body map to see each body system, what space does to it and what to do.' },
   {

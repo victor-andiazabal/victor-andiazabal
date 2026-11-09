@@ -1,0 +1,26 @@
+/* Space backdrop: NASA photo ISS074-E-521637 (Milky Way over Earth's airglow) on a fixed layer, with translucent surfaces over it. */
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(11,15,20,0.30) 0%, rgba(11,15,20,0.64) 45%, rgba(11,15,20,0.86) 100%),
+    url(/space.jpg) center 20% / cover no-repeat var(--bg);
+}
+:root[data-theme='light'] body::before {
+  background:
+    linear-gradient(180deg, rgba(244,246,248,0.80) 0%, rgba(244,246,248,0.91) 40%, rgba(244,246,248,0.97) 100%),
+    url(/space.jpg) center 20% / cover no-repeat var(--bg);
+}
+:root {
+  --surface-1: rgba(18, 25, 33, 0.74);
+  --surface-2: rgba(24, 33, 43, 0.80);
+  --surface-3: rgba(31, 42, 54, 0.86);
+  --shell: rgba(11, 15, 20, 0.72);
+}
+:root[data-theme='light'] {
+  --surface-1: rgba(255, 255, 255, 0.84);
+  --surface-2: rgba(238, 242, 245, 0.88);
+  --surface-3: rgba(227, 233, 238, 0.92);
+  --shell: rgba(244, 246, 248, 0.80);
+}
+.topbar, .rail, .bottombar { background: var(--shell); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+.ind-tile, .alert, .panel, .card, .status-panel, .learn-panel, .tour-card { backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
