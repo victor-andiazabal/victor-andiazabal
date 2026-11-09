@@ -10,6 +10,83 @@ Team: Les Tigres de Bethesda.
 
 **Live demo:** https://victor-andiazabal.github.io/victor-andiazabal/
 
+## Try it
+
+Three ways, easiest first. All crew data in the app is simulated.
+
+### Option 1: open it in your browser (nothing to install)
+
+Go to https://victor-andiazabal.github.io/victor-andiazabal/ on any phone, tablet or computer.
+
+A 7-step tutorial opens on your first visit and points at the real controls. To replay it, press the **?**
+button in the top bar, or use Settings, then Replay tutorial.
+
+### Option 2: install it like an app (works offline)
+
+Space Vigil is a progressive web app. Open the live link once while online, then install it. After that it
+starts from its own icon and works without a connection.
+
+- **iPhone or iPad (Safari):** tap the Share button, choose **Add to Home Screen**, then **Add**.
+- **Android (Chrome):** open the menu (three dots), choose **Install app** (on some versions it reads
+  **Add to Home screen**), then confirm.
+- **Windows, macOS or Linux (Chrome or Edge):** click the install icon at the right end of the address bar, or
+  open the browser menu and choose **Install Space Vigil**, then confirm.
+
+### Option 3: run it on your computer
+
+1. **Install Node.js (LTS)** from https://nodejs.org. The app needs Node 20.19 or newer, or 22.12 or newer
+   (the requirement comes from Vite). The default installer options are fine.
+2. **Download the code.** On the GitHub page, click the green **Code** button, then **Download ZIP**, and unzip
+   it. Or, with git: `git clone https://github.com/victor-andiazabal/victor-andiazabal.git`.
+3. **Start it** from the `vigil` folder:
+   - Windows: double-click `start-windows.bat`.
+   - macOS: double-click `start-mac.command`. macOS may refuse to open it the first time; right-click the
+     file, choose **Open**, then **Open** again. If nothing happens, open Terminal in the folder and run
+     `sh start-mac-linux.sh`.
+   - Linux: in a terminal, in the folder, run `sh start-mac-linux.sh` (or `bash start-mac-linux.sh`).
+
+   The first run installs the app's packages (internet needed, a minute or two). Then your browser opens at
+   http://localhost:5173. Keep the window open while you use the app; close it to stop.
+
+For developers, the same thing by hand:
+
+```bash
+cd vigil && npm install && npm start
+```
+
+### A 2-minute tour of the demo
+
+The demo opens on the Commander at mission day 30 in the "sleep debt" scenario, so there is something to see.
+
+1. **Today.** Read the status and its reason, then press the **Start check-in** button (the next action).
+2. **Check-in.** Values on the first three steps (vitals, body, sleep and alertness) arrive pre-filled, marked
+   "from wearable". On each step, press **Confirm all on this step**.
+3. On **Symptoms**, press **None today**, then **Save check-in** on the review step. That is about six taps.
+4. Back on Today, the next action becomes **Run reaction test**: a 60-second reaction test.
+5. Open the **Body map** to see seven body systems coloured by the same rules, then **Alerts** to see why each
+   alert fired, the source, the checklist and the message to the flight surgeon.
+6. **Crew and ground link.** On Alerts, press **Send today's report**, then **Open ground console in a new window**
+   (or open the same address with `?view=ground` added in a second window). The report reaches the ground
+   after the link's one-way delay, and the ground can reply the same way. Demo time plays 1 minute of delay
+   as 1 second.
+7. **Settings** (in the More menu on a phone). Switch the environment (station, transit, rover, base), the
+   scenario (nominal, solar storm, sleep debt, early infection) and the mission day. The crew tabs in the top
+   bar switch between the four simulated crew members.
+
+### Troubleshooting
+
+- **"node is not recognized"** (or "command not found"): Node.js is not installed or the window was opened
+  before the install. Install Node.js LTS from https://nodejs.org, then close the window and start again
+  (restart the terminal if you use one).
+- **Port 5173 is in use:** Vite takes the next free port. Read the address it prints (for example
+  `http://localhost:5174/`) and open that.
+- **Blank or old page after an update:** the offline cache is serving the previous version. Hard refresh
+  (Ctrl+Shift+R, or Cmd+Shift+R on macOS). If that does not help, close the app and reopen it once online.
+- **Want a clean demo:** Settings, then Display and data, then **Clear local data** removes manual entries,
+  acknowledgements and settings.
+- **`npm install` fails:** check the internet connection, delete the `node_modules` folder, and run the
+  launcher again.
+
 ## The problem
 
 On the way to Mars the one-way signal delay reaches 24 minutes, so a crew member who feels off cannot
@@ -94,34 +171,39 @@ Highlights:
 
 All crew data in the demo is simulated and labelled as such. No real astronaut records are used.
 
-## Run it
+## Development
+
+To run the app, see [Try it](#try-it) above. Other scripts, from the `vigil` folder (Node 20.19+ or 22.12+):
 
 ```bash
-cd vigil
-npm install
-npm run dev
+npm run dev       # same dev server as npm start, without opening a browser
+npm run lint      # oxlint
+npm test          # vitest, single run
+npm run build     # type-check and production build into dist/
+npm run preview   # serve the production build locally
 ```
 
-Tests: `npm test` (vitest: the statistics, the simulator, every alert rule at its cited cut-off, CSV import, the body map, the comm link queue, the badges, the Today grouping and the check-in draft).
+The tests (vitest) cover the statistics, the simulator, every alert rule at its cited cut-off, CSV import, the body map, the comm link queue, the badges, the Today grouping and the check-in draft.
 
-Production build: `npm run build`, output in `dist/`. The GitHub Actions workflow in
-`.github/workflows/pages.yml` builds and deploys to GitHub Pages on every push to `main`.
+The production build goes to `dist/`. The GitHub Actions workflow in
+`.github/workflows/pages.yml` (at the repository root) builds and deploys to GitHub Pages on every push to `main`.
 
 ## Stack
 
-React 19, TypeScript, Vite, Recharts. No backend, no accounts, no network calls after load.
+React 19, TypeScript, Vite (with vite-plugin-pwa for the offline cache), Recharts. No backend, no accounts, no network calls after load.
 
 ## Layout
 
 ```
 vigil/
+  start-windows.bat, start-mac.command, start-mac-linux.sh   one-click launchers
   src/data/        indicators, crew roster, scenarios, countermeasure checklists, sources, body systems,
                    link delay presets, daily routine
   src/lib/         simulator, baseline statistics, rule engine, pulse estimation, storage, CSV, body map
                    status, comm link queue, badges
   src/components/  Today, body map, check-in, reaction test, trends, alerts, comm link, routine,
                    badges, learn, settings
-  src/lib/__tests__ unit tests for the statistics, simulator and rules
+  src/lib/__tests__ unit tests for the statistics, simulator, rules and screen logic
   docs/            sources, design process, demo deck (pptx), slide outline, video script, video, submission draft, pitch notes
 ```
 
