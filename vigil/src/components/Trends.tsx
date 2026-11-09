@@ -165,7 +165,7 @@ export function Trends({ initial }: { initial?: IndicatorId }) {
             {refs.length > 0 && (
               <li>
                 <svg width="28" height="8" aria-hidden="true"><line x1="0" y1="4" x2="28" y2="4" stroke="var(--text-muted)" strokeWidth="1" strokeDasharray="6 4" /></svg>
-                Published cut-off (amber: Watch, red: Act now)
+                Published cut-off (amber: keep an eye on it, red: needs action)
               </li>
             )}
           </ul>

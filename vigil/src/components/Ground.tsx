@@ -128,7 +128,7 @@ export function Ground({ go }: { go: (v: View) => void }) {
             </tbody>
           </table>
         </div>
-        <p className="small-note">Each dot is the rule result for that indicator today (green Nominal, amber Watch, red Act now). Hover or focus a cell for the value and baseline.</p>
+        <p className="small-note">Each dot is the rule result for that indicator today (green normal for them, amber keep an eye on it, red needs action). Hover or focus a cell for the value and baseline.</p>
       </div>
 
       <div className="ground-section">

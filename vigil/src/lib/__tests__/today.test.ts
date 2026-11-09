@@ -69,7 +69,7 @@ describe('buildStatusHistory', () => {
     expect(h.hr[0].day).toBe(17);
     expect(h.hr.at(-1)!.day).toBe(30);
     expect(h.hr.every((d) => d.level !== null)).toBe(true);
-    expect(h.hr.at(-1)!.label).toMatch(/^Day 30: \d+ bpm, (Nominal|Watch|Act now)$/);
+    expect(h.hr.at(-1)!.label).toMatch(/^Day 30: \d+ bpm, (Normal for you|Keep an eye on it|Needs action)$/);
   });
 
   it('starts at day 1 early in the mission and marks missing days', () => {

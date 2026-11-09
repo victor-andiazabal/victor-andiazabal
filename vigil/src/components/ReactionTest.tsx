@@ -245,7 +245,7 @@ export function ReactionTest({ go }: { go: (v: View) => void }) {
           </p>
           <p>
             Response time slows and lapses increase with sleep loss, often before you feel tired. Space Vigil flags a mean 15% slower than your
-            baseline as Watch, and 35% slower or 6 extra lapses as Act now.
+            baseline as "keep an eye on it", and 35% slower or 6 extra lapses as "needs action".
           </p>
           <p className="small-note">
             The full PVT-B lasts 3 minutes; this 60-second version is for the prototype and keeps the same 355 ms lapse threshold and 1-4 s
