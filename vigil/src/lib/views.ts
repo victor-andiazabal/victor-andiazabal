@@ -19,9 +19,9 @@ export const VIEW_LABEL: Record<View, string> = {
   settings: 'Settings',
 };
 
-/** "Check-in · VIGIL": the page title for a screen. */
+/** "Check-in · Space Vigil": the page title for a screen. */
 export function viewTitle(view: View): string {
-  return `${VIEW_LABEL[view]} · VIGIL`;
+  return `${VIEW_LABEL[view]} · Space Vigil`;
 }
 
 export type Theme = 'dark' | 'light';

@@ -244,7 +244,7 @@ export function ReactionTest({ go }: { go: (v: View) => void }) {
             {b && <span className="mono"> (typical spread ±{Math.round(b.mad)} ms)</span>}.
           </p>
           <p>
-            Response time slows and lapses increase with sleep loss, often before you feel tired. VIGIL flags a mean 15% slower than your
+            Response time slows and lapses increase with sleep loss, often before you feel tired. Space Vigil flags a mean 15% slower than your
             baseline as Watch, and 35% slower or 6 extra lapses as Act now.
           </p>
           <p className="small-note">

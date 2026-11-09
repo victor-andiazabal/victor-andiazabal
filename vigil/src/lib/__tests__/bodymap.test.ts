@@ -97,6 +97,21 @@ describe('systemStatus', () => {
     expect(worstSystem(st)).toBe('neuroBehavioral');
   });
 
+  it('routes breathing rate to the heart and lungs, and HRV to both heart and brain', () => {
+    const resp = BODY_SYSTEMS.filter((sys) => sys.indicators.includes('resp')).map((sys) => sys.id);
+    const hrv = BODY_SYSTEMS.filter((sys) => sys.indicators.includes('hrv')).map((sys) => sys.id);
+    expect(resp).toEqual(['cardio']);
+    expect(hrv.sort()).toEqual(['cardio', 'neuroBehavioral']);
+  });
+
+  it('fast breathing at rest turns the heart and lungs system red', () => {
+    const m = simulateMember(CREW[0], base);
+    const fast = { ...m, records: m.records.map((r) => (r.day === base.currentDay ? { ...r, values: { ...r.values, resp: 32 } } : r)) };
+    const st = systemStatus(evaluate(fast, base));
+    expect(st.cardio.level).toBe('red');
+    expect(st.cardio.findings.some((f) => f.indicator === 'resp')).toBe(true);
+  });
+
   it('routes a red-flag symptom to its system only', () => {
     const ev = evaluate(withSymptomsToday(simulateMember(CREW[0], base), ['visionLoss']), base);
     const st = systemStatus(ev);

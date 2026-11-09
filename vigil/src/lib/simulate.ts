@@ -11,6 +11,8 @@ const NOISE: Record<IndicatorId, number> = {
   bpSys: 5,
   bpDia: 3,
   spo2: 0.8,
+  resp: 1.1,
+  hrv: 5,
   temp: 0.18,
   glucose: 5,
   weight: 0.3,
@@ -99,7 +101,7 @@ function applyScenario(
   }
 
   if (def.id === 'sleepDebt') {
-    const sleepProfile = [6.1, 5.6, 5.2, 4.9, 5.4, 4.6, 5.0, 4.8];
+    const sleepProfile = [6.1, 5.6, 5.2, 4.9, 4.7, 4.6, 4.8, 4.6];
     v.sleep = sleepProfile[Math.min(t, sleepProfile.length - 1)] + 0.2 * gaussian(rand);
     const severity = Math.min(1, (t + 1) / 5);
     v.pvtRt += 25 + 70 * severity + 10 * gaussian(rand);
@@ -107,6 +109,7 @@ function applyScenario(
     v.mood -= severity >= 0.6 ? 1.6 : 0.8;
     v.stress += severity >= 0.6 ? 1.6 : 0.9;
     v.hr += 3 + 4 * severity;
+    v.hrv *= 1 - 0.3 * severity;
     if (t >= 3) symptoms.push('fatigue');
     if (t >= 4 && rand() < 0.5) symptoms.push('headache');
   }
@@ -117,6 +120,8 @@ function applyScenario(
     const spo2Profile = [-1, -2, -3.5, -2.5];
     v.temp = tempProfile[Math.min(t, 3)] + 0.1 * gaussian(rand);
     v.hr += hrProfile[Math.min(t, 3)];
+    v.resp += [3, 6, 9, 7][Math.min(t, 3)];
+    v.hrv *= [0.9, 0.75, 0.65, 0.7][Math.min(t, 3)];
     v.spo2 += spo2Profile[Math.min(t, 3)];
     v.sleep -= 0.8;
     v.exercise = t === 0 ? v.exercise * 0.6 : 0;

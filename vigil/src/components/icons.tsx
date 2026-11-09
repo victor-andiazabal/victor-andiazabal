@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useId, type ReactNode } from 'react';
 
 /** One line icon set: drawn on a 20px grid, 1px rendered stroke at any size (24px for patches). Decorative by default; pass a label to expose one. */
 interface IconProps {
@@ -119,12 +119,31 @@ export const IconScience = (p: IconProps) => (
   <Svg {...p}><path d="M8 2.5h4M8.5 2.5v5l-4.5 8a1.3 1.3 0 0 0 1.1 2h9.8a1.3 1.3 0 0 0 1.1-2l-4.5-8v-5M6.5 12.5h7" /></Svg>
 );
 
-/** The VIGIL pulse-ring mark, drawn in the brand colour. */
+/** Pulse path shared by the drawn line and the gap it cuts through the ring. */
+const MARK_PULSE = 'M8 62H42L48 52L56 82L64 36L72 72L78 62H112';
+
+/**
+ * The Space Vigil mark: a heartbeat crossing an orbit ring, a four-point star on the peak and a small satellite on
+ * the ring. Geometry from src/assets/logo-mark.svg, redrawn as one-colour line art in the brand token with a 1px
+ * rendered stroke at any size, like the icon set.
+ */
 export function Logo({ size = 28 }: { size?: number }) {
+  const maskId = useId();
+  const stroke = 120 / size;
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" focusable="false" className="logo">
-      <circle cx="16" cy="16" r="14" fill="none" stroke="var(--brand)" strokeWidth="2" />
-      <path d="M6 17 L11 17 L13 11 L16 23 L19 14 L21 17 L26 17" fill="none" stroke="var(--brand)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width={size} height={size} viewBox="0 0 120 120" aria-hidden="true" focusable="false" className="logo">
+      <mask id={maskId}>
+        <rect width="120" height="120" fill="white" />
+        <path d={MARK_PULSE} fill="none" stroke="black" strokeWidth={stroke * 4} strokeLinejoin="round" strokeLinecap="round" />
+      </mask>
+      <g fill="none" stroke="var(--brand)" strokeWidth={stroke} strokeLinejoin="round" strokeLinecap="round">
+        <circle cx="60" cy="60" r="40" mask={`url(#${maskId})`} />
+        <path d={MARK_PULSE} />
+      </g>
+      <g fill="var(--brand)">
+        <path d="M64 25L65.8 34.2L75 36L65.8 37.8L64 47L62.2 37.8L53 36L62.2 34.2Z" />
+        <circle cx="88.3" cy="31.7" r="5" />
+      </g>
     </svg>
   );
 }

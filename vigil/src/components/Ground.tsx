@@ -6,6 +6,7 @@ import { evaluate } from '../lib/rules';
 import type { View } from '../lib/views';
 import { useStore } from '../state/store';
 import { useComm } from '../lib/comm';
+import { Avatar } from './Avatar';
 import { CommLink } from './CommLink';
 import { useCommSender } from './commSender';
 import { FoldButton } from './Fold';
@@ -57,12 +58,12 @@ export function Ground({ go }: { go: (v: View) => void }) {
         {isWatch ? (
           <FoldButton open={expanded} controls={bodyId} onToggle={() => toggleWatch(f.id)}>
             <Pill level={f.level} />
-            <span className="fold-main finding-title">{c.callsign}: {f.title}</span>
+            <span className="fold-main finding-title">{c.name}: {f.title}</span>
           </FoldButton>
         ) : (
           <header className="finding-head">
             <Pill level={f.level} />
-            <h3>{c.callsign}: {f.title}</h3>
+            <h3>{c.name}: {f.title}</h3>
           </header>
         )}
         {expanded && (
@@ -102,8 +103,10 @@ export function Ground({ go }: { go: (v: View) => void }) {
               {evals.map(({ crew: c, ev }) => (
                 <tr key={c.id}>
                   <th scope="row">
-                    <button type="button" className="link-btn" onClick={() => { dispatch({ type: 'select', crewId: c.id }); go('today'); }}>
-                      {c.callsign}
+                    <button type="button" className="link-btn" onClick={() => { dispatch({ type: 'select', crewId: c.id }); go('today'); }} title={`${c.callsign} · ${c.role} · ${c.agency}`}>
+                      <Avatar crew={c} size={24} />
+                      {c.name}
+                      <span className="ground-seat mono">{c.seat}</span>
                     </button>
                   </th>
                   <td><Pill level={ev.overall} /></td>
@@ -148,7 +151,7 @@ export function Ground({ go }: { go: (v: View) => void }) {
           <h2>Surgeon notes</h2>
           {crew.map((c) => (
             <div key={c.id} className="panel">
-              <label className="field-label" htmlFor={`note-${c.id}`}>Surgeon notes · {c.callsign}</label>
+              <label className="field-label" htmlFor={`note-${c.id}`}>Surgeon notes · {c.name}</label>
               <textarea
                 id={`note-${c.id}`}
                 className="input"

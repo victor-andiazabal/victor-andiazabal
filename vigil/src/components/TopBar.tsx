@@ -21,12 +21,6 @@ const ROLE_ICON: Record<string, () => ReactNode> = {
   ms1: () => <IconScience />,
 };
 
-/** "CDR, pilot" -> "CDR": the seat code is the first token of the role. */
-function shortCallsign(role: string, fallback: string): string {
-  const code = role.split(',')[0]?.trim();
-  return code || fallback;
-}
-
 const STEP: Record<string, number> = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 };
 
 /**
@@ -79,15 +73,15 @@ function CrewTabs() {
             type="button"
             role="radio"
             aria-checked={on}
-            aria-label={`${c.callsign}, ${LEVEL_LABEL[level]}`}
+            aria-label={`${c.name}, ${c.callsign}, ${LEVEL_LABEL[level]}`}
             tabIndex={i === rove ? 0 : -1}
-            title={`${c.callsign} · ${c.role}`}
+            title={`${c.name} · ${c.role} · ${c.agency}`}
             className="crew-tab"
             onClick={() => choose(i)}
             onKeyDown={(e) => onKeyDown(e, i)}
           >
             <span className="crew-tab-icon" aria-hidden="true">{(ROLE_ICON[c.id] ?? ROLE_ICON.cdr)()}</span>
-            <span className="crew-tab-call" aria-hidden="true">{shortCallsign(c.role, c.callsign)}</span>
+            <span className="crew-tab-call" aria-hidden="true">{c.seat}</span>
             <span className={`dot ${level}`} aria-hidden="true" />
           </button>
         );
@@ -109,7 +103,7 @@ export function TopBar({ theme, setTheme, onHelp }: TopBarProps) {
     <header className="topbar">
       <div className="brand">
         <Logo />
-        <span className="brand-name">VIGIL</span>
+        <span className="brand-name">Space Vigil</span>
       </div>
       <CrewTabs />
       <div className="topbar-spacer" />

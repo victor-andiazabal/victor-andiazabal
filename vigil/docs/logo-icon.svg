@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <mask id="cut">
+      <rect width="120" height="120" fill="white"/>
+      <path d="M14 62H42L48 52L56 82L64 36L72 72L78 62H106" fill="none" stroke="black" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/>
+    </mask>
+  </defs>
+  <rect width="120" height="120" rx="26" fill="#0b0f14"/>
+  <circle cx="60" cy="60" r="38" fill="none" stroke="#4fd1c5" stroke-width="5" mask="url(#cut)"/>
+  <path d="M14 62H42L48 52L56 82L64 36L72 72L78 62H106" fill="none" stroke="#4fd1c5" stroke-width="5.5" stroke-linejoin="round" stroke-linecap="round"/>
+  <path d="M64 25L65.8 34.2L75 36L65.8 37.8L64 47L62.2 37.8L53 36L62.2 34.2Z" fill="#4fd1c5"/>
+  <circle cx="86.9" cy="33.1" r="5" fill="#4fd1c5"/>
+</svg>

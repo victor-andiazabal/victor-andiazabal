@@ -6,6 +6,7 @@ import { buildStatusHistory, groupTiles, nextAction, tileSpans } from '../lib/to
 import type { DayRecord, IndicatorId } from '../lib/types';
 import type { View } from '../lib/views';
 import { useStore } from '../state/store';
+import { Avatar } from './Avatar';
 import { IconChevronRight } from './icons';
 import { IndicatorTile } from './IndicatorTile';
 import { StatusPanel } from './StatusPanel';
@@ -92,7 +93,8 @@ export function Today({ go }: { go: Go }) {
 
   const tasks = routineFor(settings.environment);
   const done = tasks.filter((t) => routineDone[`${selected.id}:${settings.currentDay}:${t.id}`]).length;
-  const meta = `Mission day ${settings.currentDay} · ${selected.callsign} (${selected.role.split(',')[0]})`;
+  const days = settings.currentDay;
+  const meta = `${selected.name}, ${selected.callsign} · ${selected.agency} · ${days} ${days === 1 ? 'day' : 'days'} in space`;
   const surgeonNote = ev.notifySurgeon ? `The flight surgeon should hear about this. One-way delay to the ground: ${env.commDelay}.` : null;
   const others = evals.filter((e) => e.crew.id !== selected.id);
   const groups = useMemo(() => tileGroups(ev.byIndicator), [ev.byIndicator]);
@@ -148,8 +150,12 @@ export function Today({ go }: { go: Go }) {
           <h2 id="today-crew-title">Crew</h2>
           <div className="crew-strip">
             {others.map(({ crew: c, ev: e }) => (
-              <button key={c.id} type="button" className="crew-chip" onClick={() => dispatch({ type: 'select', crewId: c.id })} aria-label={`Show ${c.callsign}`}>
-                <span>{c.callsign}</span>
+              <button key={c.id} type="button" className="crew-chip" onClick={() => dispatch({ type: 'select', crewId: c.id })} aria-label={`Show ${c.name}, ${c.callsign}`}>
+                <Avatar crew={c} size={32} />
+                <span className="crew-chip-who">
+                  <span className="crew-chip-name">{c.name}</span>
+                  <span className="crew-chip-role">{c.callsign} · {c.agency}</span>
+                </span>
                 <Pill level={e.overall} />
               </button>
             ))}

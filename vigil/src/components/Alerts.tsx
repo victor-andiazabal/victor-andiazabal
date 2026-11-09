@@ -62,7 +62,7 @@ export function Alerts() {
     <>
       <div className="page-head">
         <div>
-          <h1>Alerts · {selected.callsign}</h1>
+          <h1>Alerts · {selected.name}</h1>
           <p>Every alert says which rule fired, with the numbers, and what to do. Acknowledge the ones you have handled.</p>
         </div>
         <div className="alerts-actions">
@@ -165,7 +165,7 @@ export function Alerts() {
                     return (
                       <tr key={c.id}>
                         <td>
-                          <button type="button" className="link-btn" aria-label={`Show ${c.callsign}`} aria-current={c.id === selected.id ? 'true' : undefined} onClick={() => dispatch({ type: 'select', crewId: c.id })}>{c.callsign}</button>
+                          <button type="button" className="link-btn" aria-label={`Show ${c.name}, ${c.callsign}`} aria-current={c.id === selected.id ? 'true' : undefined} onClick={() => dispatch({ type: 'select', crewId: c.id })}>{c.name}</button>
                         </td>
                         <td><Pill level={e.overall} /></td>
                         <td className="num"><span className="flag-cell"><span className="flag-count">{e.findings.length}</span>{e.notifySurgeon && <span className="pill neutral">Surgeon</span>}</span></td>

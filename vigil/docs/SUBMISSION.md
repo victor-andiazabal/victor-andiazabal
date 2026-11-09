@@ -6,13 +6,14 @@ The "Use of Artificial Intelligence" field is left for the team to answer.
 
 ## Project name
 
-VIGIL
+Space Vigil
 
 ## High-level project summary
 
-VIGIL is a browser-based health self-assessment tool for astronauts on long-duration missions. Each crew
+Space Vigil is a browser-based health self-assessment tool for astronauts on long-duration missions. Each crew
 member logs daily indicators named in the challenge (blood pressure, heart rate, glucose, temperature,
-sleep, mood) plus SpO2, body mass, exercise, stress, a 60-second reaction test and radiation dose. VIGIL
+sleep, mood) plus SpO2, breathing rate, heart rate variability, body mass, exercise, stress, sleepiness,
+a 60-second reaction test and radiation dose. Space Vigil
 compares every value with the person's own 14-day pre-flight baseline and with published cut-offs from
 NASA-STD-3001, the ACC/AHA, CDC and ADA, then shows a colour-coded status and plain-language alerts. Every
 alert states the rule that fired, the numbers, the source, a countermeasure checklist, and whether the
@@ -48,6 +49,14 @@ TypeScript functions, each tied to a source id, so judges and flight surgeons ca
 consistent self-measurement through routine prompts; a single packaged message for the ground; a learning
 layer so crew without medical training understand what each number means.
 
+**Data source.** Space Vigil is designed around the Bio-Monitor (Hexoskin Astroskin) smart shirt that has flown on
+the ISS since 2019 and is being adapted for Gateway: ECG and heart rate, heart rate variability, breathing
+rate, SpO2, skin temperature, activity and sleep from one garment over Bluetooth to the crew tablet. Cuff,
+glucose meter and dosimeter readings are typed or imported. The prototype uses simulated values in that shape.
+
+**Method.** Design thinking: empathize (three users: astronaut, crew medical officer, flight surgeon), define
+("understand an alert and the next step in under 30 seconds"), ideate, prototype, test. See docs/DESIGN_PROCESS.md.
+
 **Tools.** React 19, TypeScript, Vite, Recharts. No backend. GitHub Pages for hosting.
 
 **Hopes.** A template that a flight surgeon could configure per crew member and per mission, with real
@@ -66,7 +75,8 @@ wearable input.
 
 ## Other data and resources
 
-ACC/AHA 2017 blood pressure guideline; American Heart Association heart rate reference; ADA Standards of
+Canadian Space Agency Bio-Monitor documentation and NASA NTRS Astroskin evaluation (wearable data source);
+ACC/AHA 2017 blood pressure guideline; Cleveland Clinic respiratory rate; Shaffer and Ginsberg 2017 (HRV norms); American Heart Association heart rate reference; ADA Standards of
 Care; CDC fever definition; Mayo Clinic SpO2 reference; AASM/SRS sleep recommendation; Barger et al. 2014
 (ISS sleep); Basner, Mollicone and Dinges 2011 (PVT-B); Shavers et al. 2024 (ISS dose rate); Verkruysse et al.
 2008 (camera photoplethysmography).

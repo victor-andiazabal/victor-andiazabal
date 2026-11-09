@@ -170,7 +170,7 @@ describe('buildReport', () => {
     expect(r.subject).toContain(fe1.callsign);
     expect(r.subject).toContain('day 29');
     expect(r.body).toContain('PRIVATE MEDICAL CONFERENCE REQUEST');
-    expect(r.body).toContain(`From: ${fe1.callsign} (${fe1.role})`);
+    expect(r.body).toContain(`From: ${fe1.name}, ${fe1.callsign} (${fe1.role}), ${fe1.agency}`);
     expect(r.body).toContain('Mission day 29');
     expect(r.body).toContain('one-way delay 4-24 min (Mars)');
     expect(r.body).toContain(`Overall status: ${ev.overall.toUpperCase()}`);

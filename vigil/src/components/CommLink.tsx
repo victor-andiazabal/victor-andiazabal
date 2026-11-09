@@ -201,7 +201,7 @@ function NoteComposer({ sendDraft }: { sendDraft: Send }) {
         <label className="comm-field">
           <span className="field-label">Crew member</span>
           <Select className="input" value={member.id} onChange={(e) => setCrewId(e.target.value)}>
-            {crew.map((c) => <option key={c.id} value={c.id}>{c.callsign} ({c.role})</option>)}
+            {crew.map((c) => <option key={c.id} value={c.id}>{c.name}, {c.callsign}</option>)}
           </Select>
         </label>
         <p className="comm-row"><Pill level={ev.overall} /><span className="comm-small">Day {settings.currentDay} · {ev.findings.length} flags{ev.notifySurgeon ? ' · surgeon flagged' : ''}</span></p>

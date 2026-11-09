@@ -2,7 +2,7 @@ import type { IndicatorId } from '../lib/types';
 
 /**
  * Body systems shown on the interactive body map. Each one links the NASA HRP hazards that act on it,
- * the daily indicators and symptoms already tracked by VIGIL, and the countermeasure checklists.
+ * the daily indicators and symptoms already tracked by Space Vigil, and the countermeasure checklists.
  * No thresholds live here: status comes from the existing rules (see lib/bodymap.ts).
  * Every hazard effect is backed by one of the ids in `sources`.
  */
@@ -46,10 +46,10 @@ export const BODY_SYSTEMS: BodySystem[] = [
       { id: 'distance', effect: 'Communication delays mean the crew has to solve problems on its own, which adds workload and stress.' },
       { id: 'closedEnv', effect: 'Higher cabin CO2 makes headaches more likely: on the ISS, each 1 mmHg rise doubled the odds of a reported headache.' },
     ],
-    indicators: ['sleep', 'kss', 'pvtRt', 'pvtLapses', 'mood', 'stress'],
+    indicators: ['sleep', 'kss', 'pvtRt', 'pvtLapses', 'mood', 'stress', 'hrv'],
     symptoms: ['headache', 'fatigue', 'sleepTrouble', 'severeHeadache', 'confusion'],
     checklists: ['sleep', 'alertness', 'mood'],
-    sources: ['hrp-hazards', 'hfbp', 'comm-delay', 'law-co2', 'barger-2014', 'pvt-b', 'kaida-2006'],
+    sources: ['hrp-hazards', 'hfbp', 'comm-delay', 'law-co2', 'barger-2014', 'pvt-b', 'kaida-2006', 'hrv-norms'],
   },
   {
     id: 'eyes',
@@ -83,16 +83,16 @@ export const BODY_SYSTEMS: BodySystem[] = [
     id: 'cardio',
     label: 'Heart, vessels and lungs',
     function:
-      'The heart pumps blood through the vessels to every organ, and the lungs load that blood with oxygen. Pulse, blood pressure and oxygen saturation show how well it is working.',
+      'The heart pumps blood through the vessels to every organ, and the lungs load that blood with oxygen. Pulse, blood pressure, oxygen saturation, breathing rate and heart rate variability show how well it is working.',
     hazards: [
       { id: 'gravity', effect: 'Without the head-to-foot pull of gravity, pressure in the arteries changes; after six months on the ISS, crews came home with carotid arteries 17-30% stiffer.' },
       { id: 'closedEnv', effect: 'Every breath of cabin air comes from life support, so an atmosphere fault would show first as falling oxygen saturation or breathlessness.' },
       { id: 'distance', effect: 'Far from Earth a heart problem cannot be evacuated quickly, and advice from the ground arrives minutes late.' },
     ],
-    indicators: ['hr', 'bpSys', 'bpDia', 'spo2'],
+    indicators: ['hr', 'bpSys', 'bpDia', 'spo2', 'resp', 'hrv'],
     symptoms: ['chestPain', 'breath', 'faint', 'dizziness'],
     checklists: ['bp', 'hr', 'spo2', 'redFlag'],
-    sources: ['hughson-2016', 'hrp-hazards', 'comm-delay', 'aha-bp', 'aha-hr', 'mayo-spo2'],
+    sources: ['hughson-2016', 'hrp-hazards', 'comm-delay', 'aha-bp', 'aha-hr', 'mayo-spo2', 'resp-range', 'hrv-norms', 'bio-monitor-csa'],
   },
   {
     id: 'metabolic',

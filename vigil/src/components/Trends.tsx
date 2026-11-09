@@ -20,6 +20,7 @@ const REF_LINES: Partial<Record<IndicatorId, RefLine[]>> = {
   bpSys: [{ y: 130, label: 'stage 1', level: 'amber' }, { y: 140, label: 'stage 2', level: 'amber' }, { y: 180, label: 'crisis', level: 'red' }],
   bpDia: [{ y: 80, label: 'stage 1', level: 'amber' }, { y: 90, label: 'stage 2', level: 'amber' }],
   spo2: [{ y: 95, label: '95%', level: 'amber' }, { y: 90, label: '90%', level: 'red' }],
+  resp: [{ y: 20, label: '20 /min', level: 'amber' }, { y: 12, label: '12 /min', level: 'neutral' }],
   temp: [{ y: 38, label: 'fever 38 °C', level: 'amber' }],
   glucose: [{ y: 70, label: '70 hypo', level: 'amber' }, { y: 100, label: '100', level: 'neutral' }, { y: 126, label: '126', level: 'amber' }],
   sleep: [{ y: 7, label: '7 h (AASM)', level: 'neutral' }, { y: 8.5, label: '8.5 h scheduled', level: 'neutral' }],
@@ -84,7 +85,7 @@ export function Trends({ initial }: { initial?: IndicatorId }) {
     <>
       <div className="page-head">
         <div>
-          <h1>Trends · {selected.callsign}</h1>
+          <h1>Trends · {selected.name}</h1>
           <p>Pre-flight days (0 and earlier) form your personal baseline. The cyan band is the baseline median plus or minus 2 typical deviations.</p>
         </div>
         <label className="check-row">
@@ -136,7 +137,7 @@ export function Trends({ initial }: { initial?: IndicatorId }) {
                       key={m.id}
                       type="monotone"
                       dataKey={m.id}
-                      name={m.callsign}
+                      name={m.name}
                       stroke={look.stroke}
                       strokeDasharray={look.dash}
                       strokeWidth={own ? 2 : 1.5}
@@ -155,7 +156,7 @@ export function Trends({ initial }: { initial?: IndicatorId }) {
               return (
                 <li key={m.id}>
                   <svg width="28" height="8" aria-hidden="true"><line x1="0" y1="4" x2="28" y2="4" stroke={look.stroke} strokeWidth={m.id === selected.id ? 2 : 1.5} strokeDasharray={look.dash} /></svg>
-                  {m.callsign}
+                  {m.name}
                 </li>
               );
             })}

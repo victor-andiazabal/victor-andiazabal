@@ -16,8 +16,8 @@ export const STEPS: StepDef[] = [
   {
     id: 'vitals',
     label: 'Vitals',
-    blurb: 'Cuff, oximeter and thermometer. Sit quietly for 5 minutes first.',
-    fields: ['bpSys', 'bpDia', 'hr', 'spo2', 'temp'],
+    blurb: 'Cuff, oximeter, thermometer and the Bio-Monitor shirt. Sit quietly for 5 minutes first.',
+    fields: ['bpSys', 'bpDia', 'hr', 'spo2', 'resp', 'hrv', 'temp'],
   },
   {
     id: 'body',

@@ -3,6 +3,8 @@ export type IndicatorId =
   | 'bpSys'
   | 'bpDia'
   | 'spo2'
+  | 'resp'
+  | 'hrv'
   | 'temp'
   | 'glucose'
   | 'weight'
@@ -37,7 +39,15 @@ export interface DayRecord {
 export interface CrewMember {
   id: string;
   callsign: string;
+  /** Seat code shown on the crew tabs: CDR, FE1, FE2, MS1. */
+  seat: string;
+  /** Fictional name for the simulated crew member. */
+  name: string;
   role: string;
+  /** Space agency, shown beside the role. Fictional assignment. */
+  agency: string;
+  /** Hue (0-360) from the crew profile. The portrait stays neutral so it never competes with status colours. */
+  hue: number;
   /** Personal resting set-points used by the simulator (simulated person, not a real astronaut). */
   setpoints: Record<IndicatorId, number>;
   records: DayRecord[];

@@ -19,7 +19,7 @@ describe('viewFromQuery', () => {
 
 describe('viewTitle', () => {
   it('names every screen, then the app', () => {
-    expect(viewTitle('checkin')).toBe('Check-in · VIGIL');
+    expect(viewTitle('checkin')).toBe('Check-in · Space Vigil');
     expect(VIEWS.every((v) => VIEW_LABEL[v].length > 0)).toBe(true);
   });
 });

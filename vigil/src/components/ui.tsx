@@ -76,7 +76,7 @@ export function Disclaimer() {
   return (
     <div className="disclaimer">
       <p>
-        VIGIL is a decision-support prototype built for the 2026 NASA Space Apps Challenge. It is not a medical device and
+        Space Vigil is a decision-support prototype built for the 2026 NASA Space Apps Challenge. It is not a medical device and
         does not diagnose. All crew data shown is simulated unless you enter it yourself. Reference ranges are quoted from
         the public sources linked in Learn; operational limits are set by each mission's flight surgeon.
       </p>
