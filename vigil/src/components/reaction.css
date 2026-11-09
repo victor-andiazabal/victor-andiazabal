@@ -1,0 +1,35 @@
+/* Reaction test: one large target zone; state colour follows meaning and always comes with a word. */
+
+.pvt-stage {
+  min-height: 320px; padding: var(--s-6); border-radius: var(--r-panel);
+  display: grid; place-content: center; justify-items: center; gap: var(--s-2); text-align: center;
+  background: var(--surface-2); color: var(--text); border: 1px solid var(--line-strong);
+  user-select: none; -webkit-user-select: none; touch-action: manipulation; cursor: default;
+  transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease);
+}
+.pvt-stage.live { cursor: pointer; }
+.pvt-word { font-size: 28px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+.pvt-readout { font-size: 56px; font-weight: 500; line-height: 1; letter-spacing: -0.02em; }
+.pvt-sub { font-size: 16px; }
+
+.pvt-stage.armed { border-color: var(--text-2); }
+.pvt-stage.go .pvt-word { font-size: 40px; }
+.pvt-stage.go { background: var(--green); border-color: var(--green); color: var(--bg); }
+.pvt-stage.false { background: var(--amber); border-color: var(--amber); color: var(--bg); }
+.pvt-stage.done { border-color: var(--text-2); }
+
+.pvt-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); margin-top: var(--s-4); }
+.pvt-clock { font-size: 13px; margin-left: auto; }
+
+.pvt-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); margin: var(--s-6) 0 0; }
+.pvt-stat { background: var(--surface-1); border: 1px solid var(--line); border-radius: var(--r-card); padding: var(--s-3) var(--s-4); display: flex; flex-direction: column-reverse; gap: var(--s-1); box-shadow: var(--shadow-panel); }
+.pvt-stat dt { font-size: 13px; color: var(--text-muted); }
+.pvt-stat dd { margin: 0; font-size: 28px; font-weight: 500; line-height: 1.1; }
+
+@media (max-width: 1023px) {
+  .pvt-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 639px) {
+  .pvt-readout { font-size: 40px; }
+  .pvt-clock { margin-left: 0; }
+}

@@ -12,6 +12,7 @@ export type IndicatorId =
   | 'exercise'
   | 'mood'
   | 'stress'
+  | 'kss'
   | 'pvtRt'
   | 'pvtLapses'
   | 'radDose';
@@ -28,18 +29,24 @@ export interface DayRecord {
   values: Partial<Record<IndicatorId, number>>;
   symptoms: string[];
   notes?: string;
-  source: 'simulated' | 'manual';
+  /**
+   * 'manual' is a saved daily check-in (or an imported row). 'pvt' is a reaction-test result saved before any check-in
+   * that day: its other values are the simulated feed carried over, so it does not count as a check-in.
+   */
+  source: 'simulated' | 'manual' | 'pvt';
 }
 
 export interface CrewMember {
   id: string;
   callsign: string;
+  /** Seat code shown on the crew tabs: CDR, FE1, FE2, MS1. */
+  seat: string;
   /** Fictional name for the simulated crew member. */
   name: string;
   role: string;
-  /** Space agency, for the profile card. Fictional assignment. */
+  /** Space agency, shown beside the role. Fictional assignment. */
   agency: string;
-  /** Hue (0-360) used to tint the generated avatar. */
+  /** Hue (0-360) from the crew profile. The portrait stays neutral so it never competes with status colours. */
   hue: number;
   /** Personal resting set-points used by the simulator (simulated person, not a real astronaut). */
   setpoints: Record<IndicatorId, number>;

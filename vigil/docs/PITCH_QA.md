@@ -51,6 +51,14 @@ against the 3-minute version is on the roadmap.
 Each environment carries its one-way delay (NASA Ames figures). The surgeon message bundles the day's values
 and every flag so one exchange is enough, and the ground view shows what the surgeon receives.
 
+**Why no server?**
+Offline is the thesis. On a 4 to 24 minute link the crew cannot depend on a round trip to a server, so every
+rule runs on the device and the app works with the link down. The crew-to-ground link follows the same
+store-and-forward idea that delay- and disruption-tolerant networking (DTN) uses for space links: a message is
+kept, sent, and delivered when it arrives, and nothing waits for a reply. Space Vigil's queue is a browser demo of
+that idea, not an implementation of the DTN protocols. In the demo both windows share one browser; a real
+mission would carry the same messages over the vehicle's own link.
+
 **Where would the data come from on a real mission?**
 Mostly one garment. The Bio-Monitor, Hexoskin's Astroskin shirt, has flown on the ISS since 2019 and gives
 ECG, heart rate variability, breathing rate, SpO2, skin temperature, activity and sleep over Bluetooth. CSA is
@@ -63,18 +71,24 @@ the flight surgeon. The problem statement and the 30-second success criterion ca
 
 **What would you build next?**
 Bluetooth cuff and wearable input, baselines informed by NASA OSDR human datasets, sync between crew tablets
-and the ground, and validation of the short reaction test.
+and a real ground link, and validation of the short reaction test.
 
 **How is it built?**
 React, TypeScript, Vite, Recharts. No backend. Rules are plain functions with a source id each, covered by
-29 unit tests. It installs as a web app and works offline.
+unit tests. It installs as a web app and works offline.
 
 ## Demo order (3 minutes)
 
-1. Dashboard, Commander, day 30: red ring, five flags. Say what the ring means.
+1. Today, Elena Marsh (Commander, NASA), day 30: the Act now status, its reason and the one next action. Say what the ring means.
 2. Click the Sleep tile: trend with baseline band, 7-hour line, scenario window.
 3. Alerts: open the reaction-time checklist, show the sources, copy the surgeon message.
 4. Reaction test: run 10 seconds of it, stop.
-5. Settings: switch to Solar particle event, day 25. Dashboard turns red for the whole crew.
-6. Ground view: the crew grid and the surgeon queue.
-7. Phone: same app, installed, offline.
+5. Settings: switch to Solar particle event, day 25. Today turns red for the whole crew.
+6. Body map: click the Heart, vessels and lungs region, show the indicators behind the colour and the hazards
+   that affect it. (Today has a small version of the same map.)
+7. Two-window comm demo: Alerts, then "Open ground console in a new window" (or open `?view=ground`).
+   In the crew window press "Send today's report"; watch it travel the delay with demo time on (Mars, closest:
+   4 minutes plays in 4 seconds), then arrive in the ground window. Type a reply there and watch it travel back.
+   Say: the crew already acted on the checklist while the message was in flight.
+8. Ground view: the crew grid and the surgeon queue. Surgeon notes typed here also appear in the crew window's Ground view, because the two windows now share saved data.
+9. Phone: same app, installed, offline.

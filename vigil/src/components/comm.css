@@ -1,0 +1,56 @@
+/* Crew <-> ground comm link. Tokens only. The transit lane is the one cyan element here. */
+.comm { display: grid; gap: var(--s-4); align-content: start; }
+.comm-small { font-size: 14px; color: var(--text-2); }
+
+/* Empty state: one 48px row, a 20px line icon and one sentence. */
+.comm-empty { display: flex; align-items: center; gap: var(--s-3); min-height: var(--hit); margin: 0; color: var(--text-2); }
+.comm-empty-icon { flex: none; display: inline-grid; color: var(--text-muted); }
+
+.comm-head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s-4) var(--s-6); flex-wrap: wrap; }
+.comm-head h2 { margin-bottom: var(--s-2); }
+.comm-lead { margin: 0 0 var(--s-2); max-width: 64ch; color: var(--text-2); }
+.comm-controls { display: flex; align-items: flex-end; gap: var(--s-3); flex-wrap: wrap; }
+.comm-field { display: grid; gap: var(--s-1); margin: 0; }
+.comm-field .field-label { margin-bottom: 0; }
+.comm-controls .comm-field { min-width: 240px; }
+.comm-toggle { font-size: 16px; font-weight: 500; }
+.comm-row { display: flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; margin: 0; }
+.comm .seg { align-self: start; }
+.comm .seg-option { padding: 0 20px; }
+.comm-count { margin-left: 6px; color: var(--text-2); font-size: 13px; }
+.comm-pane { min-height: var(--hit); }
+.comm-stamp { font-size: 13px; color: var(--text-2); }
+.comm-compose-body { display: grid; gap: var(--s-3); justify-items: start; max-width: 520px; }
+.comm-compose-body .comm-field, .comm-compose-body .input { width: 100%; }
+
+.comm-lanes { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4); }
+.comm-lane { display: flex; align-items: center; gap: var(--s-3); }
+.comm-icon { width: 28px; height: 28px; flex: none; color: var(--text-2); }
+.comm-track {
+  position: relative; flex: 1; height: 1px;
+  background: repeating-linear-gradient(90deg, var(--line-strong) 0 8px, transparent 8px 14px);
+}
+.comm-dot {
+  position: absolute; top: 50%; width: 14px; height: 14px; margin: -7px 0 0 -7px;
+  border-radius: 50%; background: var(--brand); border: 3px solid var(--surface-1); box-sizing: content-box;
+  transition: left 250ms linear;
+}
+.comm-meta { display: flex; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; font-size: 13px; margin-top: var(--s-2); color: var(--text-2); }
+
+.comm-log { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-4); }
+.comm-log > li { padding-top: var(--s-4); border-top: 1px solid var(--line); display: grid; gap: var(--s-1); }
+.comm-log > li:first-child { border-top: 0; padding-top: 0; }
+.comm-log-head { display: flex; align-items: center; gap: var(--s-2); flex-wrap: wrap; }
+.comm-body { margin: var(--s-1) 0 0; white-space: pre-wrap; }
+.comm-pre {
+  margin: 0; padding: var(--s-3); max-height: 260px; overflow: auto; white-space: pre-wrap;
+  font-family: var(--mono); font-size: 13px; line-height: 1.5;
+  background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r-card);
+}
+.comm-reply { margin: 0; display: flex; gap: var(--s-2); align-items: baseline; flex-wrap: wrap; font-size: 14px; }
+.comm-log .btn { justify-self: start; }
+.comm-log .input { max-width: 640px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .comm-dot { transition: none; }
+}

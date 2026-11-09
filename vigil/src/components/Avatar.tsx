@@ -1,35 +1,52 @@
 import type { CrewMember } from '../lib/types';
 
-/** Generated portrait: an astronaut in a helmet, tinted per crew member. No real person is depicted. */
-export function Avatar({ crew, size = 56 }: { crew: Pick<CrewMember, 'name' | 'hue'>; size?: number }) {
-  const h = crew.hue;
-  const initials = crew.name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase();
-  const id = `av-${h}`;
+interface AvatarProps {
+  crew: Pick<CrewMember, 'name'>;
+  size?: number;
+  /** Expose the portrait to assistive tech. Off by default: the name is almost always printed beside it. */
+  labelled?: boolean;
+}
+
+/** Initials appear only where they can be read. */
+const INITIALS_MIN = 40;
+
+/**
+ * Generated portrait: a helmeted figure drawn in the line-icon style (1px rendered stroke at any size) on a neutral
+ * disc. No real person is depicted. It stays neutral on purpose so it never competes with the green,
+ * amber and red status colours that sit next to it.
+ */
+export function Avatar({ crew, size = 32, labelled = false }: AvatarProps) {
+  const initials = crew.name
+    .split(' ')
+    .map((w) => w[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+  const stroke = 64 / size;
   return (
-    <svg width={size} height={size} viewBox="0 0 64 64" role="img" aria-label={`Portrait of ${crew.name}`} className="avatar">
-      <defs>
-        <linearGradient id={`${id}-bg`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor={`hsl(${h} 70% 55%)`} />
-          <stop offset="1" stopColor={`hsl(${(h + 40) % 360} 70% 35%)`} />
-        </linearGradient>
-        <linearGradient id={`${id}-visor`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#1b2250" />
-          <stop offset="1" stopColor="#0b1020" />
-        </linearGradient>
-      </defs>
-      <circle cx="32" cy="32" r="32" fill={`url(#${id}-bg)`} />
-      {/* suit shoulders */}
-      <path d="M8 64 C10 48 20 44 32 44 C44 44 54 48 56 64 Z" fill="#e8ecf8" />
-      <path d="M8 64 C10 48 20 44 32 44 C44 44 54 48 56 64 Z" fill={`hsl(${h} 40% 30%)`} opacity="0.25" />
-      {/* helmet */}
-      <circle cx="32" cy="26" r="17" fill="#f3f5fb" />
-      <circle cx="32" cy="26" r="13.5" fill={`url(#${id}-visor)`} />
-      <path d="M22 20 Q27 13 36 15" stroke="#ffffff" strokeOpacity="0.55" strokeWidth="2" fill="none" strokeLinecap="round" />
-      <text x="32" y="30.5" textAnchor="middle" fontSize="10" fontWeight="700" fill="#ffffff" fontFamily="Inter, system-ui, sans-serif">
-        {initials}
-      </text>
-      {/* chest patch */}
-      <rect x="27" y="50" width="10" height="6" rx="1.5" fill={`hsl(${h} 70% 55%)`} />
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 64 64"
+      className="avatar"
+      role={labelled ? 'img' : undefined}
+      aria-label={labelled ? `Portrait of ${crew.name}` : undefined}
+      aria-hidden={labelled ? undefined : true}
+      focusable="false"
+    >
+      <circle cx="32" cy="32" r={32 - stroke / 2} fill="var(--surface-2)" stroke="var(--line-strong)" strokeWidth={stroke} />
+      <g fill="none" stroke="var(--text-2)" strokeWidth={stroke} strokeLinecap="round" strokeLinejoin="round">
+        {/* suit shoulders */}
+        <path d="M12 58c2-9 10-13 20-13s18 4 20 13" />
+        {/* helmet and visor */}
+        <circle cx="32" cy="27" r="15" />
+        <path d="M21 27a11 9 0 0 1 22 0v2a11 7 0 0 1-22 0z" fill="var(--surface-3)" />
+      </g>
+      {size >= INITIALS_MIN && (
+        <text x="32" y="31" textAnchor="middle" fontSize="9" fontWeight="600" fill="var(--text)" fontFamily="var(--mono)">
+          {initials}
+        </text>
+      )}
     </svg>
   );
 }

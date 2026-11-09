@@ -1,0 +1,12 @@
+{
+  "url": "http://localhost:4180/",
+  "width": 1440,
+  "frames": 116,
+  "p50": 8.3,
+  "p95": 8.5,
+  "dropped": 0,
+  "longestTask": 0,
+  "clsLoad": 0.0062,
+  "clsTotal": 0.0062,
+  "pass": true
+}

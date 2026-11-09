@@ -20,6 +20,7 @@ const NOISE: Record<IndicatorId, number> = {
   exercise: 22,
   mood: 0.45,
   stress: 0.45,
+  kss: 0.6,
   pvtRt: 14,
   pvtLapses: 0.9,
   radDose: 0,
@@ -133,12 +134,29 @@ function applyScenario(
   }
 }
 
+/** Hours of sleep lost against the set-point raise KSS by about this many points per hour. */
+const KSS_PER_HOUR_LOST = 0.9;
+
+/**
+ * Karolinska sleepiness for one day: the person's set-point, worse after short sleep, worse again inside the
+ * sleep-debt window (accumulated debt) and slightly worse when ill. Uses its own random stream.
+ */
+function sleepiness(scenario: ScenarioId, crewId: string, day: number, sp: Record<IndicatorId, number>, sleep: number, rand: () => number): number {
+  let k = sp.kss + KSS_PER_HOUR_LOST * Math.max(0, sp.sleep - sleep) + NOISE.kss * gaussian(rand);
+  const def = scenarioById(scenario);
+  const active = def.id !== 'nominal' && (def.target === 'all' || def.target === crewId) && day >= def.startDay && day <= def.endDay;
+  if (active && def.id === 'sleepDebt') k += 2.5 * Math.min(1, (day - def.startDay + 1) / 5);
+  if (active && def.id === 'illness') k += 0.7;
+  return k;
+}
+
 /** Build the full record history for one crew member. Deterministic for a given seed. */
 export function simulateMember(
   base: Omit<CrewMember, 'records'>,
   settings: MissionSettings,
 ): CrewMember {
   const rand = mulberry32(settings.seed ^ hashString(base.id));
+  const kssRand = mulberry32(settings.seed ^ hashString(`${base.id}:kss`));
   const env = ENVIRONMENTS[settings.environment];
   const records: DayRecord[] = [];
   const lastDay = Math.min(settings.currentDay, MAX_MISSION_DAY);
@@ -150,7 +168,8 @@ export function simulateMember(
     const inFlight = day >= 1;
 
     for (const def of INDICATORS) {
-      if (def.id === 'radDose') continue;
+      // Dose and sleepiness are derived below; kss draws from its own stream so adding it left every other value unchanged.
+      if (def.id === 'radDose' || def.id === 'kss') continue;
       v[def.id] = sp[def.id] + NOISE[def.id] * gaussian(rand);
     }
 
@@ -179,6 +198,7 @@ export function simulateMember(
     if (inFlight && rand() < 0.08) symptoms.push('backPain');
 
     applyScenario(settings.scenario, base.id, day, v, symptoms, rand);
+    v.kss = sleepiness(settings.scenario, base.id, day, sp, v.sleep, kssRand);
 
     const values: Partial<Record<IndicatorId, number>> = {};
     for (const def of INDICATORS) values[def.id] = clampRound(def.id, v[def.id]);

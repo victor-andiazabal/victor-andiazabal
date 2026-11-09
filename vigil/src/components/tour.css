@@ -1,0 +1,39 @@
+/* First-run tutorial (C1). The spotlight's huge box-shadow is the dim layer, so the cutout is free. */
+
+.tour-layer { position: fixed; inset: 0; z-index: 100; }
+.tour-dim { position: absolute; inset: 0; background: var(--scrim); }
+.tour-spot {
+  position: absolute; top: 0; left: 0;
+  border-radius: var(--r-card);
+  box-shadow: 0 0 0 2px var(--brand), 0 0 0 9999px var(--scrim);
+  pointer-events: none;
+}
+.tour-spot.is-gliding {
+  transition: transform var(--t-glide) var(--ease), width var(--t-glide) var(--ease), height var(--t-glide) var(--ease);
+}
+
+.tour-card {
+  position: absolute; width: 360px; max-width: calc(100vw - 32px);
+  padding: var(--s-6); border-radius: var(--r-panel);
+  background: var(--surface-3); border: 1px solid var(--line-strong); box-shadow: var(--shadow-overlay);
+  animation: tour-card-in var(--t-menu) var(--ease) both;
+}
+@keyframes tour-card-in { from { opacity: 0; } }
+.tour-title { font-size: 18px; line-height: 1.25; margin: 0 0 var(--s-2); }
+.tour-body { font-size: 16px; color: var(--text-2); margin: 0 0 var(--s-6); }
+.tour-foot { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); }
+.tour-dots { display: flex; gap: 6px; }
+.tour-dots span { width: 6px; height: 6px; border-radius: 50%; background: var(--line-strong); }
+.tour-dots span.is-on { background: var(--text); }
+.tour-buttons { display: flex; gap: var(--s-2); }
+.tour-buttons .btn, .tour-next { min-height: var(--hit); padding: 12px 20px; }
+.tour-skip { margin-top: var(--s-2); font-size: 13px; }
+
+@media (max-width: 639px) {
+  .tour-card { width: auto; max-width: none; padding: var(--s-4); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-spot.is-gliding { transition: none; }
+  .tour-card { animation: none; }
+}

@@ -20,9 +20,17 @@ beats per minute at rest. Crews need a tool that notices those shifts for them a
 
 ## What Space Vigil does
 
-- **Daily check-in** for blood pressure, heart rate, heart rate variability, breathing rate, SpO2, temperature,
-  fasting glucose, body mass, sleep, exercise, mood, stress, symptoms and radiation dose. Keyboard, touch, or
-  values pre-filled from a wearable.
+- **Today**: one screen with the day's status (Nominal, Watch or Act now) and its reason, the single next action,
+  a compact body map, and one tile per indicator with its last 14 days as day bars. Tiles that need attention
+  come first.
+- **Daily check-in** in five short steps (vitals, body, sleep and alertness, symptoms, review) for blood pressure,
+  heart rate, heart rate variability, breathing rate, SpO2, temperature, fasting glucose, body mass, sleep,
+  sleepiness (Karolinska scale), exercise, mood, stress, symptoms and radiation dose. Keyboard, touch, or values
+  pre-filled from a wearable, each with your own baseline band beside it.
+- **Crew profiles**: four simulated crew members with names, roles, agencies (NASA, ESA, CSA, JAXA), generated
+  portraits and days in space. Fictional people with plausible resting values; switch between them from the
+  crew tabs in the top bar.
+- **First-run tutorial**: seven steps that point at the real controls; replay it from the help button.
 - **Built around a real wearable.** The intended live source is the Bio-Monitor (Hexoskin Astroskin) shirt that
   has flown on the ISS since 2019: ECG, HRV, breathing, SpO2, skin temperature, activity and sleep from one
   garment over Bluetooth. The Learn page shows the data path from shirt to flight surgeon.
@@ -36,6 +44,16 @@ beats per minute at rest. Crews need a tool that notices those shifts for them a
   checklist of what to do. Three levels: Nominal, Watch, Act now. Alerts that need the ground say so.
 - **Flight surgeon message**: one copy-paste summary of the day's values and flags, built for a link where a
   reply takes up to 48 minutes round trip.
+- **Body map**: a body figure coloured by the same rule results, grouped into seven body systems (brain and
+  behavior, eyes, immune, heart and lungs, metabolism, bones and muscle, skin and radiation dose). Click a
+  system to see which indicators feed it, which of the five hazards affect it, and what to do.
+- **Crew and ground link with light-time delay**: the crew tablet sends the day's report to the ground console
+  (open `?view=ground` in a second window) and the message arrives only after the one-way delay of the chosen
+  link (Moon 3-10 s end to end with relays, Mars 4-24 min). Demo time compresses 1 minute of delay into 1 second so it plays live.
+  The ground replies the same way. Messages are stored and forwarded; nothing needs a server.
+- **Mission patches**: badges for habits, not readings: first check-in, 7- and 14-day streaks, a full routine
+  day, reaction tests on 3 days in a week, 147 min of exercise on 5 days in a row, a complete record. Patches
+  never depend on whether a value is good, so there is nothing to gain by under-reporting.
 - **Trends**: every indicator over the mission with the baseline band, launch marker, scenario window and
   published cut-offs drawn on the chart. Compare the whole crew with one checkbox.
 - **Routine and streak**: timed prompts for the day (reaction test after waking, vitals, exercise block,
@@ -43,7 +61,8 @@ beats per minute at rest. Crews need a tool that notices those shifts for them a
 - **Ground view**: the flight surgeon's side of the same data. Crew-by-indicator status grid, the queue of
   items the crew flagged for the ground, and per-crew notes.
 - **Import**: CSV in the export layout, so cuff or wearable exports replace the simulated day.
-- **Learn**: what each indicator means, how to measure it on board, and every source used.
+- **Learn**: why the app exists, the five hazards, the data path from the Bio-Monitor shirt to the flight surgeon,
+  how the rules decide, what each indicator means and how to measure it on board, how it was designed, and every source.
 - **Four environments**: space station, deep-space transit, pressurized rover, planetary base. Each sets the
   comm delay and the expected daily radiation dose from measured values.
 - **Four demo scenarios**: nominal, solar particle event, sleep debt with slowed reactions, early infection.
@@ -62,12 +81,13 @@ Highlights:
 | Fever | 38.0 °C | CDC |
 | SpO2 | below 95% watch, below 90% act | Mayo Clinic |
 | Fasting glucose | <70 hypoglycemia, 100-125 prediabetes range, ≥126 diabetes range | ADA Standards of Care |
+| Sleepiness | Karolinska scale 7 or more flagged | Kaida et al. 2006 |
 | Sleep | adults need ≥7 h; ISS crews scheduled 8.5 h, average 6.1 h | AASM; Barger et al. 2014 |
 | Reaction test | 3-minute PVT-B, lapse ≥355 ms | Basner, Mollicone, Dinges 2011; NASA NTRS |
 | Radiation | 600 mSv career limit, 250 mSv per solar particle event | NASA OCHMO, NASA-STD-3001 |
 | Daily dose | 1.84 mSv/day in transit, 0.64 mSv/day on Mars, 0.2-0.5 mSv/day on ISS | MSL/RAD (Zeitlin 2013, Hassler 2014); Shavers 2024 |
 | Exercise | about 147 min/day assigned on ISS | NASA NTRS |
-| Comm delay | 3-10 s Moon, 4-24 min Mars | NASA Ames |
+| Comm delay | Moon about 1.3 s light time, 3-10 s with relays; Mars 4-24 min | NASA Ames |
 | Breathing rate | 12-20 per minute typical | Cleveland Clinic |
 | Heart rate variability | personal baseline only | Shaffer and Ginsberg 2017 |
 | Wearable source | Bio-Monitor / Astroskin on ISS since 2019 | CSA; NASA NTRS 20190000238 |
@@ -82,7 +102,7 @@ npm install
 npm run dev
 ```
 
-Tests: `npm test` (vitest, covers the statistics, the simulator and every alert rule at its cited cut-off).
+Tests: `npm test` (vitest: the statistics, the simulator, every alert rule at its cited cut-off, CSV import, the body map, the comm link queue, the badges, the Today grouping and the check-in draft).
 
 Production build: `npm run build`, output in `dist/`. The GitHub Actions workflow in
 `.github/workflows/pages.yml` builds and deploys to GitHub Pages on every push to `main`.
@@ -95,9 +115,12 @@ React 19, TypeScript, Vite, Recharts. No backend, no accounts, no network calls 
 
 ```
 vigil/
-  src/data/        indicators, crew roster, scenarios, countermeasure checklists, sources
-  src/lib/         simulator, baseline statistics, rule engine, pulse estimation, storage
-  src/components/  dashboard, check-in, reaction test, trends, alerts, routine, learn, settings
+  src/data/        indicators, crew roster, scenarios, countermeasure checklists, sources, body systems,
+                   link delay presets, daily routine
+  src/lib/         simulator, baseline statistics, rule engine, pulse estimation, storage, CSV, body map
+                   status, comm link queue, badges
+  src/components/  Today, body map, check-in, reaction test, trends, alerts, comm link, routine,
+                   badges, learn, settings
   src/lib/__tests__ unit tests for the statistics, simulator and rules
   docs/            sources, design process, demo deck (pptx), slide outline, video script, video, submission draft, pitch notes
 ```

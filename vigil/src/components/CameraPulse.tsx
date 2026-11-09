@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { estimatePulse, type PpgResult, type PpgSample } from '../lib/ppg';
+import { Segmented } from './controls/Segmented';
 import { SourceLinks } from './ui';
+import './camera-pulse.css';
 
 type Mode = 'finger' | 'face';
 type Phase = 'idle' | 'starting' | 'recording' | 'done' | 'error';
@@ -96,59 +98,87 @@ export function CameraPulse({ onResult }: { onResult: (bpm: number) => void }) {
     : '';
 
   return (
-    <div className="panel" style={{ background: 'var(--bg-2)' }}>
-      <h3 className="camera-pulse-title">Camera pulse <span className="pill neutral">experimental</span></h3>
-      <p className="muted" style={{ fontSize: 13 }}>
+    <div className="cp">
+      <div className="cp-head">
+        <h3>Camera pulse</h3>
+        <span className="pill neutral">experimental</span>
+      </div>
+      <p className="cp-text">
         Twenty seconds of video, no upload. Fingertip over the camera (with the light on) gives the cleanest signal;
         face mode needs steady, bright, even light.
       </p>
-      <div className="scale" style={{ maxWidth: 320, marginBottom: 10 }}>
-        <button type="button" className={mode === 'finger' ? 'on' : ''} onClick={() => setMode('finger')} disabled={phase === 'recording'}>Fingertip</button>
-        <button type="button" className={mode === 'face' ? 'on' : ''} onClick={() => setMode('face')} disabled={phase === 'recording'}>Face</button>
-      </div>
-      <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-        <video ref={videoRef} muted playsInline style={{ width: 160, height: 120, borderRadius: 10, background: '#000', objectFit: 'cover', display: phase === 'recording' || phase === 'starting' ? 'block' : 'none' }} />
-        <canvas ref={canvasRef} style={{ display: 'none' }} />
-        <div style={{ flex: 1, minWidth: 220 }}>
-          {phase === 'idle' && <button type="button" className="btn" onClick={start}>Start {SECONDS} s measurement</button>}
+      {phase !== 'recording' && phase !== 'starting' && (
+        <Segmented
+          label="Camera pulse mode"
+          value={mode}
+          onChange={(v) => setMode(v as Mode)}
+          options={[
+            { value: 'finger', label: 'Fingertip' },
+            { value: 'face', label: 'Face' },
+          ]}
+        />
+      )}
+      <div className="cp-body">
+        <video ref={videoRef} muted playsInline className="cp-video" data-on={phase === 'recording' || phase === 'starting'} />
+        <canvas ref={canvasRef} hidden />
+        <div className="cp-state">
+          {phase === 'idle' && (
+            <button type="button" className="btn" onClick={start}>
+              Start {SECONDS} s measurement
+            </button>
+          )}
           {phase === 'starting' && <span className="muted">Waiting for camera permission…</span>}
           {phase === 'recording' && (
             <>
-              <div className="progress" style={{ marginBottom: 6 }}><span style={{ width: `${(elapsed / SECONDS) * 100}%` }} /></div>
-              <span className="muted mono">{elapsed.toFixed(0)} / {SECONDS} s</span>{' '}
-              <button type="button" className="btn sm" onClick={cancel} style={{ marginLeft: 8 }}>Cancel</button>
+              <div className="progress cp-progress">
+                <span style={{ width: `${(elapsed / SECONDS) * 100}%` }} />
+              </div>
+              <div className="cp-row">
+                <span className="muted mono">
+                  {elapsed.toFixed(0)} / {SECONDS} s
+                </span>
+                <button type="button" className="btn-ghost" onClick={cancel}>
+                  Cancel
+                </button>
+              </div>
             </>
           )}
           {phase === 'error' && (
             <>
-              <span style={{ color: 'var(--red)' }}>Camera not available: {error}</span>{' '}
-              <button type="button" className="btn sm" onClick={() => setPhase('idle')}>Back</button>
+              <p className="cp-error">Camera not available: {error}</p>
+              <button type="button" className="btn" onClick={() => setPhase('idle')}>
+                Back
+              </button>
             </>
           )}
           {phase === 'done' && result && (
             <>
-              <svg viewBox="0 0 300 60" width="100%" height="60" aria-label="Pulse waveform" style={{ background: 'var(--panel)', borderRadius: 8 }}>
-                <path d={path} fill="none" stroke="var(--accent)" strokeWidth="1.5" />
+              <svg viewBox="0 0 300 60" width="100%" height="60" role="img" aria-label="Pulse waveform" className="cp-wave">
+                <path d={path} fill="none" stroke="var(--text-2)" strokeWidth="1.5" />
               </svg>
               {result.bpm !== null ? (
-                <p style={{ margin: '6px 0' }}>
-                  <b style={{ fontSize: 22 }}>{result.bpm} bpm</b>{' '}
+                <p className="cp-row">
+                  <span className="cp-bpm mono">{result.bpm} bpm</span>
                   <span className={`pill ${result.quality === 'good' ? 'green' : 'amber'}`}>signal {result.quality}</span>
                 </p>
               ) : (
-                <p style={{ margin: '6px 0', color: 'var(--amber)' }}>Signal too weak to read a pulse. Cover the lens fully, hold still, add light, and try again.</p>
+                <p className="cp-weak">Signal too weak to read a pulse. Cover the lens fully, hold still, add light, and try again.</p>
               )}
-              <div style={{ display: 'flex', gap: 8 }}>
-                {result.bpm !== null && <button type="button" className="btn sm primary" onClick={() => onResult(result.bpm!)}>Use {result.bpm} bpm as heart rate</button>}
-                <button type="button" className="btn sm" onClick={() => setPhase('idle')}>Measure again</button>
+              <div className="cp-row">
+                {result.bpm !== null && (
+                  <button type="button" className="btn" onClick={() => onResult(result.bpm!)}>
+                    Use {result.bpm} bpm as heart rate
+                  </button>
+                )}
+                <button type="button" className="btn-ghost" onClick={() => setPhase('idle')}>
+                  Measure again
+                </button>
               </div>
             </>
           )}
         </div>
       </div>
-      <div style={{ marginTop: 8 }}>
-        <SourceLinks ids={['rppg']} compact />
-      </div>
+      <SourceLinks ids={['rppg']} compact />
     </div>
   );
 }

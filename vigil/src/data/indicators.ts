@@ -3,6 +3,8 @@ import type { IndicatorId } from '../lib/types';
 export interface IndicatorDef {
   id: IndicatorId;
   label: string;
+  /** Tile label: one line at 13px beside the status pill, down to a 390px phone (about 76px). Falls back to label. */
+  shortLabel?: string;
   short: string;
   unit: string;
   decimals: number;
@@ -15,6 +17,8 @@ export interface IndicatorDef {
   how: string;
   /** Published reference range text, with source ids. */
   reference: string;
+  /** One plain sentence tying the reading to the five HRP hazards, shown on the check-in cue card. */
+  whySpace?: string;
   sources: string[];
   /** 'manual' = entered by the crew member, 'device' = comes from a wearable or sensor in the simulation. */
   entry: 'manual' | 'device';
@@ -25,6 +29,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'hr',
     label: 'Resting heart rate',
+    shortLabel: 'Resting HR',
     short: 'HR',
     unit: 'bpm',
     decimals: 0,
@@ -34,6 +39,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'How many times the heart beats per minute while at rest. It rises with fever, dehydration, stress and poor sleep.',
     how: 'From the Bio-Monitor shirt, a wearable or the camera pulse tool; or sit still 5 minutes and count the pulse at the wrist for 30 seconds and double it.',
     reference: 'Typical adult resting range 60-100 bpm (AHA). Very fit people are often lower, so Space Vigil also compares with your own baseline.',
+    whySpace: 'In a closed cabin an infection reaches the whole crew, and a resting rate that climbs with fever, stress or poor sleep is often the first sign.',
     sources: ['aha-hr'],
     entry: 'device',
     group: 'vitals',
@@ -41,6 +47,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'bpSys',
     label: 'Blood pressure, systolic',
+    shortLabel: 'Systolic BP',
     short: 'SYS',
     unit: 'mmHg',
     decimals: 0,
@@ -50,6 +57,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Pressure in the arteries when the heart contracts. The top number of a blood-pressure reading.',
     how: 'Use the cuff after 5 minutes seated, arm supported, feet flat. Take two readings a minute apart and enter the second.',
     reference: 'Normal <120; elevated 120-129; stage 1 130-139; stage 2 >=140; crisis >180 (ACC/AHA 2017).',
+    whySpace: 'Far from Earth the flight surgeon sees only what you send, so pressure is checked against the published ACC/AHA cut-offs every day.',
     sources: ['aha-bp'],
     entry: 'manual',
     group: 'vitals',
@@ -57,6 +65,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'bpDia',
     label: 'Blood pressure, diastolic',
+    shortLabel: 'Diastolic BP',
     short: 'DIA',
     unit: 'mmHg',
     decimals: 0,
@@ -66,6 +75,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Pressure in the arteries between beats. The bottom number of a blood-pressure reading.',
     how: 'Same cuff reading as systolic.',
     reference: 'Normal <80; stage 1 80-89; stage 2 >=90; crisis >120 (ACC/AHA 2017).',
+    whySpace: 'Read together with systolic: the same ACC/AHA cut-offs apply in orbit as on the ground.',
     sources: ['aha-bp'],
     entry: 'manual',
     group: 'vitals',
@@ -73,6 +83,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'spo2',
     label: 'Blood oxygen (SpO2)',
+    shortLabel: 'SpO2',
     short: 'SpO2',
     unit: '%',
     decimals: 0,
@@ -82,6 +93,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Share of hemoglobin carrying oxygen, measured through the skin with a pulse oximeter.',
     how: 'Clip the oximeter on a warm finger, hold still for 30 seconds, enter the stable value.',
     reference: '95-100% is typical; below 90% is low (Mayo Clinic).',
+    whySpace: 'In a hostile, closed environment the cabin air is the only air, so a low reading means checking the finger first, then cabin oxygen and CO2.',
     sources: ['mayo-spo2'],
     entry: 'device',
     group: 'vitals',
@@ -89,6 +101,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'resp',
     label: 'Breathing rate',
+    shortLabel: 'Breathing',
     short: 'Breaths',
     unit: '/min',
     decimals: 0,
@@ -98,6 +111,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Breaths per minute at rest, from the stretch bands in the smart shirt. It climbs with fever, anxiety, pain and cabin CO2.',
     how: 'Read from the Bio-Monitor shirt, or count breaths for 60 seconds while seated.',
     reference: 'Typical adult resting rate 12-20 breaths per minute (Cleveland Clinic).',
+    whySpace: 'The cabin air is recycled and CO2 builds up in poorly ventilated corners, so fast breathing at rest can mean fever, anxiety or the air itself.',
     sources: ['resp-range', 'bio-monitor-csa'],
     entry: 'device',
     group: 'vitals',
@@ -105,6 +119,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'hrv',
     label: 'Heart rate variability',
+    shortLabel: 'HRV',
     short: 'HRV',
     unit: 'ms',
     decimals: 0,
@@ -114,6 +129,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'How much the gap between heartbeats varies (RMSSD), from the shirt\'s ECG. Higher usually means better recovery; a sustained drop tracks fatigue and stress.',
     how: 'Overnight value from the Bio-Monitor shirt or a wearable. Not something to measure by hand.',
     reference: 'No universal cut-off; normal values differ a lot between people, so Space Vigil compares with your own baseline only (Shaffer 2017).',
+    whySpace: 'Long shifts, short sleep and isolation wear down recovery; a few low nights in a row is an early warning before you feel it.',
     sources: ['hrv-norms', 'bio-monitor-csa'],
     entry: 'device',
     group: 'vitals',
@@ -121,15 +137,17 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'temp',
     label: 'Body temperature',
+    shortLabel: 'Body temp',
     short: 'Temp',
     unit: '°C',
     decimals: 1,
     min: 33,
     max: 42,
     step: 0.1,
-    what: 'Core body temperature. A rise can be the first sign of infection, which matters a lot in a closed cabin.',
+    what: 'Core body temperature. A rise can be the first sign of infection, which matters in a closed cabin.',
     how: 'Oral or forehead thermometer, at the same time each day, not right after exercise or a hot drink.',
     reference: 'Fever is 38.0 °C (100.4 °F) or higher (CDC).',
+    whySpace: 'Infection spreads easily in a closed cabin, so a fever is reported early to protect the whole crew.',
     sources: ['cdc-fever'],
     entry: 'manual',
     group: 'vitals',
@@ -137,6 +155,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'glucose',
     label: 'Fasting blood glucose',
+    shortLabel: 'Glucose',
     short: 'Glucose',
     unit: 'mg/dL',
     decimals: 0,
@@ -146,6 +165,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Sugar in the blood before the first meal of the day. Tracks nutrition and metabolic stress.',
     how: 'Finger-stick meter before eating. Note if the reading was not fasting.',
     reference: 'Fasting <100 normal; 100-125 prediabetes range; >=126 diabetes range; <70 hypoglycemia (ADA).',
+    whySpace: 'Distance from Earth means no quick resupply or clinic, so nutrition and metabolic stress are tracked from the first fasting reading.',
     sources: ['ada-glucose'],
     entry: 'manual',
     group: 'metabolic',
@@ -162,6 +182,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Your weight, measured about once a week. Crews tend to lose mass in flight through fluid shifts, muscle loss and under-eating.',
     how: 'Use the on-board mass measurement device weekly, or a scale on a planetary surface.',
     reference: 'No published cut-off is used; Space Vigil compares with your own pre-flight baseline.',
+    whySpace: 'Crews lose mass in flight through fluid shifts, muscle loss and under-eating, so each weekly reading is compared with your pre-flight mass.',
     sources: ['hrp-hazards'],
     entry: 'manual',
     group: 'metabolic',
@@ -169,6 +190,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'sleep',
     label: 'Sleep duration',
+    shortLabel: 'Sleep',
     short: 'Sleep',
     unit: 'h',
     decimals: 1,
@@ -178,6 +200,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Hours actually slept. ISS crews are scheduled 8.5 h but average about 6 h, and short sleep degrades alertness.',
     how: 'From the wearable, or estimate from lights-out to wake-up minus time awake.',
     reference: 'Adults need 7 h or more (AASM). ISS schedules allow 8.5 h; measured average about 6.1 h (Barger 2014).',
+    whySpace: 'Isolation and long shifts cut sleep: ISS crews are scheduled 8.5 h but average about 6 h, and short sleep degrades alertness.',
     sources: ['aasm-sleep', 'barger-2014'],
     entry: 'device',
     group: 'behavioral',
@@ -185,6 +208,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'exercise',
     label: 'Exercise time',
+    shortLabel: 'Exercise',
     short: 'Exercise',
     unit: 'min',
     decimals: 0,
@@ -194,6 +218,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Minutes of resistive plus aerobic exercise. The main countermeasure against bone and muscle loss in reduced gravity.',
     how: 'Log the session from the exercise device, or enter minutes by hand.',
     reference: 'ISS schedules assign about 147 min/day; loaded time is often far lower (NASA NTRS).',
+    whySpace: 'In reduced gravity, exercise is the main countermeasure against bone and muscle loss.',
     sources: ['iss-exercise', 'hrp-hazards'],
     entry: 'manual',
     group: 'behavioral',
@@ -210,6 +235,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Self-rated mood from 1 (very low) to 5 (very good). Isolation and confinement are one of the five spaceflight hazards.',
     how: 'Rate honestly how you feel today, not how you want to feel.',
     reference: 'No universal cut-off. Space Vigil looks for a sustained drop against your own baseline.',
+    whySpace: 'Isolation and confinement are one of the five spaceflight hazards; a sustained drop against your own normal is the signal to act.',
     sources: ['hrp-hazards', 'hfbp'],
     entry: 'manual',
     group: 'behavioral',
@@ -226,13 +252,33 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Self-rated stress from 1 (calm) to 5 (overwhelmed).',
     how: 'Rate how much pressure you felt over the last 24 hours.',
     reference: 'No universal cut-off. Space Vigil looks for a sustained rise against your own baseline.',
+    whySpace: 'Months of isolation, confinement and workload raise stress; Space Vigil watches for a sustained rise against your own normal.',
     sources: ['hfbp'],
+    entry: 'manual',
+    group: 'behavioral',
+  },
+  {
+    id: 'kss',
+    label: 'Sleepiness (Karolinska scale)',
+    shortLabel: 'Sleepiness',
+    short: 'KSS',
+    unit: '/9',
+    decimals: 0,
+    min: 1,
+    max: 9,
+    step: 1,
+    what: 'Self-rated sleepiness on the Karolinska Sleepiness Scale, from 1 (extremely alert) to 9 (extremely sleepy, fighting sleep). Higher ratings go with slower reaction times and more lapses.',
+    how: 'Rate how alert you feel right now, at the same time each day, before coffee or exercise if you can.',
+    reference: 'Validated against reaction-test lapses and EEG: ratings rise as performance falls (Kaida 2006). Space Vigil flags 7 (sleepy) or higher.',
+    whySpace: 'Isolation and long shifts erode sleep; a rating of 7 or more goes with slower reactions and more lapses on the reaction test.',
+    sources: ['kaida-2006'],
     entry: 'manual',
     group: 'behavioral',
   },
   {
     id: 'pvtRt',
     label: 'Reaction test, mean response time',
+    shortLabel: 'Reaction',
     short: 'PVT RT',
     unit: 'ms',
     decimals: 0,
@@ -242,6 +288,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Average response time on the reaction self-test. It slows with sleep loss before you feel tired.',
     how: 'Run the 60-second reaction test in Space Vigil (a shortened form of the 3-minute PVT-B the ISS crews use).',
     reference: 'Compared with your own baseline. Lapses are responses of 355 ms or more (PVT-B).',
+    whySpace: 'Reaction time slows with sleep loss before you feel tired, which matters before docking, EVA prep or driving.',
     sources: ['pvt-b', 'reaction-self-test'],
     entry: 'device',
     group: 'behavioral',
@@ -249,6 +296,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'pvtLapses',
     label: 'Reaction test, lapses',
+    shortLabel: 'Lapses',
     short: 'Lapses',
     unit: '',
     decimals: 0,
@@ -258,6 +306,7 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Number of responses slower than 355 ms during the test. Lapses are the most sleep-sensitive PVT measure.',
     how: 'Counted automatically by the reaction test.',
     reference: 'Lapse threshold 355 ms for the brief PVT (Basner 2011).',
+    whySpace: 'Lapses are the most sleep-sensitive reaction-test measure, so they catch fatigue from long shifts early.',
     sources: ['pvt-b'],
     entry: 'device',
     group: 'behavioral',
@@ -265,6 +314,7 @@ export const INDICATORS: IndicatorDef[] = [
   {
     id: 'radDose',
     label: 'Radiation dose today',
+    shortLabel: 'Radiation',
     short: 'Dose',
     unit: 'mSv',
     decimals: 2,
@@ -274,11 +324,31 @@ export const INDICATORS: IndicatorDef[] = [
     what: 'Effective dose received today from the personal dosimeter. Space radiation is one of the five hazards.',
     how: 'Read from the personal dosimeter or the vehicle radiation monitor.',
     reference: 'Career limit 600 mSv; 250 mSv short-term limit for one solar particle event (NASA-STD-3001). Cruise to Mars about 1.84 mSv/day, Mars surface about 0.64 mSv/day (MSL/RAD).',
+    whySpace: 'Space radiation is one of the five hazards: about 1.84 mSv a day in cruise to Mars, against a 600 mSv career limit.',
     sources: ['ochmo-radiation', 'rad-cruise', 'rad-surface', 'iss-dose'],
     entry: 'device',
     group: 'environment',
   },
 ];
+
+/** Standard KSS anchors (Akerstedt and Gillberg 1990, as used by Kaida 2006); even numbers carry no label. */
+export const KSS_ANCHORS: Record<number, string> = {
+  1: 'extremely alert',
+  3: 'alert',
+  5: 'neither alert nor sleepy',
+  7: 'sleepy, but no effort to keep awake',
+  9: 'extremely sleepy, fighting sleep',
+};
+
+/** Short forms of the anchors, used to place an unlabeled even rating between its neighbours. */
+const KSS_SHORT: Record<number, string> = { 1: 'extremely alert', 3: 'alert', 5: 'neither alert nor sleepy', 7: 'sleepy', 9: 'extremely sleepy' };
+
+/** Anchor text for a KSS rating; an unlabeled even rating is described by its neighbours. */
+export function kssAnchor(n: number): string {
+  const r = Math.round(n);
+  if (KSS_ANCHORS[r]) return KSS_ANCHORS[r];
+  return `between ${KSS_SHORT[r - 1] ?? r - 1} and ${KSS_SHORT[r + 1] ?? r + 1}`;
+}
 
 export const indicatorById = (id: IndicatorId): IndicatorDef => INDICATORS.find((i) => i.id === id)!;
 
@@ -326,7 +396,7 @@ export const ENVIRONMENTS: Record<
   rover: {
     label: 'Pressurized rover (surface)',
     blurb: 'Small crew away from the base for days, limited medical kit.',
-    commDelay: '3-10 s (Moon) to 4-24 min (Mars)',
+    commDelay: '3-10 s with relays (Moon) to 4-24 min (Mars)',
     dailyDoseMsv: 0.64,
     doseNote: 'Mars surface about 0.64 mSv/day; the Moon has no atmosphere and no magnetic field either.',
     gravity: 'partial gravity',
@@ -334,7 +404,7 @@ export const ENVIRONMENTS: Record<
   base: {
     label: 'Planetary base',
     blurb: 'Long stay in partial gravity with better shielding and a larger medical kit.',
-    commDelay: '3-10 s (Moon) to 4-24 min (Mars)',
+    commDelay: '3-10 s with relays (Moon) to 4-24 min (Mars)',
     dailyDoseMsv: 0.5,
     doseNote: 'Below the open-surface rate thanks to regolith shielding; exact value depends on the habitat.',
     gravity: 'partial gravity',

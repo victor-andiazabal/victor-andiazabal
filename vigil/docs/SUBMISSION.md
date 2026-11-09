@@ -12,7 +12,8 @@ Space Vigil
 
 Space Vigil is a browser-based health self-assessment tool for astronauts on long-duration missions. Each crew
 member logs daily indicators named in the challenge (blood pressure, heart rate, glucose, temperature,
-sleep, mood) plus SpO2, body mass, exercise, stress, a 60-second reaction test and radiation dose. Space Vigil
+sleep, mood) plus SpO2, breathing rate, heart rate variability, body mass, exercise, stress, sleepiness,
+a 60-second reaction test and radiation dose. Space Vigil
 compares every value with the person's own 14-day pre-flight baseline and with published cut-offs from
 NASA-STD-3001, the ACC/AHA, CDC and ADA, then shows a colour-coded status and plain-language alerts. Every
 alert states the rule that fired, the numbers, the source, a countermeasure checklist, and whether the
@@ -34,8 +35,10 @@ Source: https://github.com/victor-andiazabal/victor-andiazabal/tree/main/vigil
 
 **What it does.** A daily check-in form (keyboard, touch or pre-filled from a wearable), a camera-based pulse
 measurement (fingertip or face, processed on the device), a psychomotor vigilance reaction test, trend charts with the baseline band and published cut-offs, an alert list with
-checklists, a routine with timed prompts and a streak, a ground view for the flight surgeon, CSV import for
-device data, a learn section, and mission settings.
+checklists, a body map that colours seven body systems from the rule results, a routine with timed prompts, a streak and
+mission patches for habits, a ground view for the flight surgeon with a crew-to-ground message link that delivers
+reports after the one-way light-time delay (demo time compresses it), CSV import for device data, a learn
+section, and mission settings.
 
 **How it works.** Pre-flight days give a median and a median absolute deviation per indicator. In-flight
 values are turned into a robust z-score; values beyond about 3 typical deviations, or three-day trends, are

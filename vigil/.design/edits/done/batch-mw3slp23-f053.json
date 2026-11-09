@@ -1,0 +1,90 @@
+{
+  "id": "batch-mw3slp23-f053",
+  "kind": "batch",
+  "sentAt": "2026-11-05T17:01:24.891Z",
+  "page": "http://127.0.0.1:3016/",
+  "items": [
+    {
+      "n": 1,
+      "action": "comment",
+      "note": "change the button it looks really plain",
+      "component": null,
+      "target": {
+        "selector": "#root > div > main > div > div:nth-of-type(1) > section:nth-of-type(1) > div:nth-of-type(3) > button:nth-of-type(1)",
+        "label": "button \"Start check-in\"",
+        "tag": "button",
+        "text": "Start check-in",
+        "classes": "btn-primary next-action",
+        "section": "section \"Today's status:\nAct now\"",
+        "html": "<button type=\"button\" class=\"btn-primary next-action\" data-tour=\"next-action\">Start check-in</button>",
+        "rect": {
+          "x": 481,
+          "y": 360,
+          "w": 360,
+          "h": 56
+        },
+        "viewport": {
+          "w": 1590,
+          "h": 935
+        }
+      },
+      "page": "/"
+    },
+    {
+      "n": 2,
+      "action": "replace",
+      "note": "",
+      "component": {
+        "id": 23552,
+        "name": "Segmented Control",
+        "author": "ddoemonn"
+      },
+      "target": {
+        "selector": "#root > div > header",
+        "label": "header \"VIGIL Crew member Commander Flight Engin…\"",
+        "tag": "header",
+        "text": "VIGIL Crew member Commander Flight Engineer 1 Flight Engineer 2 Mission Specialist Mission Day 30 Dark Light",
+        "classes": "topbar",
+        "section": "header",
+        "html": "<header class=\"topbar\"><div class=\"brand\"><svg width=\"28\" height=\"28\" viewBox=\"0 0 32 32\" aria-hidden=\"true\" focusable=\"false\" class=\"logo\"><circle cx=\"16\" cy=\"16\" r=\"14\" fill=\"none\" stroke=\"var(--brand)\" stroke-width=\"2\"></circle><path d=\"M6 17 L11 17 L13 11 L16 23 L19 14 L21 17 L26 17\" fill=\"none\" stroke=\"var(--brand)\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"></path></svg><span class=\"brand-name\">VIGIL</span></div><div class=\"topbar-spacer\"></div><label class=\"sr-only\" for=\"crew-select\">Crew member</label><select id=\"crew-select\" class=\"crew-select\"><option value=\"cdr\">Commander</option><option value=\"fe1\">Flight Engineer 1</option><option value=\"fe2\">Flight Engineer",
+        "rect": {
+          "x": 0,
+          "y": 113,
+          "w": 1575,
+          "h": 64
+        },
+        "viewport": {
+          "w": 1590,
+          "h": 935
+        }
+      },
+      "page": "/"
+    },
+    {
+      "n": 3,
+      "action": "comment",
+      "note": "change the edges of all the tabs and buttons find a different type of button",
+      "component": null,
+      "target": {
+        "selector": "#root > div > main > div",
+        "label": "div \"9/15 in range Today's status: Act now 2 …\"",
+        "tag": "div",
+        "text": "9/15 in range Today's status: Act now 2 items need action: severe short sleep, reaction time well below your baseline Mission day 30 · Commander, CDR, pilot · D",
+        "classes": "main-inner",
+        "section": "main \"Today's status:\nAct now\"",
+        "html": "<div class=\"main-inner\"><div class=\"today-top\"><section class=\"panel status-panel\" data-tour=\"status\" aria-labelledby=\"status-word\"><div class=\"ring red\"><svg viewBox=\"0 0 160 160\" aria-hidden=\"true\"><circle class=\"ring-track\" cx=\"80\" cy=\"80\" r=\"72\"></circle><circle class=\"ring-arc\" cx=\"80\" cy=\"80\" r=\"72\" stroke-dasharray=\"452.3893421169302\" stroke-dashoffset=\"180.95573684677208\" transform=\"rotate(-90 80 80)\" style=\"--c: 452.3893421169302;\"></circle></svg><span class=\"ring-text\"><span class=\"ring-count mono\">9/15</span><span class=\"ring-cap\">in range</span></span></div><div class=\"status-text\"><h1 id=\"status-word\" class=\"status-word red\"><span class=\"sr-only\">Today's status: </span>Act now</",
+        "rect": {
+          "x": 272,
+          "y": 96,
+          "w": 1271,
+          "h": 1517
+        },
+        "viewport": {
+          "w": 1590,
+          "h": 935
+        }
+      },
+      "page": "/"
+    }
+  ]
+}

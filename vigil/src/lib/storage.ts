@@ -1,6 +1,6 @@
 import type { AppState, MissionSettings } from './types';
 
-const KEY = 'vigil:v1';
+export const STATE_KEY = 'vigil:v1';
 
 export const DEFAULT_SETTINGS: MissionSettings = {
   environment: 'transit',
@@ -14,7 +14,7 @@ export type Persisted = Pick<AppState, 'settings' | 'selectedCrewId' | 'manual' 
 
 export function loadState(): Persisted | null {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(STATE_KEY);
     if (!raw) return null;
     const p = JSON.parse(raw) as Partial<Persisted>;
     if (!p.settings) return null;
@@ -31,9 +31,13 @@ export function loadState(): Persisted | null {
   }
 }
 
+export function serializeState(p: Persisted): string {
+  return JSON.stringify(p);
+}
+
 export function saveState(p: Persisted) {
   try {
-    localStorage.setItem(KEY, JSON.stringify(p));
+    localStorage.setItem(STATE_KEY, serializeState(p));
   } catch {
     /* storage unavailable (private window, etc.) */
   }
@@ -41,7 +45,7 @@ export function saveState(p: Persisted) {
 
 export function clearState() {
   try {
-    localStorage.removeItem(KEY);
+    localStorage.removeItem(STATE_KEY);
   } catch {
     /* ignore */
   }
