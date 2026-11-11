@@ -9,6 +9,8 @@ import { useStore } from '../state/store';
 import { Avatar } from './Avatar';
 import { IconChevronRight } from './icons';
 import { IndicatorTile } from './IndicatorTile';
+import { tileNote } from '../lib/words';
+import { scenarioById } from '../lib/simulate';
 import { StatusPanel } from './StatusPanel';
 import { Disclaimer, Pill } from './ui';
 import './today.css';
@@ -103,13 +105,21 @@ export function Today({ go }: { go: Go }) {
   return (
     <>
       <div className="today-top">
-        <StatusPanel ev={ev} action={action} sweep={sweep} meta={meta} surgeonNote={surgeonNote} go={go} />
+        <StatusPanel ev={ev} action={action} sweep={sweep} meta={meta} surgeonNote={surgeonNote} portrait={<Avatar crew={selected} size={28} />} go={go} />
         <section className="panel today-body" data-tour="bodymap" aria-labelledby="today-body-title">
           <h2 id="today-body-title">Body map</h2>
           <Suspense fallback={<p className="muted bm-fallback">Loading body map…</p>}>
             <BodyMap go={go} compact />
           </Suspense>
         </section>
+      </div>
+
+      <div className="mission-strip" aria-label="Mission context">
+        <span className="pill neutral"><span className="k">where</span>{env.label}</span>
+        <span className="pill neutral"><span className="k">gravity</span>{env.gravity}</span>
+        <span className="pill neutral"><span className="k">signal to Earth</span>{env.commDelay} one way</span>
+        <span className="pill neutral"><span className="k">scenario</span>{scenarioById(settings.scenario).label}</span>
+        <span className="pill neutral sim">simulated crew, not real people</span>
       </div>
 
       <section className="today-section" aria-label="Indicators">
@@ -119,7 +129,12 @@ export function Today({ go }: { go: Go }) {
               <h2 id={`today-${g.id}-title`}>
                 {g.title} <span className="ind-count mono">{g.defs.length}</span>
               </h2>
-              {gi === 0 && <span className="section-hint">Tap a tile for its trend; tap the day bars for the last 14 days</span>}
+              {gi === 0 && (
+                <span className="section-hint">
+                  <span className="legend-line"><span className="dot green" aria-hidden="true" /> normal for you <span className="dot amber" aria-hidden="true" /> keep an eye on it <span className="dot red" aria-hidden="true" /> do something now</span>
+                  Tap a tile for its trend, the day bars for the last 14 days, or <b>i</b> for what it measures.
+                </span>
+              )}
             </div>
             <div className="ind-grid">
               {g.defs.map((def, i) => {
@@ -133,6 +148,7 @@ export function Today({ go }: { go: Go }) {
                     trend={trends[def.id]}
                     order={order}
                     refresh={sweep > 0 && refreshed[def.id] === g.id}
+                    note={tileNote(def, ev.byIndicator[def.id], settings.environment)}
                     tourAnchor={order === 0}
                     attention={g.id === 'attention'}
                     spans={{ sm: g.spans.sm[i], lg: g.spans.lg[i], xl: g.spans.xl[i] }}

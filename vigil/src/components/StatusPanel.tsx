@@ -70,10 +70,12 @@ interface StatusPanelProps {
   sweep: number;
   meta: string;
   surgeonNote: string | null;
+  /** Portrait shown beside the name line. */
+  portrait?: React.ReactNode;
   go: (v: View, indicator?: IndicatorId) => void;
 }
 
-export function StatusPanel({ ev, action, sweep, meta, surgeonNote, go }: StatusPanelProps) {
+export function StatusPanel({ ev, action, sweep, meta, surgeonNote, portrait, go }: StatusPanelProps) {
   const src = sourceById(REMEASURE_SOURCE);
   return (
     <section className="panel status-panel" data-tour="status" aria-labelledby="status-word">
@@ -84,7 +86,7 @@ export function StatusPanel({ ev, action, sweep, meta, surgeonNote, go }: Status
           {LEVEL_LABEL[ev.overall]}
         </h1>
         <p className="status-reason">{reasonLine(ev.findings)}</p>
-        <p className="status-meta">{meta}</p>
+        <p className="status-meta">{portrait && <span className="status-portrait">{portrait}</span>}{meta}</p>
         {surgeonNote && <p className="status-surgeon">{surgeonNote}</p>}
       </div>
       <div className="status-actions">

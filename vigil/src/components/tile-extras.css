@@ -1,0 +1,42 @@
+/* Clarity extras on the indicator tiles: a plain sentence about the baseline, and an "i" that explains the measure. */
+.ind-note { position: relative; z-index: 2; pointer-events: none; margin: 0; font-size: 12.5px; line-height: 1.35; color: var(--text-2); }
+.ind-tile.range .ind-note { color: var(--text-muted); }
+.ind-info {
+  position: relative; z-index: 2; flex: 0 0 auto;
+  width: 22px; height: 22px; border-radius: 50%; padding: 0;
+  border: 1px solid var(--line-strong); background: var(--surface-2); color: var(--text-muted);
+  font-size: 12px; font-weight: 600; font-style: italic; font-family: Georgia, 'Times New Roman', serif; line-height: 1;
+}
+.ind-info:hover, .ind-info[aria-expanded='true'] { color: var(--text); border-color: var(--text-muted); }
+.ind-info:focus-visible { outline: 2px solid var(--action); outline-offset: 2px; }
+.ind-explain { position: relative; z-index: 2; font-size: 13px; line-height: 1.45; color: var(--text-2); padding: 6px 8px; border-radius: 8px; background: var(--surface-3); }
+.ind-explain b { color: var(--text); font-weight: 500; }
+.ind-explain-ref { display: block; margin-top: 4px; color: var(--text-muted); }
+.legend-line { display: inline-flex; align-items: center; gap: 6px; margin-right: 10px; }
+.legend-line .dot { margin-left: 6px; }
+.legend-line .dot:first-child { margin-left: 0; }
+.mission-strip { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 var(--s-5); }
+.mission-strip .pill { gap: 8px; padding: 5px 12px; font-size: 13px; }
+.mission-strip .pill .k { color: var(--text-muted); font-weight: 400; }
+.mission-strip .pill.sim { border-style: dashed; }
+.status-portrait { display: inline-flex; vertical-align: middle; margin-right: 8px; }
+.status-portrait .avatar { border-radius: 50%; }
+/* Crew row: let chips shrink and stack on narrow screens instead of pushing the page wider. */
+.crew-strip { flex-wrap: wrap; }
+.crew-chip { min-width: 0; max-width: 100%; }
+.crew-chip-who { min-width: 0; }
+.crew-chip-name, .crew-chip-role { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 700px) {
+  .crew-strip { display: flex; flex-direction: column; }
+  .crew-chip { width: 100%; }
+}
+.mission-strip { margin-top: var(--s-2); }
+
+/* Ten invisible pixels of overflow come from a pseudo-element in the top panels at phone width; clip them so the page never scrolls sideways. */
+@media (max-width: 639px) { .today-top { overflow-x: clip; } }
+
+/* Status word on phones: smaller and allowed to wrap, so it never clips. */
+@media (max-width: 639px) {
+  .status-text { min-width: 0; }
+  .status-word { font-size: 34px; line-height: 1.05; white-space: normal; overflow-wrap: anywhere; }
+}
