@@ -37,6 +37,8 @@
 
 /* Status word on phones: smaller and allowed to wrap, so it never clips. */
 @media (max-width: 639px) {
-  .status-text { min-width: 0; }
-  .status-word { font-size: 34px; line-height: 1.05; white-space: normal; overflow-wrap: anywhere; }
+  /* Stack the ring above the words on phones; side by side leaves no room for the status word. */
+  .today-top .status-panel { display: grid; grid-template-columns: minmax(0, 1fr); justify-items: start; }
+  .today-top .status-panel .status-text { min-width: 0; width: 100%; }
+  .today-top .status-panel .status-word, .today-top .status-panel h1.status-word { font-size: 34px; line-height: 1.05; white-space: normal; overflow-wrap: anywhere; }
 }
