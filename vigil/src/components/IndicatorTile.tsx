@@ -1,4 +1,4 @@
-import { useId, type CSSProperties } from 'react';
+import { useId, useState, type CSSProperties } from 'react';
 import type { IndicatorDef } from '../data/indicators';
 import { fmt, LEVEL_LABEL } from '../lib/format';
 import type { Evaluation } from '../lib/rules';
@@ -7,6 +7,7 @@ import { AnimateDigits } from './controls/AnimateDigits';
 import { BaselineBand } from './controls/BaselineBand';
 import { StatusStrip } from './controls/StatusStrip';
 import { IconArrowDown, IconArrowRight, IconArrowUp } from './icons';
+import './tile-extras.css';
 import { Pill } from './ui';
 
 type Trend = 'up' | 'down' | 'flat' | null;
@@ -28,6 +29,8 @@ interface IndicatorTileProps {
   attention: boolean;
   /** Track spans on the 12-track grid at <1024, 1024-1279 and >=1280. */
   spans: { sm: number; lg: number; xl: number };
+  /** Plain sentence under the band: where today sits against the person's usual. */
+  note: string;
   onOpen: () => void;
 }
 
@@ -35,8 +38,10 @@ interface IndicatorTileProps {
  * One reading: label, readout, the baseline band, a 14-day strip and the trend. The whole tile opens its trend.
  * In range tiles keep the strip hidden until hover, focus or a tap on it, so only flagged tiles carry colour.
  */
-export function IndicatorTile({ def, status, days, trend, order, refresh, tourAnchor, attention, spans, onOpen }: IndicatorTileProps) {
+export function IndicatorTile({ def, status, days, trend, order, refresh, tourAnchor, attention, spans, note, onOpen }: IndicatorTileProps) {
   const scale = bandScale(status.value, status.baseline, def);
+  const [explain, setExplain] = useState(false);
+  const explainId = useId();
   const TrendIcon = trend ? TREND_ICON[trend] : null;
   const stripId = useId();
   const style = { '--i': order, '--span-sm': spans.sm, '--span-lg': spans.lg, '--span-xl': spans.xl } as CSSProperties;
@@ -52,7 +57,22 @@ export function IndicatorTile({ def, status, days, trend, order, refresh, tourAn
       <div className="ind-head">
         <span className="ind-label">{def.shortLabel ?? def.label}</span>
         <Pill level={status.level} />
+        <button
+          type="button"
+          className="ind-info"
+          aria-label={`What is ${def.label}?`}
+          aria-expanded={explain}
+          aria-controls={explainId}
+          onClick={(e) => { e.stopPropagation(); setExplain((v) => !v); }}
+        >
+          i
+        </button>
       </div>
+      {explain && (
+        <div id={explainId} className="ind-explain">
+          <b>{def.label}.</b> {def.what} <span className="ind-explain-ref">{def.reference}</span>
+        </div>
+      )}
       <div className="ind-readout">
         <AnimateDigits value={fmt(def.id, status.value)} className="ind-value" />
         <span className="ind-unit mono">{def.unit}</span>
@@ -65,6 +85,7 @@ export function IndicatorTile({ def, status, days, trend, order, refresh, tourAn
       <div className="ind-band" data-tour={tourAnchor ? 'baseline' : undefined}>
         <BaselineBand value={status.value} baseline={status.baseline} min={scale.min} max={scale.max} />
       </div>
+      <p className="ind-note">{note}</p>
       <div className="ind-strip">
         <StatusStrip days={days} summaryId={stripId} />
       </div>
