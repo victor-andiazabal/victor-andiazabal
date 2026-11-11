@@ -34,3 +34,9 @@
 
 /* Ten invisible pixels of overflow come from a pseudo-element in the top panels at phone width; clip them so the page never scrolls sideways. */
 @media (max-width: 639px) { .today-top { overflow-x: clip; } }
+
+/* Status word on phones: smaller and allowed to wrap, so it never clips. */
+@media (max-width: 639px) {
+  .status-text { min-width: 0; }
+  .status-word { font-size: 34px; line-height: 1.05; white-space: normal; overflow-wrap: anywhere; }
+}
