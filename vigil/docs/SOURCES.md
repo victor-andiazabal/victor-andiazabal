@@ -5,6 +5,15 @@ papers only. The same list is in `src/data/sources.ts` and in the app under Lear
 
 ## NASA
 
+The challenge's official Resources tab (posted 13 November) lists five links; all five are below and cited in the app.
+
+- **NASA Human Research Program, Risks of Human Spaceflight.** https://www.nasa.gov/hrp/risks/
+- **NASA Human Research Program, Ongoing HRP Research in Space.** https://www.nasa.gov/hrp/ongoing-hrp-research/
+- **Canadian Space Agency, Monitoring radiation for astronaut health (26 Feb 2026).**
+  https://www.asc-csa.gc.ca/eng/news/articles/2026/2026-02-26-monitoring-radiation-astronaut-health.asp
+- **Canadian Space Agency, Why do we conduct science experiments in space?**
+  https://www.asc-csa.gc.ca/eng/iss/science/why-do-we-conduct-science-experiments-in-space.asp
+
 - **NASA Human Research Program, The 5 Hazards of Human Spaceflight.** https://www.nasa.gov/hrp/hazards/
   Space radiation, isolation and confinement, distance from Earth, gravity fields, hostile/closed environments.
 - **NASA Human Research Program, About Human Factors and Behavioral Performance.**

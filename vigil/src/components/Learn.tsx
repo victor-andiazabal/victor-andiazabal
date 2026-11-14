@@ -65,7 +65,7 @@ export function Learn({ go }: { go: (v: View) => void }) {
             </li>
           ))}
         </ul>
-        <SourceLinks ids={['hrp-hazards', 'hfbp', 'twins']} />
+        <SourceLinks ids={['hrp-hazards', 'hrp-risks', 'hrp-ongoing', 'hfbp', 'twins']} />
         <p className="learn-note">
           The Body map shows which body systems each hazard affects and how yours are doing today.
         </p>
