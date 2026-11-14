@@ -325,7 +325,7 @@ export const INDICATORS: IndicatorDef[] = [
     how: 'Read from the personal dosimeter or the vehicle radiation monitor.',
     reference: 'Career limit 600 mSv; 250 mSv short-term limit for one solar particle event (NASA-STD-3001). Cruise to Mars about 1.84 mSv/day, Mars surface about 0.64 mSv/day (MSL/RAD).',
     whySpace: 'Space radiation is one of the five hazards: about 1.84 mSv a day in cruise to Mars, against a 600 mSv career limit.',
-    sources: ['ochmo-radiation', 'rad-cruise', 'rad-surface', 'iss-dose'],
+    sources: ['ochmo-radiation', 'rad-cruise', 'rad-surface', 'iss-dose', 'csa-radiation'],
     entry: 'device',
     group: 'environment',
   },

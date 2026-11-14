@@ -64,6 +64,10 @@ wearable input.
 
 ## NASA data and resources used
 
+From the challenge's official Resources tab: NASA HRP 5 Hazards of Human Spaceflight; NASA HRP Risks of Human
+Spaceflight; NASA HRP Ongoing Research in Space; CSA Monitoring Radiation for Astronaut Health; CSA Why Do We
+Conduct Science Experiments in Space. All five are cited in the app (Learn page and alert sources).
+
 - NASA Human Research Program: the five hazards of human spaceflight and the Human Factors and Behavioral
   Performance element (framing, indicator choice).
 - NASA OCHMO Radiation Protection Technical Brief, NASA-STD-3001: 600 mSv career limit, 250 mSv solar
